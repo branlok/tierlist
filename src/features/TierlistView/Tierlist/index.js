@@ -12,20 +12,9 @@ function Tierlist() {
     <StyledTL>
       {rowOrder?.map((item, idx) => {
         if (item !== "storage") {
-          console.log(item);
-          return (
-            <Row key={item} rowId={item} />
-            // <div className="row row1" key={item}>
-            //   <div className="title">{rows[item].name}</div>
-            // </div>
-          );
+          return <Row key={item} rowId={item} />;
         }
       })}
-      {/* <div className="row row1">
-        <div className="title">1sdf</div>
-      </div>
-      <div className="row row2">2sdf</div>
-      <div className="row row3">3sdf</div> */}
     </StyledTL>
   );
 }
@@ -37,6 +26,7 @@ let StyledTL = styled.div`
   z-index: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   .row:nth-child(1) {
     background-color: #c1b7db;
   }
@@ -53,7 +43,7 @@ let StyledTL = styled.div`
     background-color: #332659;
   }
   .row:nth-child(6) {
-    background-color: #180F30;
+    background-color: #180f30;
   }
   .row {
     height: 125px;

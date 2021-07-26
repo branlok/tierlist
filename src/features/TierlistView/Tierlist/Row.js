@@ -35,6 +35,8 @@ let StyledDroppableRow = styled.div`
   width: 100%;
   display: flex;
   overflow-x: scroll;
+  overflow-y: hidden;
+  user-select: none; 
   ::-webkit-scrollbar {
   height: 0;
   width: 0;

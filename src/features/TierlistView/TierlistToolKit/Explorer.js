@@ -109,6 +109,7 @@ let StyledWrapper = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: column;
+  
   h1 {
     color: white;
     text-align: center;
@@ -123,6 +124,7 @@ let StyledExplorer = styled.div`
   border-radius: 10px;
   background-color: #382b54;
   overflow-y: scroll;
+  user-select: none; 
   ::-webkit-scrollbar {
   height: 0;
   width: 0;

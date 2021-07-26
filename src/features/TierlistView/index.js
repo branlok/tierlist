@@ -14,26 +14,18 @@ import {
 } from "./TierlistSlice";
 import TierlistToolkit from "./TierlistToolKit";
 
-function TierlistView() {
+function useDragLogic() {
   let rows = useSelector((state) => state.loadedTierlist.rows);
-  let status = useSelector((state) => state.loadedTierlist.status);
+  // let status = useSelector((state) => state.loadedTierlist.status);
   let dispatch = useDispatch();
-  let { id } = useParams();
 
-  useEffect(() => {
-    if (id) {
-      //load requested tierlist to redux
-      dispatch(loadTierlist(id));
-    }
-  }, [id]);
-
-
-  //DRAGGABLE LOGGIC
   let onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
+
     if (!destination) {
       return;
     }
+
     if (
       destination.droppableId === source.droppaableId &&
       destination.index === source.index
@@ -45,21 +37,63 @@ function TierlistView() {
     let finish = rows[destination.droppableId];
     if (start === finish) {
       dispatch(modifyRowOrder({ destination, source, draggableId }));
-    
     } else {
-      dispatch(updateOrderInRow({destination, source, draggableId}));
-      
+      dispatch(updateOrderInRow({ destination, source, draggableId }));
+
       dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
     }
   };
+  return onDragEnd;
+}
+
+function TierlistView() {
+  // let rows = useSelector((state) => state.loadedTierlist.rows);
+  let status = useSelector((state) => state.loadedTierlist.status);
+  let dispatch = useDispatch();
+
+  let { id } = useParams();
+  let onDragEnd = useDragLogic();
+
+  useEffect(() => {
+    if (id) {
+      //load requested tierlist to redux
+      dispatch(loadTierlist(id));
+    }
+  }, [id]);
+
+  //DRAGGABLE LOGGIC
+  // let onDragEnd = (result) => {
+  //   const { destination, source, draggableId } = result;
+
+  //   if (!destination) {
+  //     return;
+  //   }
+
+  //   if (
+  //     destination.droppableId === source.droppaableId &&
+  //     destination.index === source.index
+  //   ) {
+  //     return;
+  //   }
+
+  //   let start = rows[source.droppableId];
+  //   let finish = rows[destination.droppableId];
+  //   if (start === finish) {
+  //     dispatch(modifyRowOrder({ destination, source, draggableId }));
+  //   } else {
+  //     dispatch(updateOrderInRow({ destination, source, draggableId }));
+
+  //     dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
+  //   }
+  // };
 
   if (status == "loading") {
     return <div>loading</div>;
   } else {
     return (
       <StyledWrapper data-test="tierlistwindow">
+        <StyledLeftColumn data-test="leftColumn" />
         <DragDropContext onDragEnd={onDragEnd}>
-          <StyledLeftColumn data-test="leftColumn" />
           <Wrapper>
             <StyledPageWrapper>
               <TierlistHeaders />

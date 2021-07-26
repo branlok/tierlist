@@ -15,7 +15,6 @@ function Item({ itemId, index }) {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            {/* {item.name}  */}
             <StyledImage src={item.imageURL} />
           </StyledItem>
         );
