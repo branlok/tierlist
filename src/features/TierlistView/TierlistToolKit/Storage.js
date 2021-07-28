@@ -49,11 +49,13 @@ let StyledStorage = styled.div`
   overflow-y: hidden;
   user-select: none;
   position: relative;
+  scrollbar-width: none;
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
     color: transparent;
   }
+
   .messsge-for-empty {
     position: absolute;
     top: 0px;

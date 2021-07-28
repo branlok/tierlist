@@ -7,6 +7,7 @@ export const loadTierlist = createAsyncThunk(
   "loadedTierlist/load",
   async (tierlistId) => {
     if (!tierlistId) {
+      //if there is no tierlist avaliable, return basic tierlist
       return { updateTo: baseTierlistMaker(tierlistId) };
     }
 
@@ -34,6 +35,34 @@ export const loadTierlist = createAsyncThunk(
         imageObjects[item.id] = URL.createObjectURL(item.picture);
       });
 
+    //supply new instance for fetching
+
+    //delete last session
+
+    await db.items
+      .where("tierlistId")
+      .equals(tierlistId)
+      .delete()
+      .then((deletecount) => console.log(deletecount));
+
+    let items = tierlistData.items;
+    console.log(items);
+    let itemEntries = [];
+    let itemKeys = [];
+
+    for (let [key, value] of Object.entries(items)) {
+      itemKeys.push(key);
+      itemEntries.push(value);
+    }
+
+    //add bulk to items
+    console.log(itemEntries, tierlistId);
+    await db.items.bulkAdd(itemEntries).then((response) => {
+      console.log("successfully instances");
+    });
+
+    // // await db.items;
+
     let response = { updateTo: tierlistData, imagePayload: imageObjects };
     return response;
   }
@@ -44,7 +73,7 @@ export const saveTierlist = createAsyncThunk(
   async (tierlistStructure, thunkAPI) => {
     console.log(thunkAPI.getState().loadedTierlist);
     const response = await db.tierlists.put({
-      id: tierlistStructure.tierlist.id,
+      id: thunkAPI.getState().loadedTierlist.tierlist.id,
       tierlist: thunkAPI.getState().loadedTierlist,
       status: "saved",
       date: Date.now(),
@@ -81,10 +110,28 @@ export const updateItemsDB = createAsyncThunk(
   }
 );
 
+export const deleteItemFromDB = createAsyncThunk(
+  "loadedTierlist/deleteItems",
+  async (payload, thunkAPI) => {
+    //delete from image collection
+    const deleteFromImageDB = await db.images
+      .where("id")
+      .equals(payload)
+      .delete()
+      .then((deletecount) => console.log(deletecount));
+
+    const deleteFromInstanceDB = await db.items
+      .where("id")
+      .equals(payload)
+      .delete()
+      .then((deletecount) => console.log(deletecount, "rew"));
+  }
+);
+
+/* Rearrange Item between rows other than the same row  */
 export const updateOrderInRow = createAsyncThunk(
   "loadedTierlist/updateOrderInRow",
   async (payload) => {
-    console.log(payload.draggableId, payload, "readme");
     await db.items
       .update(payload.draggableId, {
         resides: payload.destination.droppableId,
@@ -145,8 +192,57 @@ let tierlistSlice = createSlice({
 
       let finishOrder = state.rows[destination.droppableId].itemOrder;
       finishOrder.splice(destination.index, 0, draggableId);
+      //update resides
       state.items[draggableId].resides = destination.droppableId;
     },
+    returnToStorage: (state, action) => {
+      let itemsInRow = action.payload.rowItems; //[itemIDs]
+      let targetRow = action.payload.rowId;
+
+      //reallocate items resided in row to storage, and update resides
+      for (let item of itemsInRow) {
+        state.rows.storage.itemOrder.push(item);
+        state.items[item].resides = "storage";
+      }
+      //remove row from rowOrder
+      let index = state.rowOrder.indexOf(targetRow);
+      console.log(index);
+      state.rowOrder.splice(index, 1);
+      //remove row data
+      delete state.rows[targetRow];
+    },
+    addNewRow: (state, action) => {
+      //count current rows
+
+      let rowCount = state.rowOrder[state.rowOrder.length - 1]; //get last id
+      if (rowCount == "storage") {
+        rowCount = state.rowOrder[state.rowOrder.length - 2];
+        if (!rowCount) {
+          //if only storage left, row count will be undefined, so set it to row-0
+          rowCount = "row-0";
+        }
+      }
+      //substr of `row-${number}` format
+      let newRowName = `row-${+rowCount.substr(4) + 1}`;
+
+      state.rowOrder.push(newRowName);
+      state.rows[newRowName] = {
+        id: newRowName,
+        name: "new row",
+        description: "something",
+        itemOrder: [],
+      };
+    },
+    deleteItem: (state, action) => {
+      let resides = state.items[action.payload].resides;
+      delete state.items[action.payload];
+
+      let itemIndex = state.rows[resides].itemOrder.indexOf(action.payload);
+      state.rows[resides].itemOrder.splice(itemIndex, 1);
+    },
+    // deleteRow: (state, action) => {
+    //   state.rowOrder.splice(action.payload, 1);
+    // },
   },
   extraReducers: {
     [saveTierlist.fulfilled]: (state, action) => {
@@ -175,7 +271,7 @@ let tierlistSlice = createSlice({
       }
     },
     [loadTierlist.rejected]: (state, action) => {},
-    [updateOrderInRow.fulfilled]: (state, action) => {}
+    [updateOrderInRow.fulfilled]: (state, action) => {},
   },
 });
 
@@ -184,6 +280,10 @@ export const {
   reorderItemBetweenRow,
   addItem,
   newTierlistBuild,
+  addNewRow,
+  //   deleteRow,
+  deleteItem,
+  returnToStorage,
 } = tierlistSlice.actions;
 
 export default tierlistSlice.reducer;

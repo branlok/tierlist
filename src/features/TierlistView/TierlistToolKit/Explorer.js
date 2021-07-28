@@ -9,51 +9,44 @@ import db from "../../../db";
 
 import Item from "./Explorer/Item";
 
+/**
+ * Component returns ordered list of items query from indexeddb
+ *
+ * @returns list of ordered items in tierlist
+ * **/
+
 function Explorer() {
   let items = useSelector((state) => state.loadedTierlist.items);
-//   let row = useSelector((state) => state.loadedTierlist.rows);
+
   let [orderedItems, setOrderedItems] = useState([]);
   let { id } = useParams();
 
   useEffect(() => {
-    (async () => {
-      console.log("i randit");
-      const products = await db.items
-        .where('[tierlistId+resides]')
-        .between([id, "0"], [id, "\uffff"])
-        .toArray((re) => {
-          console.log(re);
-          setOrderedItems(re);
-        });
-    })();
+    //When item updates, update arrangement.
+    let isMounted = true;
+    if (Object.keys(items).length >= 0) {
+      (async () => {
+        const products = await db.items
+          .where("[tierlistId+resides]")
+          .between([id, "0"], [id, "\uffff"])
+          .toArray((re) => {
+            if (isMounted) {
+              setOrderedItems(re);
+            }
+          });
+      })();
+      return () => {
+        isMounted = false;
+      };
+    }
   }, [items]);
-
   return (
     <StyledWrapper>
       <h1>Explorer</h1>
       <StyledExplorer>
         {orderedItems.map((item, idx) => {
-          //   console.log(item, item[item.id], "what")
           return <Item key={item.id} item={items[item.id]} />;
         })}
-
-        {/* {Object.values(items).map((item, idx) => {
-          //   console.log(item, "wer");
-          return (
-            <Item key={idx} item={item} />
-            // <StyledItem key={idx}>
-            //   <img className="itemImage" src={item.imageURL}></img>
-            //   <StyledItemContent>
-            //     <div className="top">
-            //       <div>add title</div>
-            //       <div>{item}</div>
-            //     </div>
-            //     <div className="bottom">add description</div>
-            //   </StyledItemContent>
-            //   <StlyedBG src={item.imageURL} />
-            // </StyledItem>
-          );
-        })} */}
       </StyledExplorer>
     </StyledWrapper>
   );
@@ -109,7 +102,7 @@ let StyledWrapper = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  
+
   h1 {
     color: white;
     text-align: center;
@@ -124,12 +117,12 @@ let StyledExplorer = styled.div`
   border-radius: 10px;
   background-color: #382b54;
   overflow-y: scroll;
-  user-select: none; 
+  user-select: none;
   ::-webkit-scrollbar {
-  height: 0;
-  width: 0;
-  color: transparent;
-}
+    height: 0;
+    width: 0;
+    color: transparent;
+  }
 `;
 
 export default Explorer;

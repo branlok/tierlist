@@ -58,7 +58,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-[data-rbd-draggable-id] { will-change: transform, opacity; }
+[data-rbd-draggable-id] { will-change: transform; }
 `;
 
 function App() {

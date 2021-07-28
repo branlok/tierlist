@@ -12,7 +12,7 @@ function Tierlist() {
     <StyledTL>
       {rowOrder?.map((item, idx) => {
         if (item !== "storage") {
-          return <Row key={item} rowId={item} />;
+          return <Row key={item} index={idx} rowId={item} />;
         }
       })}
     </StyledTL>

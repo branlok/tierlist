@@ -1,13 +1,24 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { addNewRow, saveTierlist } from "../TierlistSlice";
 
 function TierlistHeaders() {
+  let dispatch = useDispatch();
+
+  let addRowAndSave = async () => {
+    dispatch(addNewRow());
+    await dispatch(saveTierlist());
+  };
+
   return (
     <StyledTLHeaderWrapper>
-      <StyledColumn>Settings</StyledColumn>
+      <StyledColumn>
+        <button onClick={addRowAndSave}>Add Row</button>
+      </StyledColumn>
       <StyledTLHeader>
-        <h1 className="title">tierlistname</h1>
-        <p>DEscription</p>
+        <h1 className="title">This is my tierlist</h1>
+        <p>Description if it needs</p>
       </StyledTLHeader>
     </StyledTLHeaderWrapper>
   );
@@ -25,6 +36,8 @@ let StyledColumn = styled.div`
   height: 100%;
   color: white;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column-reverse;
 `;
 
 let StyledTLHeader = styled.div`

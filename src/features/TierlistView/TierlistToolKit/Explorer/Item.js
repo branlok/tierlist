@@ -19,6 +19,7 @@ function Item({ item }) {
     })();
   }, []);
 
+  if (!item) return null;
   return (
     <StyledItem>
       <img className="itemImage" src={item.imageURL}></img>
@@ -63,7 +64,7 @@ let StyledItemContent = styled.div`
     height: 25px;
     font-weight: bold;
     display: flex;
-    
+
     .input-title {
       background-color: transparent;
       border-style: none;
@@ -94,7 +95,7 @@ let StyledItemContent = styled.div`
     }
   }
   .input-description {
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     margin-top: 10px;
     border-style: none;
@@ -110,7 +111,7 @@ let StyledItemContent = styled.div`
       outline: none;
     }
     ::placeholder {
-        color: #bfbfbf;
+      color: #bfbfbf;
     }
   }
 `;

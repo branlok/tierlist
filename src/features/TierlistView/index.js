@@ -10,47 +10,16 @@ import {
   loadTierlist,
   modifyRowOrder,
   reorderItemBetweenRow,
+  saveTierlist,
   updateOrderInRow,
 } from "./TierlistSlice";
 import TierlistToolkit from "./TierlistToolKit";
 
-function useDragLogic() {
-  let rows = useSelector((state) => state.loadedTierlist.rows);
-  // let status = useSelector((state) => state.loadedTierlist.status);
-  let dispatch = useDispatch();
-
-  let onDragEnd = (result) => {
-    const { destination, source, draggableId } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      destination.droppableId === source.droppaableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    let start = rows[source.droppableId];
-    let finish = rows[destination.droppableId];
-    if (start === finish) {
-      dispatch(modifyRowOrder({ destination, source, draggableId }));
-    } else {
-      dispatch(updateOrderInRow({ destination, source, draggableId }));
-
-      dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
-    }
-  };
-  return onDragEnd;
-}
 
 function TierlistView() {
   // let rows = useSelector((state) => state.loadedTierlist.rows);
   let status = useSelector((state) => state.loadedTierlist.status);
   let dispatch = useDispatch();
-
   let { id } = useParams();
   let onDragEnd = useDragLogic();
 
@@ -60,32 +29,6 @@ function TierlistView() {
       dispatch(loadTierlist(id));
     }
   }, [id]);
-
-  //DRAGGABLE LOGGIC
-  // let onDragEnd = (result) => {
-  //   const { destination, source, draggableId } = result;
-
-  //   if (!destination) {
-  //     return;
-  //   }
-
-  //   if (
-  //     destination.droppableId === source.droppaableId &&
-  //     destination.index === source.index
-  //   ) {
-  //     return;
-  //   }
-
-  //   let start = rows[source.droppableId];
-  //   let finish = rows[destination.droppableId];
-  //   if (start === finish) {
-  //     dispatch(modifyRowOrder({ destination, source, draggableId }));
-  //   } else {
-  //     dispatch(updateOrderInRow({ destination, source, draggableId }));
-
-  //     dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
-  //   }
-  // };
 
   if (status == "loading") {
     return <div>loading</div>;
@@ -106,6 +49,41 @@ function TierlistView() {
     );
   }
 }
+
+
+function useDragLogic() {
+  let rows = useSelector((state) => state.loadedTierlist.rows);
+  // let status = useSelector((state) => state.loadedTierlist.status);
+  let dispatch = useDispatch();
+  let onDragEnd = async (result) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppaableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    let start = rows[source.droppableId];
+    let finish = rows[destination.droppableId];
+    if (start === finish) {
+      dispatch(modifyRowOrder({ destination, source, draggableId }));
+      await dispatch(saveTierlist());
+    } else {
+      dispatch(updateOrderInRow({ destination, source, draggableId }));
+      dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
+      await dispatch(saveTierlist());
+      
+    }
+  };
+  return onDragEnd;
+}
+
 
 let StyledWrapper = styled.div`
   height: 100vh;
