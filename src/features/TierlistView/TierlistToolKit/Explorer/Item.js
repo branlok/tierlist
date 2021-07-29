@@ -8,6 +8,7 @@ import { editItemTitle, updateItemDetails } from "../../TierlistSlice";
 import { ReactComponent as EditPenSVG } from "../../../../Styles/svg/EditPen.svg";
 import Description from "./Description";
 import { useRef } from "react";
+import scrollInto from "../../../utils/scrollInto";
 
 function Item({ item }) {
   //better appraoch to use api from indexeddb
@@ -82,7 +83,8 @@ function Item({ item }) {
               {item.name} <EditPenSVG className="svg" />
             </p>
           )}
-          <div className="tag">{rowReference[item.resides].name}</div>
+          
+          <div className="tag" onClick={() => scrollInto("row", item.resides)}>{rowReference[item.resides].name}</div>
         </div>
         <Description itemId={item.id} itemDescription={item.description} />
         {/* <textarea className="input-description" placeholder="add note" /> */}
@@ -185,7 +187,7 @@ let StyledItemContent = styled.div`
       width: 100px;
       margin-right: 10px;
       border: 1px solid gray;
-      backdrop-filter: blur(10px);
+      /* backdrop-filter: blur(10px); */
       /* background-color: black; */
       border-radius: 20px;
       text-align: center;

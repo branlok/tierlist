@@ -51,8 +51,9 @@ let StyledItem = styled.div`
   color: white;
   flex-shrink: 0;
   position: relative;
-  padding: 10px; //experimental
+  /* padding: 10px; //experimental */
   /* border-radius: 10px; */
+  
   .item-info-wrapper {
     height: 125px;
     width: 100%;
@@ -62,6 +63,7 @@ let StyledItem = styled.div`
     top: 0px;
     left: 0px;
     transition: 0.3s;
+    /* border: 3px solid black; */
     :hover {
       transition: 0.3s;
       opacity: 1;
@@ -71,8 +73,8 @@ let StyledItem = styled.div`
     }
   }
   .name {
-    height: 100%;
-    width: 100%;
+    height: calc(100% - 0px);
+    width: calc(100% - 0px);
     font-size: 20px;
     font-weight: bold;
     display: flex;
@@ -85,13 +87,16 @@ let StyledItem = styled.div`
     justify-content: center;
     align-items: center;
     padding: 10px;
-    border-radius: 10px;
+    /* margin: 5px; */
+    /* border-radius: 15px; */
+    border: 3px solid rgba(0,0,0,0.5);
     //experimental above
-    background: linear-gradient(
+    background-color: rgba(0,0,0,0.9);
+    /* background: linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.6) 0%,
       rgba(97, 255, 0, 0) 100%
-    );
+    ); */
   }
   .delete-button {
     position: absolute;
@@ -101,10 +106,10 @@ let StyledItem = styled.div`
     .delete-cross {
       fill: rgba(255, 255, 255, 0.6);
       background-color: transparent;
-      width: 15px;
-      height: 15px;
+      width: 10px;
+      height: 10px;
       padding: 10px;
-      transition: 0.5s;
+      transition: 0.2s;
       :hover {
         transform: rotate(-90deg);
         fill: rgba(255, 0, 0, 0.8);
@@ -120,7 +125,7 @@ let StyledImage = styled.img`
   display: block;
   min-width: 170px;
 
-  border-radius: 10px; //experimental
+  /* border-radius: 10px; //experimental */
 `;
 
 export default Item;

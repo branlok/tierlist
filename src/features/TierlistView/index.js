@@ -108,6 +108,7 @@ let StyledPageWrapper = styled.div`
   /* width: 100%; */
   overflow-y: scroll;
   scrollbar-width: none;
+  scroll-behavior: smooth;
   ::-webkit-scrollbar {
     height: 0;
     width: 0;

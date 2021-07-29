@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Row from "./Row";
 
+
 /* RENDERS ROWS */
 function Tierlist() {
   let rows = useSelector((state) => state.loadedTierlist.rows);
@@ -27,7 +28,6 @@ let StyledTL = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  scrollbar-width: none;
   .row:nth-child(1) {
     background-color: #c1b7db;
   }
@@ -50,6 +50,9 @@ let StyledTL = styled.div`
     height: 125px;
     width: 100%;
     display: flex;
+    :focus {
+        border: 2px solid white;
+    }
   }
   .title {
     width: 150px;
