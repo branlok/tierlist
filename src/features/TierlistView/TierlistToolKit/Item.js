@@ -30,7 +30,7 @@ function Item({ itemId, index }) {
 
 let StyledItem = styled.div`
   height: 125px;
-
+  padding: 10px; //experimental 
   color: white;
   flex-shrink: 0;
   overflow-x: hidden;
@@ -41,6 +41,8 @@ let StyledImage = styled.img`
   object-fit: cover;
   display: block;
   opacity: ${props => props.ready ? "1" : "0"};
+  min-width: 170px;
+  border-radius: 5px; //experimental 
   /* display: ${props => props.ready ? "block" : "none"} */
 `;
 

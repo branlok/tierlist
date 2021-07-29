@@ -132,11 +132,34 @@ export const deleteItemFromDB = createAsyncThunk(
 export const updateOrderInRow = createAsyncThunk(
   "loadedTierlist/updateOrderInRow",
   async (payload) => {
+    console.log("ran");
     await db.items
       .update(payload.draggableId, {
         resides: payload.destination.droppableId,
       })
       .then((res) => console.log("updated"));
+    return payload;
+  }
+);
+
+export const updateItemDetails = createAsyncThunk(
+  "loadedTierlist/updateItemDetails",
+  async (payload, thunkAPI) => {
+    //update instance
+    await db.items
+      .update(payload.itemId, { [payload.field]: payload.content })
+      .then((res) => console.log("updated instance"));
+
+    //saved
+    let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
+    let pathToUpdate = "tierlist.items." + payload.itemId + "." + payload.field;
+    // console.log(payload.title);
+    console.log({ [pathToUpdate]: payload.content });
+
+    await db.tierlists
+      .update(tierlistId, { [pathToUpdate]: payload.content })
+      .then((res) => console.log(res));
+    //   .update(tierlistId, )
   }
 );
 
@@ -240,9 +263,11 @@ let tierlistSlice = createSlice({
       let itemIndex = state.rows[resides].itemOrder.indexOf(action.payload);
       state.rows[resides].itemOrder.splice(itemIndex, 1);
     },
-    // deleteRow: (state, action) => {
-    //   state.rowOrder.splice(action.payload, 1);
-    // },
+    editItemTitle: (state, action) => {
+      console.log(action.payload);
+      state.items[action.payload.id][action.payload.field] =
+        action.payload.newValue;
+    },
   },
   extraReducers: {
     [saveTierlist.fulfilled]: (state, action) => {
@@ -282,6 +307,7 @@ export const {
   newTierlistBuild,
   addNewRow,
   //   deleteRow,
+  editItemTitle,
   deleteItem,
   returnToStorage,
 } = tierlistSlice.actions;

@@ -27,6 +27,7 @@ let StyledTL = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  scrollbar-width: none;
   .row:nth-child(1) {
     background-color: #c1b7db;
   }

@@ -6,8 +6,6 @@ import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-import { addImage } from "../../imageHandler/imageSlice";
-import { addItem } from "../TierlistSlice";
 import Explorer from "./Explorer";
 import FileDropper from "./FileDropper";
 // import FileDropper from "./FileDropper";
@@ -18,18 +16,28 @@ import Header from "./Header";
 import Storage from "./Storage";
 
 function TierlistToolkit() {
-
   return (
     <StyledSidebar>
       <Header />
-      <Explorer />
-      <Storage />
-      <FileDropper />
-      <Footer />
+      <StyledWrapper>
+        <Explorer />
+        <Storage />
+        {/* <FileDropper /> */}
+        <Footer />
+      </StyledWrapper>
     </StyledSidebar>
   );
 }
 
+let StyledWrapper = styled.div`
+  width: 100%;
+  height: calc(100% - 40px);
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+`;
 
 let StyledSidebar = styled.div`
   height: 100vh;
@@ -38,7 +46,7 @@ let StyledSidebar = styled.div`
   position: absolute;
   top: 0px;
   right: 0px;
-  background-color: #14082e;
+  background-color: #331C64;
   /* z-index: 2; */
   color: white;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);

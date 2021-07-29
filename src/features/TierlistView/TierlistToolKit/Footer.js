@@ -10,11 +10,12 @@ function Footer() {
   return (
     <StyledHeader>
       <button
+        className="save-button"
         onClick={async () => {
           await dispatch(saveTierlist(tierlist));
         }}
       >
-        save
+        Save to Collection
       </button>
     </StyledHeader>
   );
@@ -22,6 +23,7 @@ function Footer() {
 
 let StyledHeader = styled.div`
   width: 100%;
+  padding-top: 10px;
   height: 50px;
   flex-shrink: 0;
   text-align: center;
@@ -31,6 +33,17 @@ let StyledHeader = styled.div`
   font-size: 20px;
   font-weight: bold;
   flex-shrink: 0;
+  /* border: 1px solid white; */
+  .save-button {
+    background-color: #19cd61;
+    border-radius: 50px;
+    height: 30px;
+    font-weight: bold;
+    text-align: center;
+    border-style: none;
+    color: white;
+    padding: 0px 10px;
+  }
   /* background-color: rgba(255,255,255,0.5); */
 `;
 

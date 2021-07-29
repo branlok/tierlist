@@ -1,55 +1,84 @@
 import React from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import FileDropper from "./FileDropper";
 import Item from "./Item";
+import { StyledHeader } from "./styles";
 
 function Storage() {
   let storageRow = useSelector((state) => state.loadedTierlist.rows.storage);
+  let [showFileUpload, setShowFileUpload] = useState(
+    storageRow.itemOrder.length > 0 ? false : true
+  );
 
   return (
     <StyledStorageWrapper>
-      <Droppable droppableId={storageRow.id} direction="horizontal">
-        {(provided) => {
-          return (
-            <StyledStorage ref={provided.innerRef} {...provided.droppableProps}>
-              {storageRow.itemOrder.map((item, index) => {
-                return <Item key={item} itemId={item} index={index} />;
-              })}
-              {storageRow.itemOrder.length == 0 ? (
-                <div className="messsge-for-empty"> empty </div>
-              ) : null}
-              {provided.placeholder}
-            </StyledStorage>
-          );
-        }}
-      </Droppable>
+      <StyledHeader>
+        <div className="title">Storage</div>
+        <div
+          className="adder"
+          onClick={() => setShowFileUpload((prevState) => !prevState)}
+        >
+          +
+        </div>
+      </StyledHeader>
+      {showFileUpload ? (
+        <FileDropper setShowFileUpload={setShowFileUpload} />
+      ) : (
+        <Droppable droppableId={storageRow.id} direction="horizontal">
+          {(provided) => {
+            return (
+              <StyledStorage
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                onDragOver={() => setShowFileUpload((prevState) => !prevState)}
+              >
+                {storageRow.itemOrder.map((item, index) => {
+                  return <Item key={item} itemId={item} index={index} />;
+                })}
+                {storageRow.itemOrder.length == 0 ? (
+                  <div className="messsge-for-empty">
+                    {" "}
+                    Drop the images here ...{" "}
+                  </div>
+                ) : null}
+                {provided.placeholder}
+              </StyledStorage>
+            );
+          }}
+        </Droppable>
+      )}
     </StyledStorageWrapper>
   );
 }
 
 let StyledStorageWrapper = styled.div`
-  height: 125px;
+  height: 160px;
   width: 100%;
   border-radius: 10px;
-  padding: 0px 10px;
+  /* padding: 0px 10px; */
   overflow: hidden;
   flex-shrink: 0;
   overflow: hidden;
+  position: relative;
 `;
 
 let StyledStorage = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-  background-color: #261b3d;
-  border-radius: 10px;
+  /* background-color: #261b3d; */
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 0px 0px 10px 10px;
   overflow-x: scroll;
   overflow-y: hidden;
   user-select: none;
   position: relative;
   scrollbar-width: none;
+  /* flex-direction: row-reverse; */
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
@@ -61,7 +90,7 @@ let StyledStorage = styled.div`
     top: 0px;
     left: 0px;
     width: 100%;
-    height: 100%;
+    height: 125px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -7,15 +7,13 @@ import styled from "styled-components";
 import { addImage } from "../../imageHandler/imageSlice";
 import { addItem, updateItemsDB, updateTierlistStatus } from "../TierlistSlice";
 
-function FileDropper() {
+function FileDropper({setShowFileUpload}) {
   const dispatch = useDispatch();
   const tierlistId = useSelector((state) => state.loadedTierlist.tierlist.id);
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
       let objectURLS = [];
-      //can't use foreach because await wont'work
-      // console.log(acceptedFiles);
 
       for (let file of acceptedFiles) {
         let id = nanoid();
@@ -28,6 +26,7 @@ function FileDropper() {
       await dispatch(
         updateTierlistStatus({ status: "draft", date: Date.now(), tierlistId })
       );
+      setShowFileUpload(prevState => !prevState)
     },
     [tierlistId]
   );
@@ -38,46 +37,30 @@ function FileDropper() {
     noKeyboard: true,
   });
   return (
-    <StyledGallery>
-      <StyledFileDropper {...getRootProps()}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop the files here ...</p>
-        ) : (
-          <p>Drag 'n' drop some files here, or click to select files</p>
-        )}
+    <StyledFileDropper {...getRootProps()}>
+      <input {...getInputProps()} />
+      {isDragActive ? (
+        <p>Drop the files here ...</p>
+      ) : (
+        <p>Drag 'n' drop some files here, or click to select files</p>
+      )}
 
-        <StyledButton type="button" onClick={open}>
-          Open File Dialog
-        </StyledButton>
-      </StyledFileDropper>
-    </StyledGallery>
+      {/* <StyledButton type="button" onClick={open}>
+        Open File Dialog
+      </StyledButton> */}
+    </StyledFileDropper>
   );
 }
 
-let StyledGallery = styled.div`
-  width: 100%;
-  height: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-`;
 
 let StyledFileDropper = styled.div`
-  background-color: #3b345e;
-  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  height: 125px;
   width: 100%;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   p {
     font-size: 14px;
     text-align: center;

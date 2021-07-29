@@ -8,6 +8,7 @@ import styled from "styled-components";
 import db from "../../../db";
 
 import Item from "./Explorer/Item";
+import { StyledHeader } from "./styles";
 
 /**
  * Component returns ordered list of items query from indexeddb
@@ -42,7 +43,11 @@ function Explorer() {
   }, [items]);
   return (
     <StyledWrapper>
-      <h1>Explorer</h1>
+      <StyledHeader>
+        <h1 className="title">Explorer</h1>
+        <StyledTools />
+      </StyledHeader>
+
       <StyledExplorer>
         {orderedItems.map((item, idx) => {
           return <Item key={item.id} item={items[item.id]} />;
@@ -52,57 +57,40 @@ function Explorer() {
   );
 }
 
-// let StyledItem = styled.div`
+let StyledTools = styled.div`
+  height: 20px;
+  width: 100px;
+  background-color: black;
+  border-radius: 5px;
+`;
+// let StyledHeader = styled.div`
 //   width: 100%;
-//   height: 125px;
+//   height: 35px;
+//   background-color: gray;
+//   border-radius: 10px 10px 0px 0px;
+//   color: white;
+//   font-weight: bold;
 //   display: flex;
-//   position: relative;
-//   .itemImage {
+//   justify-content: space-between;
+//   align-items: center;
+//   /* .filter {
 //     height: 100%;
 //     width: 100px;
-//     object-fit: cover;
-//     flex-shrink: 0;
-//     z-index: 1;
-//   }
+//     background-color: black;
+//     border-radius: 5px;
+//   } */
 // `;
 
-// let StyledItemContent = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   z-index: 1;
-//   margin: 10px;
-//   display: flex;
-//   flex-direction: column;
-//   /* backdrop-filter: blur(3px); */
-//   .top {
-//     width: 100%;
-//     height: 25px;
-//     font-weight: bold;
-//     display: flex;
-//   }
-//   .bottom {
-//     font-size: 12px;
-//   }
-// `;
-
-// let StlyedBG = styled.img`
-//   position: absolute;
-//   left: 0px;
-//   top: 0px;
-//   height: 100%;
-//   width: 100%;
-//   opacity: 0.2;
-//   object-fit: cover;
-//   object-position: center center;
-// `;
-
-let StyledWrapper = styled.div`
-  height: calc(100% - 400px);
+let StyledWrapper = styled.section`
+  height: calc(100% - 200px);
   width: 100%;
-  padding: 10px;
+  /* padding: 10px; */
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
-
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+  border-radius: 10px;
   h1 {
     color: white;
     text-align: center;
@@ -114,15 +102,17 @@ let StyledWrapper = styled.div`
 let StyledExplorer = styled.div`
   height: 100%;
   width: 100%;
-  border-radius: 10px;
-  background-color: #382b54;
+  border-radius: 0px 0px 10px 10px;
+  /* background-color: rgba(0, 0, 0, 0.8); */
   overflow-y: scroll;
   user-select: none;
+  scroll-behavior: smooth;
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
     color: transparent;
   }
+  scrollbar-width: none;
 `;
 
 export default Explorer;
