@@ -54,7 +54,7 @@ function Storage({ mini }) {
                 {storageRow.itemOrder.length == 0 ? (
                   <div className="messsge-for-empty">
                     {" "}
-                    Drop the images here ...{" "}
+                    Drop the images files or draggables here ...{" "}
                   </div>
                 ) : null}
                 {provided.placeholder}

@@ -45,9 +45,9 @@ function FileDropper({ setShowFileUpload }) {
 
       {isDragActive ? null : <p>Drop the files here ...</p>}
 
-      {/* <StyledButton type="button" onClick={open}>
+      <StyledButton type="button" onClick={open}>
         Open File Dialog
-      </StyledButton> */}
+      </StyledButton>
     </StyledFileDropper>
   );
 }
