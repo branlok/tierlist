@@ -57,6 +57,11 @@ table {
 	border-spacing: 0;
 }
 [data-rbd-draggable-id] { will-change: transform; }
+
+input:not([type="radio"]):not([type="checkbox"]) {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
 `;
 
 function App() {
@@ -141,9 +146,6 @@ let StyledRightColumn = styled.div`
     background-color: #7a67b2;
   }
 
-  input {
-    border-radius: 0;
-  }
 `;
 
 export default App;
