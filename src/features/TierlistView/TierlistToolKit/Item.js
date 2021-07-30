@@ -23,6 +23,7 @@ function Item({ itemId, index }) {
         ...style,
         height: "125px",
         width: "auto",
+        maxWidth: "250px",
         transition: `all ${curve} ${duration}s`,
       };
     } else {
@@ -66,7 +67,7 @@ let StyledItem = styled.div`
 let StyledImage = styled.img`
   height: 100%;
   width: 100%;
-
+  max-width: 250px;
   object-fit: cover;
   display: block;
   opacity: ${(props) => (props.ready ? "1" : "0")};

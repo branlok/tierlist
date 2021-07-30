@@ -33,6 +33,7 @@ function Item({ itemId, index, toolState }) {
         ...style,
         height: "125px",
         width: toolState ? "auto" : "230px",
+        maxWidth: "250px",
         transition: `all ${curve} ${duration}s`,
       };
     } else {
@@ -173,6 +174,7 @@ let StyledImage = styled.img`
   display: block;
   object-fit: cover;
   /* display: block; */
+  max-width: 250px;
 
   /* min-width: 170px; */
 

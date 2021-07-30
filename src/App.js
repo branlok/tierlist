@@ -66,7 +66,7 @@ function App() {
       <Switch>
         <Route path="/" exact>
           {/* <TierlistView /> */}
-          <Home/>
+          <Home />
         </Route>
         <Route path="/build/:id" exact>
           <TierlistView />
@@ -139,6 +139,10 @@ let StyledRightColumn = styled.div`
   }
   .row3 {
     background-color: #7a67b2;
+  }
+
+  input {
+    border-radius: 0;
   }
 `;
 
