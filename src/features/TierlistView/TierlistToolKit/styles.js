@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledHeader = styled.div`
   width: 100%;
   height: 35px;
-  background-color: #3d3d3d;
+  background-color: #161616;
   border-radius: 10px 10px 0px 0px;
   color: white;
   font-weight: bold;

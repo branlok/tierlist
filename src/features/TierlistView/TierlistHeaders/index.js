@@ -1,15 +1,26 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { addNewRow, loadTierlist, saveTierlist } from "../TierlistSlice";
+import {
+  addNewRow,
+  editTierlistInfo,
+  loadTierlist,
+  saveTierlist,
+} from "../TierlistSlice";
 import { ReactComponent as AddSVG } from "../../../Styles/svg/Add2.svg";
 import { useEffect } from "react";
+import { useState } from "react";
 function TierlistHeaders() {
+  let [editMode, setEditMode] = useState(false);
+  let [newTitle, setNewTitle] = useState("");
+  console.log(newTitle);
+
   let dispatch = useDispatch();
   let newRowId = useSelector(
     (state) =>
       state.loadedTierlist.rowOrder[state.loadedTierlist.rowOrder.length - 1]
   );
+  let title = useSelector((state) => state.loadedTierlist.tierlist.title);
 
   useEffect(() => {
     if (newRowId !== "storage") {
@@ -30,6 +41,13 @@ function TierlistHeaders() {
     await dispatch(saveTierlist());
   };
 
+  let handleSubmitTitle = async (e) => {
+    e.preventDefault();
+    dispatch(editTierlistInfo({ newValue: newTitle, field: "title" }));
+    await dispatch(saveTierlist());
+    setEditMode(false);
+  };
+
   return (
     <StyledTLHeaderWrapper>
       <StyledColumn>
@@ -39,7 +57,21 @@ function TierlistHeaders() {
         </button>
       </StyledColumn>
       <StyledTLHeader>
-        <h1 className="title">This is my tierlist</h1>
+        {editMode ? (
+          <form className="title-form" onSubmit={(e) => handleSubmitTitle(e)}>
+            <input
+              className="title-input"
+              placeholder="Enter New Title"
+              type="text"
+              onChange={(e) => setNewTitle(e.target.value)}
+              value={newTitle}
+            ></input>
+          </form>
+        ) : (
+          <h1 className="title" onClick={() => setEditMode(true)}>
+            {title}
+          </h1>
+        )}
         <p>Description if it needs</p>
       </StyledTLHeader>
     </StyledTLHeaderWrapper>
@@ -99,8 +131,30 @@ let StyledTLHeader = styled.div`
   width: 100%;
   color: white;
   padding: 20px;
+  .title-form {
+    width: 100%;
+    .title-input {
+      border-style: none;
+      background-color: transparent;
+      font-size: 35px;
+      font-weight: bold;
+      color: white;
+      line-height: 40px;
+      padding: 0px;
+      margin-bottom: 5px;
+      ::placeholder {
+        color: #c4c4c4;
+      }
+      :focus {
+        outline: none;
+        border-bottom: 4px solid white;
+      }
+    }
+  }
   .title {
-    font-size: 25px;
+    font-size: 35px;
+    line-height: 40px;
+    margin-bottom: 5px;
   }
 `;
 

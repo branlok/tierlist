@@ -12,22 +12,29 @@ import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelet
 import Item from "./Item";
 import RowTitle from "./RowTitle";
 
-function Row({ rowId, index }) {
+function Row({ rowId, index, toolState }) {
   let row = useSelector((state) => state.loadedTierlist.rows[rowId]);
 
   return (
     <Droppable droppableId={rowId} direction="horizontal">
       {(provided) => {
         return (
-          <div id={`row-${rowId}`}className="row row1">
-            <RowTitle row={row}/>
+          <div id={`row-${rowId}`} className="row row1">
+            <RowTitle row={row} />
             <StyledDroppableRow
               //   className="row"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
               {row.itemOrder.map((item, idx) => {
-                return <Item key={item} itemId={item} index={idx} />;
+                return (
+                  <Item
+                    key={item}
+                    itemId={item}
+                    index={idx}
+                    toolState={toolState}
+                  />
+                );
               })}
               {provided.placeholder}
             </StyledDroppableRow>
@@ -52,7 +59,5 @@ let StyledDroppableRow = styled.div`
     color: transparent;
   }
 `;
-
-
 
 export default Row;

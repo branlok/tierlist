@@ -24,7 +24,7 @@ function Footer() {
 let StyledHeader = styled.div`
   width: 100%;
   padding-top: 10px;
-  height: 50px;
+  height: 80px;
   flex-shrink: 0;
   text-align: center;
   display: flex;

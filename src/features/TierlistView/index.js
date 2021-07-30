@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,13 +16,14 @@ import {
 } from "./TierlistSlice";
 import TierlistToolkit from "./TierlistToolKit";
 
-
 function TierlistView() {
+  
   // let rows = useSelector((state) => state.loadedTierlist.rows);
   let status = useSelector((state) => state.loadedTierlist.status);
   let dispatch = useDispatch();
   let { id } = useParams();
   let onDragEnd = useDragLogic();
+  let [toolState, setToolState] = useState(false); 
 
   useEffect(() => {
     if (id) {
@@ -40,16 +42,15 @@ function TierlistView() {
           <Wrapper>
             <StyledPageWrapper>
               <TierlistHeaders />
-              <Tierlist />
+              <Tierlist toolState={toolState} />
             </StyledPageWrapper>
-            <TierlistToolkit />
+            <TierlistToolkit toolState={toolState} setToolState={setToolState} />
           </Wrapper>
         </DragDropContext>
       </StyledWrapper>
     );
   }
 }
-
 
 function useDragLogic() {
   let rows = useSelector((state) => state.loadedTierlist.rows);
@@ -78,12 +79,10 @@ function useDragLogic() {
       dispatch(updateOrderInRow({ destination, source, draggableId }));
       dispatch(reorderItemBetweenRow({ destination, source, draggableId }));
       await dispatch(saveTierlist());
-      
     }
   };
   return onDragEnd;
 }
-
 
 let StyledWrapper = styled.div`
   height: 100vh;
@@ -104,11 +103,14 @@ let StyledLeftColumn = styled.div`
 let StyledPageWrapper = styled.div`
   background-color: #2d1365;
   height: 100%;
-  width: calc(100% - 450px);
+  width: calc(100% - 250px);
+  /* width: 100%; */
   /* width: 100%; */
   overflow-y: scroll;
   scrollbar-width: none;
   scroll-behavior: smooth;
+  /* display: flex;
+  flex-direction: column; */
   ::-webkit-scrollbar {
     height: 0;
     width: 0;

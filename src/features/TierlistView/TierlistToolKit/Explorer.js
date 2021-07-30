@@ -42,7 +42,7 @@ function Explorer() {
     }
   }, [items]);
   return (
-    <StyledWrapper>
+    <StyledWrapper className="explorer">
       <StyledHeader>
         <h1 className="title">Explorer</h1>
         <StyledTools />
@@ -63,26 +63,9 @@ let StyledTools = styled.div`
   background-color: black;
   border-radius: 5px;
 `;
-// let StyledHeader = styled.div`
-//   width: 100%;
-//   height: 35px;
-//   background-color: gray;
-//   border-radius: 10px 10px 0px 0px;
-//   color: white;
-//   font-weight: bold;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   /* .filter {
-//     height: 100%;
-//     width: 100px;
-//     background-color: black;
-//     border-radius: 5px;
-//   } */
-// `;
 
 let StyledWrapper = styled.section`
-  height: calc(100% - 200px);
+  height: 100%;
   width: 100%;
   /* padding: 10px; */
   padding-bottom: 10px;
@@ -91,6 +74,7 @@ let StyledWrapper = styled.section`
   background-color: rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
   border-radius: 10px;
+  overflow: hidden;
   h1 {
     color: white;
     text-align: center;

@@ -35,7 +35,9 @@ function Item({ item }) {
     //run dispatch to edit redux
     console.log(item.id);
     e.preventDefault();
-    await dispatch(updateItemDetails({itemId: item.id, content: title, field: "name"}))
+    await dispatch(
+      updateItemDetails({ itemId: item.id, content: title, field: "name" })
+    );
     dispatch(editItemTitle({ id: item.id, newValue: title, field: "name" }));
     //run async sve to indexeddb
     setShowTitleEdit(false);
@@ -83,8 +85,10 @@ function Item({ item }) {
               {item.name} <EditPenSVG className="svg" />
             </p>
           )}
-          
-          <div className="tag" onClick={() => scrollInto("row", item.resides)}>{rowReference[item.resides].name}</div>
+
+          <div className="tag" onClick={() => scrollInto("row", item.resides)}>
+            <p>{rowReference[item.resides].name}</p>
+          </div>
         </div>
         <Description itemId={item.id} itemDescription={item.description} />
         {/* <textarea className="input-description" placeholder="add note" /> */}
@@ -178,23 +182,31 @@ let StyledItemContent = styled.div`
       }
     }
     .tag {
-      width: auto;
       flex-shrink: 0;
-      padding: 3px 20px;
+      padding: 0px 20px;
       font-size: 12px;
       height: 25px;
       /* margin-right: 5px; */
-      width: 100px;
+      width: auto;
+      max-width: 200px;
       margin-right: 10px;
       border: 1px solid gray;
+
+      background-color: rgba(255, 255, 255, 0.2);
       /* backdrop-filter: blur(10px); */
-      /* background-color: black; */
       border-radius: 20px;
       text-align: center;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      text-align: start;
       align-items: center;
       user-select: all;
+      transition: 0.3s;
+      p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 `;

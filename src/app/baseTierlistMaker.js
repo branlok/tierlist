@@ -49,8 +49,8 @@ function baseTierlistMaker(id) {
     rowOrder: ["row-1", "row-2", "row-3", "row-4", "row-5", "row-6", "storage"],
     tierlist: {
       id,
-      title: "your tierlist",
-      description: "lorem ipsum",
+      title: "New Tierlist",
+      description: "",
       status: "draft",
       lastCreated: Date.now(),
     },

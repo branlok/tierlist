@@ -48,6 +48,7 @@ function RowTitle({ row }) {
   let handleSubmitTitle = async (e) => {
     e.preventDefault();
     dispatch(editRowInfo({ id: row.id, field: "name", newValue: title }));
+    await dispatch(saveTierlist());
     setEdit(false);
   };
 

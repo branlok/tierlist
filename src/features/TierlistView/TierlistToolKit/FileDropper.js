@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { addImage } from "../../imageHandler/imageSlice";
 import { addItem, updateItemsDB, updateTierlistStatus } from "../TierlistSlice";
 
-function FileDropper({setShowFileUpload}) {
+function FileDropper({ setShowFileUpload }) {
   const dispatch = useDispatch();
   const tierlistId = useSelector((state) => state.loadedTierlist.tierlist.id);
 
@@ -26,7 +26,7 @@ function FileDropper({setShowFileUpload}) {
       await dispatch(
         updateTierlistStatus({ status: "draft", date: Date.now(), tierlistId })
       );
-      setShowFileUpload(prevState => !prevState)
+      setShowFileUpload((prevState) => !prevState);
     },
     [tierlistId]
   );
@@ -37,13 +37,13 @@ function FileDropper({setShowFileUpload}) {
     noKeyboard: true,
   });
   return (
-    <StyledFileDropper {...getRootProps()}>
+    <StyledFileDropper
+      {...getRootProps()}
+      onDragExit={() => setShowFileUpload((prevState) => !prevState)}
+    >
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p>Drag 'n' drop some files here, or click to select files</p>
-      )}
+
+      {isDragActive ? null : <p>Drop the files here ...</p>}
 
       {/* <StyledButton type="button" onClick={open}>
         Open File Dialog
@@ -52,10 +52,10 @@ function FileDropper({setShowFileUpload}) {
   );
 }
 
-
 let StyledFileDropper = styled.div`
-  background-color: rgba(0,0,0,0.8);
-  height: 125px;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* height: 125px; */
+  height: calc(100% - 35px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -66,6 +66,7 @@ let StyledFileDropper = styled.div`
     text-align: center;
     font-weight: bold;
     padding: 15px;
+    user-select: none;
   }
 `;
 

@@ -3,17 +3,18 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Row from "./Row";
 
-
 /* RENDERS ROWS */
-function Tierlist() {
+function Tierlist({ toolState }) {
   let rows = useSelector((state) => state.loadedTierlist.rows);
   let rowOrder = useSelector((state) => state.loadedTierlist.rowOrder);
 
   return (
-    <StyledTL>
+    <StyledTL toolState={toolState}>
       {rowOrder?.map((item, idx) => {
         if (item !== "storage") {
-          return <Row key={item} index={idx} rowId={item} />;
+          return (
+            <Row key={item} index={idx} rowId={item} toolState={toolState} />
+          );
         }
       })}
     </StyledTL>
@@ -51,7 +52,7 @@ let StyledTL = styled.div`
     width: 100%;
     display: flex;
     :focus {
-        border: 2px solid white;
+      border: 2px solid white;
     }
   }
   .title {

@@ -1,11 +1,11 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { deleteItem, deleteItemFromDB, saveTierlist } from "../TierlistSlice";
 import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelete.svg";
-
-function Item({ itemId, index }) {
+import { ReactComponent as ReturnSVG } from "../../../Styles/svg/returnArrow.svg";
+function Item({ itemId, index, toolState }) {
   let item = useSelector((state) => state.loadedTierlist.items[itemId]);
   let dispatch = useDispatch();
 
@@ -22,16 +22,42 @@ function Item({ itemId, index }) {
     }
   };
 
+  let returnDnDStyle = (style, snapshot, option) => {
+    if (!snapshot.isDropAnimating) {
+      return style;
+    }
+
+    const { moveTo, curve, duration } = snapshot.dropAnimation;
+    if (snapshot.draggingOver == "storage") {
+      return {
+        ...style,
+        height: "125px",
+        width: toolState ? "auto" : "230px",
+        transition: `all ${curve} ${duration}s`,
+      };
+    } else {
+      return {
+        ...style,
+      };
+    }
+  };
+
   return (
     <Draggable draggableId={itemId} index={index}>
-      {(provided) => {
+      {(provided, snapshot) => {
+        const style = returnDnDStyle(provided.draggableProps.style, snapshot);
         return (
           <StyledItem
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
+            style={style}
+            // style={returnDnDStyle(provided.draggableProps.style, snapshot)}
           >
             <div className="item-info-wrapper" onDoubleClick={scrollToItem}>
+              {/* <div className="return-button">
+                <ReturnSVG className="return-svg" />
+              </div> */}
               <div className="delete-button" onClick={deleteSequence}>
                 <CrossDeleteSVG className="delete-cross" />
               </div>
@@ -48,12 +74,13 @@ function Item({ itemId, index }) {
 let StyledItem = styled.div`
   /* width: 100px; */
   height: 125px;
+  /* height: 50px */
   color: white;
   flex-shrink: 0;
   position: relative;
   /* padding: 10px; //experimental */
   /* border-radius: 10px; */
-  
+
   .item-info-wrapper {
     height: 125px;
     width: 100%;
@@ -89,9 +116,7 @@ let StyledItem = styled.div`
     padding: 10px;
     /* margin: 5px; */
     /* border-radius: 15px; */
-    border: 3px solid rgba(0,0,0,0.5);
-    //experimental above
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(0, 0, 0, 0.9);
     /* background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.6) 0%,
@@ -116,14 +141,40 @@ let StyledItem = styled.div`
       }
     }
   }
+  .return-button {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    .return-svg {
+      fill: rgba(255, 255, 255, 0.6);
+      background-color: transparent;
+      transform: rotate(-90deg);
+      /* width: 20px;
+      height: 20px; */
+      padding: 7px;
+      transition: 0.2s;
+      :hover {
+
+        fill: rgba(255, 255, 255, 1);
+      }
+    }
+  }
 `;
 
 let StyledImage = styled.img`
   height: 100%;
-  /* width: 100%; */
-  object-fit: cover;
+  width: 100%;
   display: block;
-  min-width: 170px;
+  object-fit: cover;
+  /* display: block; */
+
+  /* min-width: 170px; */
 
   /* border-radius: 10px; //experimental */
 `;

@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 import "./App.css";
-import Counter from "./features/Counter";
-import FileDropper from "./features/files/FileDropper";
 import TierlistView from "./features/TierlistView";
 
 import { createGlobalStyle } from "styled-components";

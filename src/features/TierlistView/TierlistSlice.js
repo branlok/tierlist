@@ -269,9 +269,12 @@ let tierlistSlice = createSlice({
         action.payload.newValue;
     },
     editRowInfo: (state, action) => {
-        state.rows[action.payload.id][action.payload.field] =
-          action.payload.newValue;
-      },
+      state.rows[action.payload.id][action.payload.field] =
+        action.payload.newValue;
+    },
+    editTierlistInfo: (state, action) => {
+      state.tierlist[action.payload.field] = action.payload.newValue;
+    },
   },
   extraReducers: {
     [saveTierlist.fulfilled]: (state, action) => {
@@ -315,6 +318,7 @@ export const {
   deleteItem,
   returnToStorage,
   editRowInfo,
+  editTierlistInfo,
 } = tierlistSlice.actions;
 
 export default tierlistSlice.reducer;
