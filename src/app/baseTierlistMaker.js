@@ -52,6 +52,9 @@ function baseTierlistMaker(id) {
       title: "New Tierlist",
       description: "",
       status: "draft",
+      size: "original",
+      theme: "default",
+      lastModified: Date.now(),
       lastCreated: Date.now(),
     },
   };

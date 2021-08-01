@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import Tierlist from "./Tierlist";
 import TierlistHeaders from "./TierlistHeaders";
 import {
@@ -16,14 +16,105 @@ import {
 } from "./TierlistSlice";
 import TierlistToolkit from "./TierlistToolKit";
 
+function retrieveTheme(theme) {
+  switch (theme) {
+    case "purple":
+      return {
+        main: {
+          primary: "hsl(259, 56%, 25%)",
+          primaryVarient: "hsl(257, 44%, 20%)",
+          accent: "hsl(245, 61%, 38%)",
+        },
+      };
+    case "red":
+      return {
+        main: {
+          primary: "hsl(0, 56%, 25%)",
+          primaryVarient: "hsl(0, 44%, 20%)",
+          accent: "hsl(0, 61%, 38%)",
+        },
+      };
+    case "pink":
+      return {
+        main: {
+          primary: "hsl(321, 56%, 25%)",
+          primaryVarient: "hsl(321, 44%, 20%)",
+          accent: "hsl(321, 61%, 38%)",
+        },
+      };
+    case "blue":
+      return {
+        main: {
+          primary: "hsl(236, 56%, 25%)",
+          primaryVarient: "hsl(236, 44%, 20%)",
+          accent: "hsl(236, 61%, 38%)",
+        },
+      };
+    case "brightBlue":
+      return {
+        main: {
+          primary: "hsl(236, 74%, 48%)",
+          primaryVarient: "hsl(236, 74%, 48%)",
+          accent: "hsl(236, 74%, 48%)",
+        },
+        bright: true,
+      };
+    case "yellow":
+      return {
+        main: {
+          primary: "hsl(57, 56%, 25%)",
+          primaryVarient: "hsl(57, 44%, 20%)",
+          accent: "hsl(57, 61%, 38%)",
+        },
+      };
+    case "brightYellow":
+      return {
+        main: {
+          primary: "hsl(63, 74%, 48%)",
+          primaryVarient: "hsl(63, 74%, 48%)",
+          accent: "hsl(63, 74%, 48%)",
+        },
+        bright: true,
+      };
+    case "brightRed":
+      return {
+        main: {
+          primary: "hsl(0, 74%, 48%)",
+          primaryVarient: "hsl(0, 74%, 24%)",
+          accent: "hsl(0, 87%, 48%)",
+        },
+        bright: true,
+      };
+    case "brightPink":
+      return {
+        main: {
+          primary: "hsl(328, 74%, 48%)",
+          primaryVarient: "hsl(328, 74%, 48%)",
+          accent: "hsl(328, 74%, 48%)",
+        },
+        bright: true,
+      };
+
+    default: {
+      return {
+        main: {
+          primary: "hsl(259, 56%, 25%)",
+          primaryVarient: "hsl(257, 44%, 20%)",
+          accent: "hsl(245, 61%, 38%)",
+        },
+      };
+    }
+  }
+}
+
 function TierlistView() {
-  
   // let rows = useSelector((state) => state.loadedTierlist.rows);
   let status = useSelector((state) => state.loadedTierlist.status);
+  let theme = useSelector((state) => state.loadedTierlist.tierlist?.theme);
   let dispatch = useDispatch();
   let { id } = useParams();
   let onDragEnd = useDragLogic();
-  let [toolState, setToolState] = useState(false); 
+  let [toolState, setToolState] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -32,22 +123,29 @@ function TierlistView() {
     }
   }, [id]);
 
+  let themes = useCallback(() => retrieveTheme(theme), [theme]);
+
   if (status == "loading") {
     return <div>loading</div>;
   } else {
     return (
-      <StyledWrapper data-test="tierlistwindow">
-        <StyledLeftColumn data-test="leftColumn" />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Wrapper>
-            <StyledPageWrapper>
-              <TierlistHeaders />
-              <Tierlist toolState={toolState} />
-            </StyledPageWrapper>
-            <TierlistToolkit toolState={toolState} setToolState={setToolState} />
-          </Wrapper>
-        </DragDropContext>
-      </StyledWrapper>
+      <ThemeProvider theme={themes}>
+        <StyledWrapper data-test="tierlistwindow">
+          <StyledLeftColumn data-test="leftColumn" />
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Wrapper>
+              <StyledPageWrapper>
+                <TierlistHeaders />
+                <Tierlist toolState={toolState} />
+              </StyledPageWrapper>
+              <TierlistToolkit
+                toolState={toolState}
+                setToolState={setToolState}
+              />
+            </Wrapper>
+          </DragDropContext>
+        </StyledWrapper>
+      </ThemeProvider>
     );
   }
 }
@@ -94,16 +192,20 @@ let StyledLeftColumn = styled.div`
   position: absolute;
   height: 100%;
   width: 150px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: ${(props) =>
+    props.theme.bright ? "rgba(255, 255, 255, 0.6); " : "rgba(0, 0, 0, 0.8);"};
+  transition: 0.3s;
   z-index: 1;
   mix-blend-mode: overlay;
   pointer-events: none;
 `;
 
 let StyledPageWrapper = styled.div`
-  background-color: #2d1365;
+  /* background-color: #2d1365; */
+  background-color: ${(props) => props.theme.main.primary}; //0°, 56%, 25%
   height: 100%;
   width: calc(100% - 250px);
+  /* transition: 0.3s; */
   /* width: 100%; */
   /* width: 100%; */
   overflow-y: scroll;

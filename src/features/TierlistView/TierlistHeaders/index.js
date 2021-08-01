@@ -20,7 +20,9 @@ function TierlistHeaders() {
     (state) =>
       state.loadedTierlist.rowOrder[state.loadedTierlist.rowOrder.length - 1]
   );
-  let title = useSelector((state) => state.loadedTierlist.tierlist.title);
+  let { title, description } = useSelector(
+    (state) => state.loadedTierlist.tierlist
+  );
 
   useEffect(() => {
     if (newRowId !== "storage") {
@@ -72,7 +74,7 @@ function TierlistHeaders() {
             {title}
           </h1>
         )}
-        <p>Description if it needs</p>
+        <h2 className="caption">{description}</h2>
       </StyledTLHeader>
     </StyledTLHeaderWrapper>
   );
@@ -131,6 +133,14 @@ let StyledTLHeader = styled.div`
   width: 100%;
   color: white;
   padding: 20px;
+  /*Pattern provided from https://www.magicpattern.design/tools/css-backgrounds */
+  opacity: 0.8;
+  background-image: radial-gradient(gray 0.5px, transparent 0.5px),
+    radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.3) 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  /* background-image: url("https://images.unsplash.com/photo-1504548840739-580b10ae7715?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3000&q=80");
+  background-size: cover; */
   .title-form {
     width: 100%;
     .title-input {
@@ -155,6 +165,13 @@ let StyledTLHeader = styled.div`
     font-size: 35px;
     line-height: 40px;
     margin-bottom: 5px;
+    cursor: pointer;
+    display: inline;
+  }
+  .caption {
+    font-size: 16px;
+    margin-top: 5px;
+    font-weight: normal;
   }
 `;
 

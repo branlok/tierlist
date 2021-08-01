@@ -66,7 +66,7 @@ let StyledExpandedWrapper = styled.div`
 let StyledWrapper = styled.div`
   width: calc(100% - 20px); //20px from margin
   height: calc(100% - 100px); //80px + 20px from margin
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin: 10px;
   padding: 10px;
@@ -77,8 +77,9 @@ let StyledWrapper = styled.div`
 let StyledSidebar = styled.div`
   height: 100%;
   width: ${(props) => props.width};
-  background-color: #331c64;
-  transition: 0.5s;
+  /* background-color: #331c64; */
+  background-color: ${(props) => props.theme.main.primaryVarient}; 
+  transition: 0.3s;
   flex-shrink: 0;
   color: white;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);

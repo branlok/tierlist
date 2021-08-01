@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+
 
 export const StyledHeader = styled.div`
   width: 100%;
@@ -11,9 +13,26 @@ export const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 10px;
+  border-bottom: 1px solid gray;
+  flex-shrink: 0;
+
   .title {
-      font-size: 14px;
-      margin: 0px;
+    font-size: 14px;
+    margin: 0px;
   }
 `;
+
+export const StyledOverlay = styled.div`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+`;
+
 

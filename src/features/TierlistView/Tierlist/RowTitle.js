@@ -95,6 +95,10 @@ let StyledRowTitle = styled.div`
   flex-shrink: 0;
   position: relative;
   padding: 10px;
+
+  //this gives a desaturated look
+  background-color: rgba(0,0,0,0.3);
+
   :hover > .row-tools {
     transform: translateX(0px);
   }

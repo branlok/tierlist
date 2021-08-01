@@ -7,6 +7,7 @@ import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelet
 import { ReactComponent as ReturnSVG } from "../../../Styles/svg/returnArrow.svg";
 function Item({ itemId, index, toolState }) {
   let item = useSelector((state) => state.loadedTierlist.items[itemId]);
+  let size = useSelector((state) => state.loadedTierlist.tierlist.size);
   let dispatch = useDispatch();
 
   let deleteSequence = async () => {
@@ -22,7 +23,7 @@ function Item({ itemId, index, toolState }) {
     }
   };
 
-  let returnDnDStyle = (style, snapshot, option) => {
+  let returnDnDStyle = (style, snapshot, size) => {
     if (!snapshot.isDropAnimating) {
       return style;
     }
@@ -53,6 +54,7 @@ function Item({ itemId, index, toolState }) {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             style={style}
+            size={size}
             // style={returnDnDStyle(provided.draggableProps.style, snapshot)}
           >
             <div className="item-info-wrapper" onDoubleClick={scrollToItem}>
@@ -76,6 +78,7 @@ let StyledItem = styled.div`
   /* width: 100px; */
   height: 125px;
   /* height: 50px */
+  width: ${props => props.size == "square" ? "125px" : "auto"};
   color: white;
   flex-shrink: 0;
   position: relative;
@@ -161,7 +164,6 @@ let StyledItem = styled.div`
       padding: 7px;
       transition: 0.2s;
       :hover {
-
         fill: rgba(255, 255, 255, 1);
       }
     }

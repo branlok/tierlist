@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import db from "../../../../db";
 import { editItemTitle, updateItemDetails } from "../../TierlistSlice";
 import { ReactComponent as EditPenSVG } from "../../../../Styles/svg/EditPen.svg";
@@ -55,7 +55,7 @@ function Item({ item }) {
 
   if (!item) return null;
   return (
-    <StyledItem id={`explorer-${item.id}`}>
+    <StyledItem id={`explorer-${item.id}`} className="modal">
       <img className="itemImage" src={item.imageURL}></img>
       <StyledItemContent>
         <div className="top">
@@ -99,6 +99,15 @@ function Item({ item }) {
   );
 }
 
+let fadeIn = keyframes`
+from {
+  opacity: 0;
+}
+to {
+  opacity: 1;
+}
+`;
+
 let StyledItem = styled.div`
   width: calc(100% - 10px);
   height: 125px;
@@ -106,8 +115,10 @@ let StyledItem = styled.div`
   position: relative;
   border-radius: 10px;
   overflow: hidden;
+  border: 1px solid #3b3b3b;
   /* padding: 10px; */
   margin: 5px;
+  animation: ${fadeIn} 1s ease forwards;
   .itemImage {
     /* height: calc(100% - 20px); */
     width: 80px;

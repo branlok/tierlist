@@ -23,7 +23,7 @@ function Item({ itemId, index }) {
         ...style,
         height: "125px",
         width: "auto",
-        maxWidth: "250px",
+        maxWidth: "500px",
         transition: `all ${curve} ${duration}s`,
       };
     } else {

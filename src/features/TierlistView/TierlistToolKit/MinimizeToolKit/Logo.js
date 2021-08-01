@@ -19,6 +19,7 @@ let StyledLogo = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #30269d;
+  background-color: ${(props) => props.theme.main.accent};
   .title {
     font-weight: bold;
   }
@@ -29,7 +30,7 @@ let StyledLogo = styled.div`
     fill: white;
   }
   p {
-      font-size: 12px;
+    font-size: 12px;
   }
 `;
 

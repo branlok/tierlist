@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "ajv": "^8.6.2",
     "dexie": "^3.0.3",
+    "formik": "^2.2.9",
     "jest-enzyme": "^7.1.2",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
@@ -18,7 +19,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.0",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",

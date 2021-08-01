@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import db from "../../../db";
+import DropdownSort from "./Explorer/DropdownSort";
 
 import Item from "./Explorer/Item";
+import Search from "./Search";
 import { StyledHeader } from "./styles";
 
 /**
@@ -18,8 +20,9 @@ import { StyledHeader } from "./styles";
 
 function Explorer() {
   let items = useSelector((state) => state.loadedTierlist.items);
-
   let [orderedItems, setOrderedItems] = useState([]);
+  let [queryResult, setQueryResult] = useState(null);
+  let [sort, setSort] = useState("[tierlistId+resides]");
   let { id } = useParams();
 
   useEffect(() => {
@@ -28,7 +31,7 @@ function Explorer() {
     if (Object.keys(items).length >= 0) {
       (async () => {
         const products = await db.items
-          .where("[tierlistId+resides]")
+          .where(sort)
           .between([id, "0"], [id, "\uffff"])
           .toArray((re) => {
             if (isMounted) {
@@ -40,28 +43,42 @@ function Explorer() {
         isMounted = false;
       };
     }
-  }, [items]);
+  }, [items, sort]);
   return (
-    <StyledWrapper className="explorer">
-      <StyledHeader>
-        <h1 className="title">Explorer</h1>
-        <StyledTools />
-      </StyledHeader>
+    <>
+      <Search setQueryResult={setQueryResult} />
+      <StyledWrapper className="explorer">
+        <StyledHeader >
+          <h1 className="title">Explorer</h1>
+          <DropdownSort setSort={setSort}/>
+        </StyledHeader>
 
-      <StyledExplorer>
-        {orderedItems.map((item, idx) => {
-          return <Item key={item.id} item={items[item.id]} />;
-        })}
-      </StyledExplorer>
-    </StyledWrapper>
+        <StyledExplorer>
+          {queryResult
+            ? queryResult.map((item, idx) => {
+                return <Item key={item.id} item={items[item.id]} />;
+              })
+            : orderedItems.map((item, idx) => {
+                return <Item key={item.id} item={items[item.id]} />;
+              })}
+        </StyledExplorer>
+      </StyledWrapper>
+    </>
   );
 }
 
-let StyledTools = styled.div`
-  height: 20px;
+let StyledTools = styled.select`
   width: 100px;
-  background-color: black;
+  padding-left: 5px;
+  font-size: 13px;
+  border: 1px solid #666666;
+  background-color: #434343;
+  color: white;
   border-radius: 5px;
+  height: 25px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 `;
 
 let StyledWrapper = styled.section`

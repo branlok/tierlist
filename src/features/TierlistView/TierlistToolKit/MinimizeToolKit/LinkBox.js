@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-function LinkBox() {
+function LinkBox({setModalOpen}) {
+  
   return (
     <StyledLinkBox>
-      <div className="module-link">Tierlist Info</div>
-      <div className="module-link">Explorer</div>
+      <div className="module-link" onClick={() => setModalOpen("info")}>Tierlist Info</div>
+      <div className="module-link" onClick={() => setModalOpen("explorer")} >Explorer</div>
     </StyledLinkBox>
   );
 }
@@ -28,6 +29,7 @@ let StyledLinkBox = styled.div`
     justify-content: center;
     align-items: center;
     transition: 0.2s;
+    cursor: pointer;
     :hover {
       background-color: rgba(0, 0, 0, 0.7);
     }

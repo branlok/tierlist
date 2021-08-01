@@ -12,7 +12,6 @@ function Header() {
 let StyledHeader = styled.div`
     width: 100%;
     height: 80px;
-    border: 1px solid white;
     flex-shrink: 0;
     text-align: center;
     display: flex;

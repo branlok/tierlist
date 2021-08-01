@@ -273,7 +273,17 @@ let tierlistSlice = createSlice({
         action.payload.newValue;
     },
     editTierlistInfo: (state, action) => {
-      state.tierlist[action.payload.field] = action.payload.newValue;
+      let field = action.payload.field;
+      console.log(action.payload.newValues);
+      if (action.payload.multiple) {
+        console.log(action.payload.newValues);
+        for (let [key, value] of Object.entries(action.payload.newValues)) {
+          state.tierlist[key] = value;
+        }
+        state.tierlist.lastModified = Date.now();
+      } else {
+        state.tierlist[field] = action.payload.newValue;
+      }
     },
   },
   extraReducers: {

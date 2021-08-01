@@ -86,6 +86,16 @@ let StyledStorage = styled.div`
   flex-direction: ${(props) => (props.vertical ? "column" : "row")};
   /* background-color: #261b3d; */
   background-color: rgba(0, 0, 0, 0.5);
+
+
+  /*Pattern provided from https://www.magicpattern.design/tools/css-backgrounds */
+  /* opacity: 0.8;
+  background-image: radial-gradient(gray 0.5px, transparent 0.5px),
+    radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.5) 0.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px; */
+
+
   border-radius: 0px 0px 10px 10px;
   overflow-x: ${(props) => (props.vertical ? "hidden" : "scroll")};
   overflow-y: ${(props) => (props.vertical ? "scroll" : "hidden")};
