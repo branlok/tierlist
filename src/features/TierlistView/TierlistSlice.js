@@ -7,7 +7,7 @@ export const loadTierlist = createAsyncThunk(
   "loadedTierlist/load",
   async (tierlistId) => {
     if (!tierlistId) {
-      //if there is no tierlist avaliable, return basic tierlist
+      //if provided no tierlistId, return basic tierlist
       return { updateTo: baseTierlistMaker(tierlistId) };
     }
 
@@ -19,6 +19,7 @@ export const loadTierlist = createAsyncThunk(
       .where("id")
       .equals(tierlistId)
       .each((item) => {
+        //this only returns one item
         tierlistData = item.tierlist;
       });
 

@@ -49,7 +49,7 @@ function Item({ item }) {
     console.log(showTitleEdit);
     if (showTitleEdit) {
       console.log("read");
-      titleEditRef.current.focus();
+      // titleEditRef.current.focus();
     }
   }, [showTitleEdit]);
 

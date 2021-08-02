@@ -23,8 +23,14 @@ export const fetchimages = createAsyncThunk("posts/getImages", async () => {
 });
 
 export const addImage = createAsyncThunk("posts/pushImages", async (image) => {
-    console.log(image, "what")
-  const response = await db.images.put({ picture: image.source, id: image.id, tierlistId: image.tierlistId });
+  console.log(image, "what");
+  const response = await db.images.put({
+    picture: image.source,
+    id: image.id,
+    tierlistId: image.tierlistId,
+    dateAdded: Date.now(),
+  });
+
   return image.imageURL;
 });
 
