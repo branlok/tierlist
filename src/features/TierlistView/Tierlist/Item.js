@@ -11,8 +11,7 @@ function Item({ itemId, index, toolState }) {
   let dispatch = useDispatch();
 
   let deleteSequence = async () => {
-    dispatch(deleteItem(itemId));
-    await dispatch(deleteItemFromDB(itemId));
+    await dispatch(deleteItemFromDB(itemId)); //doesn't delete source unless its the last item.
     dispatch(saveTierlist());
   };
 
@@ -78,13 +77,12 @@ let StyledItem = styled.div`
   /* width: 100px; */
   height: 125px;
   /* height: 50px */
-  width: ${props => props.size == "square" ? "125px" : "auto"};
+  width: ${(props) => (props.size == "square" ? "125px" : "auto")};
   color: white;
   flex-shrink: 0;
   position: relative;
   /* padding: 10px; //experimental */
   /* border-radius: 10px; */
-
   .item-info-wrapper {
     height: 125px;
     width: 100%;

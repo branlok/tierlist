@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import db from "../../../../db";
 import { ReactComponent as AddSVG } from "../../../../Styles/svg/Add2.svg";
-import { ReactComponent as CheckedSVG } from "../../../../Styles/svg/check.svg";
+import { ReactComponent as GargabeSVG } from "../../../../Styles/svg/Gargabe.svg";
 import {
   deleteItem,
   deleteItemFromDB,
@@ -15,6 +15,7 @@ import {
 function LocalStorageItem({ fileName, imageURL, itemId, itemKeys, dateAdded }) {
   let [itemDetails, setItemDetails] = useState(null);
   let [existsCopy, setExistCopy] = useState(itemKeys.includes(itemId));
+  let [confirmDelete, setConfirmDelete] = useState(false);
   let [deleted, setDeleted] = useState(false);
   let dispatch = useDispatch();
 
@@ -63,26 +64,44 @@ function LocalStorageItem({ fileName, imageURL, itemId, itemKeys, dateAdded }) {
   if (itemDetails) {
     return (
       //   <StyledRow>
-      <StyledRow>
+      <StyledRow confirmDelete={confirmDelete}>
+        {/* <tr className="deleteOverlay">
+          <td></td>
+        </tr> */}
         <td className="picture-column">
           <img className="image" src={imageURL}></img>
         </td>
-        <td className="filename">
+        <td className="title tdTitle">
           {fileName.length > 0 ? fileName : "Untitled"}
         </td>
-        <td className="instances">{}</td>
-        <td className="dateAdded">{date.toLocaleTimeString()}</td>
+        {/* <td className="instances">{}</td> */}
+        <td className="date tdDate">{date.toLocaleTimeString()}</td>
         <td className="action">
           <div className="action-wrapper">
             <StyledActionButton
               delete={existsCopy}
+              confirmDelete={confirmDelete}
               onClick={() => handleAddToTierlist(itemDetails, existsCopy)}
             >
               <AddSVG className="svg" />
             </StyledActionButton>
-            <button onClick={() => handleDeleteSource(itemId)}>
-              Delte Forever
-            </button>
+
+            <StyledActionButton
+              bg={confirmDelete ? "#131313" : "#9c2525"}
+              width={confirmDelete && "fit"}
+              onClick={() => setConfirmDelete((prevState) => !prevState)}
+            >
+              {!confirmDelete ? <GargabeSVG className="svg" /> : "Cancel"}
+            </StyledActionButton>
+            {confirmDelete && (
+              <StyledActionButton
+                bg={"#9c2525"}
+                width="fit"
+                onClick={() => handleDeleteSource(itemId)}
+              >
+                Confirm
+              </StyledActionButton>
+            )}
           </div>
         </td>
       </StyledRow>
@@ -99,10 +118,24 @@ let StyledRow = styled.tr`
   padding: 5px;
   transition: 0.2s;
   color: gray;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  position: relative;
+  background: linear-gradient(to right, transparent 50%, #9c2525 50%);
+  /* background: linear-gradient(to right, red 50%, blue 50%); */
+  background-size: 200% 100%;
+  background-position: ${(props) =>
+    props.confirmDelete ? "right bottom" : "left bottom"};
+  /* margin-left: 10px; */
+  transition: all 0.3s ease;
+
   :hover {
     color: white;
+  }
+  .deleteOverlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
   }
   .picture-column {
     width: 100px;
@@ -116,7 +149,14 @@ let StyledRow = styled.tr`
     background: #181818;
   } */
   :hover {
-    background-color: ${(props) => props.theme.main.accent};
+    background-color: ${(props) =>
+      props.confirmDelete ? "" : props.theme.main.accent};
+  }
+  .tdTitle {
+    padding-left: 10px;
+  }
+  .tdDate {
+    padding-left: 10px;
   }
   .image {
     height: 50px;
@@ -137,53 +177,43 @@ let StyledRow = styled.tr`
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 200px;
+    width: 250px;
     span {
       margin: 0px 10px;
     }
   }
-  .filename {
-    /* white-space: nowrap; */
-    /* overflow: hidden; */
-    /* text-overflow: ellipsis; */
-
-    width: calc(100% - 550px);
-  }
-  .dateAdded {
-    width: 100px;
-  }
 `;
 
-let StyledActionButton = styled.button`
-  width: 40px;
+export let StyledActionButton = styled.button`
+  width: ${(props) => (props.width == "fit" ? "auto" : "40px")};
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  border: 1px solid ${(props) => (props.delete ? "transparent" : "#212121")};
+  border: 1px solid ${(props) => (props.delete ? "transparent" : "transparent")};
   margin-right: 10px;
-  background-color: #131313;
+  background-color: ${(props) => (props.bg ? props.bg : "#131313")};
   cursor: pointer;
   transition: 0.2s;
+  opacity: ${(props) => (props.confirmDelete ? "0.3" : "1")};
+  pointer-events: ${(props) => (props.confirmDelete ? "none" : "auto")};
+  color: white;
+  font-weight: bold;
+  position: relative;
   :hover {
-    transform: scale(1.1);
-    background-color: #212121;
+    transform: scale(1.05);
+    border: 1px solid #e3e3e3;
   }
-
   .svg {
-    /* fill: white; */
     transition: 0.3s;
     height: 13px;
     width: 13px;
-    padding: 8px;
+    padding: 2px;
     margin: 0px;
     fill: ${(props) => (props.delete ? "#8f1313" : "white")};
-    transform: ${(props) => (props.delete ? "rotate(-45deg)" : "rotate(0deg)")};
-  }
-  .delete {
-    fill: #8f1313;
-    transform: rotate(45deg);
+    transform: ${(props) =>
+      props.delete ? "rotate(-135deg)" : "rotate(0deg)"};
   }
 `;
 export default LocalStorageItem;
