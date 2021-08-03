@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -13,7 +13,7 @@ import { useState } from "react";
 function TierlistHeaders() {
   let [editMode, setEditMode] = useState(false);
   let [newTitle, setNewTitle] = useState("");
-  console.log(newTitle);
+  let inputRef = useRef();
 
   let dispatch = useDispatch();
   let newRowId = useSelector(
@@ -30,6 +30,12 @@ function TierlistHeaders() {
       scrollToItem("row", newRowId);
     }
   }, [newRowId]);
+
+  useEffect(() => {
+    if (editMode) {
+      inputRef.current.focus();
+    }
+  }, [editMode]);
 
   let scrollToItem = (prefix, id) => {
     let item = document.getElementById(`${prefix}-${id}`);
@@ -62,6 +68,7 @@ function TierlistHeaders() {
         {editMode ? (
           <form className="title-form" onSubmit={(e) => handleSubmitTitle(e)}>
             <input
+              ref={inputRef}
               className="title-input"
               placeholder="Enter New Title"
               type="text"
@@ -152,6 +159,7 @@ let StyledTLHeader = styled.div`
       line-height: 40px;
       padding: 0px;
       margin-bottom: 5px;
+      width: 80%;
       ::placeholder {
         color: #c4c4c4;
       }

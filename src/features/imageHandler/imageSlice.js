@@ -12,6 +12,7 @@ export const fetchimages = createAsyncThunk("posts/getImages", async () => {
         return URL.createObjectURL(item.picture);
       });
     });
+    
   console.log(
     await db.images.each((item) => {
       console.log(item);
@@ -29,6 +30,7 @@ export const addImage = createAsyncThunk("posts/pushImages", async (image) => {
     id: image.id,
     tierlistId: image.tierlistId,
     dateAdded: Date.now(),
+    fileName: image.source.name
   });
 
   return image.imageURL;

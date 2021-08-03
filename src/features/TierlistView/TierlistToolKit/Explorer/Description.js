@@ -33,9 +33,9 @@ function Description({ itemId, itemDescription }) {
         field: "description",
       })
     );
-    dispatch(
-      editItemTitle({ id: itemId, newValue: description, field: "description" })
-    );
+    // dispatch(
+    //   editItemTitle({ id: itemId, newValue: description, field: "description" })
+    // );
 
     //run async sve to indexeddb
     setShowDescriptionEdit(false);

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import Search from "../Search";
 import { StyledOverlay } from "../styles";
@@ -7,7 +8,7 @@ import LocalStorage from "./LocalStorage";
 
 function ExplorerModal({ modalOpen, setModalOpen }) {
   let [tab, setTab] = useState("currentTierlist");
-
+  let items = useSelector((state) => state.loadedTierlist.items);
   return (
     <StyledOverlay
       onClick={(e) => {
@@ -61,6 +62,7 @@ const StyledBody = styled.div`
   overflow: hidden;
   /* flex-shrink: ${(props) => (props.active ? 1 : 0)}; */
   transition: 0.4s;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   .leftColumn {
     display: flex;
     justify-content: center;
@@ -76,7 +78,6 @@ const StyledBody = styled.div`
     cursor: pointer;
     color: ${(props) => (props.active ? "white" : "#404040")};
     :hover {
-      background-color: rgba(255, 255, 255, 0.2);
       color: white;
     }
   }
@@ -92,20 +93,21 @@ const StyledHeader = styled.div`
   width: 100%;
   height: 35px;
   background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 3px 3px 0px 0px;
   color: white;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-right: 10px;
-  /* border-bottom: 1px solid ${(props) => props.theme.main.accent}; */
+  font-size: 14px;
   flex-shrink: 0;
   z-index: 1;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
   .spacing {
     width: 150px;
     height: 100%;
+    /* border-right: 4px solid ${(props) => props.theme.main.accent}; */
     /* border-right: 4px solid ${(props) => props.theme.main.accent}; */
   }
 `;
@@ -124,14 +126,14 @@ to {
 const StyledModule = styled.div`
   height: 80%;
   width: 80%;
-  border: 1px solid ${(props) => props.theme.main.accent};
+  /* border: 4px solid ${(props) => props.theme.main.accent}; */
   background-color: #131313;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   animation: ${expandIn} 0.3s ease forwards;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 3px;
   position: relative;
   .bodyWrapper {
     display: flex;

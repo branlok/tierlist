@@ -127,15 +127,6 @@ let StyledTL = styled.div`
     font-weight: bold;
     flex-shrink: 0;
   }
-  /* .row1 {
-    background-color: #c1b7db;
-  }
-  .row2 {
-    background-color: #8c7cbe;
-  }
-  .row3 {
-    background-color: #7a67b2;
-  } */
 `;
 
 export default Tierlist;

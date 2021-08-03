@@ -5,7 +5,7 @@ function LinkBox({setModalOpen}) {
   
   return (
     <StyledLinkBox>
-      <div className="module-link" onClick={() => setModalOpen("info")}>Tierlist Info</div>
+      <div className="module-link" onClick={() => setModalOpen("info")}>Tierlist Settings</div>
       <div className="module-link" onClick={() => setModalOpen("explorer")} >Explorer</div>
     </StyledLinkBox>
   );

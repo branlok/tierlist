@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import db from "../../../../db";
 import { ReactComponent as AddSVG } from "../../../../Styles/svg/Add2.svg";
-import { ReactComponent as DeleteSVG } from "../../../../Styles/svg/CrossDelete.svg";
+import { ReactComponent as CheckedSVG } from "../../../../Styles/svg/check.svg";
+import {
+  deleteItem,
+  deleteItemFromDB,
+  deleteSingleImageItem,
+  saveTierlist,
+  syncNewItems,
+} from "../../TierlistSlice";
 
-function LocalStorageItem({ imageURL, itemId, itemKeys, dateAdded }) {
+function LocalStorageItem({ fileName, imageURL, itemId, itemKeys, dateAdded }) {
   let [itemDetails, setItemDetails] = useState(null);
+  let [existsCopy, setExistCopy] = useState(itemKeys.includes(itemId));
+  let [deleted, setDeleted] = useState(false);
+  let dispatch = useDispatch();
 
   useEffect(() => {
     let isMounted = true;
@@ -13,7 +24,6 @@ function LocalStorageItem({ imageURL, itemId, itemKeys, dateAdded }) {
       (async () => {
         await db.items.where({ id: itemId }).toArray((re) => {
           if (isMounted) {
-            console.log(re);
             setItemDetails(re[0]);
           }
         });
@@ -23,32 +33,57 @@ function LocalStorageItem({ imageURL, itemId, itemKeys, dateAdded }) {
       };
     }
   }, [itemId]);
+
   let date = new Date(dateAdded);
+
+  let handleAddToTierlist = async (itemDetails, remove) => {
+    if (remove) {
+      await dispatch(deleteItemFromDB(itemId));
+      await dispatch(saveTierlist());
+      setExistCopy((prevState) => !prevState);
+    } else {
+      //clone instance
+      itemDetails.imageURL = imageURL;
+      await dispatch(syncNewItems(itemDetails));
+      await dispatch(saveTierlist());
+      setExistCopy((prevState) => !prevState);
+    }
+  };
+
+  let handleDeleteSource = async (itemDetails) => {
+    await dispatch(deleteItemFromDB(itemDetails)); //do a shallow delete
+    await dispatch(deleteSingleImageItem(itemDetails)); //do a full delete and tag.
+    await dispatch(saveTierlist()); //doesn't hurt to save again.
+
+    //we will manually change our own ui because this is async is not tied to redux if item is deleted away from tierlist.
+    setDeleted(true);
+  };
+
+  if (deleted) return null;
   if (itemDetails) {
     return (
       //   <StyledRow>
-
-      <StyledRow exists={itemKeys.includes(itemId)}>
+      <StyledRow>
         <td className="picture-column">
-          <img className="picture" src={imageURL}></img>
+          <img className="image" src={imageURL}></img>
         </td>
-        <td>{itemDetails.name.length > 0 ? itemDetails.name : "Untitled"}</td>
-        <td>{date.toLocaleDateString()}</td>
-        <td>
-          {itemKeys.includes(itemId) ? (
-            "added"
-          ) : (
-            <div className="action-wrapper">
-              <button>
-                <AddSVG className="svg" />
-              </button>
-              <button>
-                <AddSVG className="svg delete" />
-              </button>
-
-              {/* <DeleteSVG className="svg"/> */}
-            </div>
-          )}
+        <td className="filename">
+          {fileName.length > 0 ? fileName : "Untitled"}
+        </td>
+        <td className="instances">{}</td>
+        <td className="dateAdded">{date.toLocaleTimeString()}</td>
+        <td className="action">
+          <div className="action-wrapper">
+            <StyledActionButton
+              delete={existsCopy}
+              onClick={() => handleAddToTierlist(itemDetails, existsCopy)}
+            >
+              <AddSVG className="svg" />
+            </StyledActionButton>
+            <button onClick={() => handleDeleteSource(itemId)}>
+              Delte Forever
+            </button>
+          </div>
         </td>
       </StyledRow>
 
@@ -83,7 +118,7 @@ let StyledRow = styled.tr`
   :hover {
     background-color: ${(props) => props.theme.main.accent};
   }
-  .picture {
+  .image {
     height: 50px;
     width: 50px;
     object-fit: cover;
@@ -93,44 +128,62 @@ let StyledRow = styled.tr`
     text-align: start;
     vertical-align: middle;
     font-weight: bold;
+    font-size: 14px;
+    height: 70px;
     /* border-right: 1px solid ${(props) => props.theme.main.accent}; */
-    padding-left: 10px;
-    .action-wrapper {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      width: 100%;
+    /* padding-left: 10px; */
+  }
+  .action-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 200px;
+    span {
+      margin: 0px 10px;
+    }
+  }
+  .filename {
+    /* white-space: nowrap; */
+    /* overflow: hidden; */
+    /* text-overflow: ellipsis; */
 
-    }
-    button {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 5px;
-      border: 1px solid #212121;
-      margin-right: 10px;
-      background-color: #131313;
-      cursor: pointer;
-      transition: 0.2s;
-      :hover {
-        transform: scale(1.1);
-        background-color: #212121;
-      }
-    }
-    .svg {
-      fill: white;
-      height: 10px;
-      width: 10px;
-      padding: 10px;
-      margin: 0px;
-    }
-    .delete {
-      fill: #8f1313;
-      transform: rotate(45deg);
-    }
+    width: calc(100% - 550px);
+  }
+  .dateAdded {
+    width: 100px;
   }
 `;
 
+let StyledActionButton = styled.button`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid ${(props) => (props.delete ? "transparent" : "#212121")};
+  margin-right: 10px;
+  background-color: #131313;
+  cursor: pointer;
+  transition: 0.2s;
+  :hover {
+    transform: scale(1.1);
+    background-color: #212121;
+  }
+
+  .svg {
+    /* fill: white; */
+    transition: 0.3s;
+    height: 13px;
+    width: 13px;
+    padding: 8px;
+    margin: 0px;
+    fill: ${(props) => (props.delete ? "#8f1313" : "white")};
+    transform: ${(props) => (props.delete ? "rotate(-45deg)" : "rotate(0deg)")};
+  }
+  .delete {
+    fill: #8f1313;
+    transform: rotate(45deg);
+  }
+`;
 export default LocalStorageItem;

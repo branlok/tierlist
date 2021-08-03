@@ -138,7 +138,7 @@ export const StyledHeader = styled.div`
   width: 100%;
   height: 35px;
   background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 3px 3px 0px 0px;
   color: white;
   font-weight: bold;
   display: flex;
@@ -148,6 +148,7 @@ export const StyledHeader = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.main.accent}; //#30269d;
   flex-shrink: 0;
   z-index: 1;
+  font-size: 14px;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   .spacing {
     width: 150px;
@@ -187,7 +188,7 @@ export const StyledModule = styled.form`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 3px;
   position: relative;
 `;
 

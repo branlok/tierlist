@@ -18,27 +18,29 @@ function Item({ item }) {
   let dispatch = useDispatch();
   let [title, setTitle] = useState("");
   let [showTitleEdit, setShowTitleEdit] = useState(
-    item?.name.length == 0 ? true : false
+    item?.name?.length == 0 ? true : false
   );
   let titleEditRef = useRef();
 
   useEffect(() => {
-    (async () => {
-      let x = await db.items
-        .where("id")
-        .equals(item.id)
-        .each((item) => console.log(item, "werds"));
-    })();
-  }, []);
+    if (item) {
+      (async () => {
+        let x = await db.items
+          .where("id")
+          .equals(item.id)
+          .each((item) => console.log(item, "weryoods"));
+      })();
+    }
+  }, [item]);
 
   const handleSubmit = async (e) => {
     //run dispatch to edit redux
-    console.log(item.id);
+    // console.log(item.id);
     e.preventDefault();
     await dispatch(
       updateItemDetails({ itemId: item.id, content: title, field: "name" })
     );
-    dispatch(editItemTitle({ id: item.id, newValue: title, field: "name" }));
+    // dispatch(editItemTitle({ id: item.id, newValue: title, field: "name" }));
     //run async sve to indexeddb
     setShowTitleEdit(false);
 
@@ -49,7 +51,7 @@ function Item({ item }) {
     console.log(showTitleEdit);
     if (showTitleEdit) {
       console.log("read");
-      // titleEditRef.current.focus();
+      titleEditRef.current.focus();
     }
   }, [showTitleEdit]);
 
@@ -116,6 +118,7 @@ let StyledItem = styled.div`
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid #3b3b3b;
+  /* min-width: 200px; */
   /* padding: 10px; */
   margin: 5px;
   animation: ${fadeIn} 1s ease forwards;

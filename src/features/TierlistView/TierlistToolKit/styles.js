@@ -28,9 +28,10 @@ export const StyledOverlay = styled.div`
   left: 0px;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   z-index: 10;
+
   justify-content: center;
   align-items: center;
 `;

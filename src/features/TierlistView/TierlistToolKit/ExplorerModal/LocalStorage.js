@@ -14,6 +14,8 @@ function LocalStorage() {
   let [orderedItems, setOrderedItems] = useState([]);
   let [queryResult, setQueryResult] = useState(null);
   let [sort, setSort] = useState("[tierlistId+resides]");
+  let [columnSort, setColumnSort] = useState("dateAdded");
+  let [reverseColumn, setReverseColumn] = useState(false);
   let { id } = useParams();
 
   useEffect(() => {
@@ -21,17 +23,28 @@ function LocalStorage() {
     let isMounted = true;
     if (Object.keys(items).length >= 0) {
       (async () => {
-        const products = await db.images.orderBy("dateAdded").toArray((re) => {
-          if (isMounted) {
-            setOrderedItems(re);
-          }
-        });
+        if (reverseColumn) {
+          await db.images.orderBy(columnSort).toArray((re) => {
+            if (isMounted) {
+              setOrderedItems(re);
+            }
+          });
+        } else {
+          await db.images
+            .orderBy(columnSort)
+            .reverse()
+            .toArray((re) => {
+              if (isMounted) {
+                setOrderedItems(re);
+              }
+            });
+        }
       })();
       return () => {
         isMounted = false;
       };
     }
-  }, [items, sort]);
+  }, [items, sort, columnSort, reverseColumn]);
 
   return (
     <>
@@ -43,10 +56,16 @@ function LocalStorage() {
         <table>
           <thead>
             <tr>
-              <th className="picture-column">Image</th>
-              <th>Title</th>
-              <th>Date Added</th>
-              <th>Action</th>
+              <th className="picture">Image</th>
+              <th className="title">Title</th>
+              <th className="instances">Instances</th>
+              <th
+                className="date"
+                onClick={() => setReverseColumn((prevState) => !prevState)}
+              >
+                Date Added
+              </th>
+              <th className="action">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -60,6 +79,7 @@ function LocalStorage() {
                   itemId={item.id}
                   itemKeys={Object.keys(items)}
                   dateAdded={item.dateAdded}
+                  fileName={item.fileName}
                 />
               );
             })}
@@ -75,7 +95,7 @@ let StyledSearchWrapper = styled.div`
   width: 100%;
   padding: 20px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid ${(props) => props.theme.main.accent};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -89,8 +109,8 @@ let StyledExplorer = styled.div`
   display: flex;
   flex-direction: column;
   table {
-
     overflow: hidden;
+    table-layout: fixed;
     thead {
       background-color: #131313;
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), 0 5px 10px rgba(0, 0, 0, 0.22);
@@ -103,20 +123,37 @@ let StyledExplorer = styled.div`
         font-weight: bold;
         padding-left: 10px;
         color: #e3e3e3;
+        font-size: 13px;
+        /* width: 100%; */
       }
     }
-    .picture-column {
-      text-align: center;
-      vertical-align: middle;
-      height: 50px;
-      padding: 10px;
-    }
+  }
+  .instances {
+      width: 100px;
+  }
+  .picture {
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+    width: 100px;
+    padding: 5px;
+    /* padding: 10px; */
+  }
+  .title {
+    width: calc(100% - 550px);
+  }
+  .date {
+    width: 150px;
+  }
+  .action {
+    width: 200px;
   }
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
     color: transparent;
   }
+
   scrollbar-width: none;
 `;
 

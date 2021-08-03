@@ -16,25 +16,30 @@ function CurrentTierlist() {
   let { id } = useParams();
 
   useEffect(() => {
-    //When item updates, update arrangement.
+    console.log("run 1");
     let isMounted = true;
     if (Object.keys(items).length >= 0) {
       (async () => {
+        console.log("run 3");
         const products = await db.items
           .where(sort)
           .between([id, "0"], [id, "\uffff"])
           .toArray((re) => {
             if (isMounted) {
+              console.log("run 4", re);
               setOrderedItems(re);
             }
           });
       })();
+
       return () => {
         isMounted = false;
       };
+    } else {
+      console.log("nothing");
     }
   }, [items, sort]);
-
+  console.log(items, orderedItems);
   return (
     <>
       <StyledSearchWrapper className="searchWrapper">
@@ -59,7 +64,7 @@ let StyledSearchWrapper = styled.div`
   width: 100%;
   padding: 20px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid ${(props) => props.theme.main.accent};
   /* padding-left: 15px; */
   display: flex;
   align-items: center;
@@ -69,18 +74,33 @@ let StyledSearchWrapper = styled.div`
 let StyledExplorer = styled.div`
   height: calc(100% - 80px);
   width: 100%;
-  border-radius: 0px 0px 10px 10px;
   padding: 10px;
-  /* background-color: rgba(0, 0, 0, 0.8); */
   overflow-y: scroll;
-  user-select: none;
   scroll-behavior: smooth;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  align-items: center;
   /* justify-content: center; */
   .modal {
-    width: calc(32%);
+    flex-basis: auto; 
+    flex-grow: 1;
+    @media only screen and (min-width: 0px) {
+      max-width: calc(100% / 1 - 10px);
+    }
+    @media only screen and (min-width: 900px) {
+      max-width: calc(100% / 2 - 10px);
+    }
+    @media only screen and (min-width: 1300px) {
+      max-width: calc(100% / 3 - 10px);
+    }
+    @media only screen and (min-width: 1700px) {
+      max-width: calc(100% / 4 - 10px);
+    }
+    @media only screen and (min-width: 2600px) {
+      max-width: calc(100% / 5 - 10px);
+    }
+    /* min-width: calc(100% / 3 - 10px); */
   }
   ::-webkit-scrollbar {
     height: 0;

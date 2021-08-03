@@ -27,6 +27,7 @@ function Explorer() {
 
   useEffect(() => {
     //When item updates, update arrangement.
+    console.log("this ran");
     let isMounted = true;
     if (Object.keys(items).length >= 0) {
       (async () => {
@@ -48,9 +49,9 @@ function Explorer() {
     <>
       <Search setQueryResult={setQueryResult} />
       <StyledWrapper className="explorer">
-        <StyledHeader >
+        <StyledHeader>
           <h1 className="title">Explorer</h1>
-          <DropdownSort setSort={setSort}/>
+          <DropdownSort setSort={setSort} />
         </StyledHeader>
 
         <StyledExplorer>
