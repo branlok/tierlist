@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
+import { useMemo } from "react";
 import { useEffect } from "react";
 
 import { useSelector } from "react-redux";
@@ -22,7 +23,10 @@ import { StyledHeader } from "./styles";
 function Explorer() {
   let items = useSelector((state) => state.loadedTierlist.items);
   let [orderedItems, setOrderedItems] = useState([]);
-
+  let itemsExists = useMemo(() => {
+    return Object.keys(items).length > 0;
+  }, [items]);
+  console.log(itemsExists);
   //search logic
   let [userSearch, setUserSearch] = useState(false);
   let [queryResult, setQueryResult] = useState(null);
@@ -81,11 +85,34 @@ function Explorer() {
             : orderedItems.map((item, idx) => {
                 return <Item key={item.id} item={items[item.id]} />;
               })}
+          {!userSearch && !itemsExists ? (
+            <StyledNoContent>
+              <p className="caption">
+                Get Started by uploading images <br /> into Storage below{" "}
+              </p>
+            </StyledNoContent>
+          ) : null}
         </StyledExplorer>
       </StyledWrapper>
     </>
   );
 }
+
+let StyledNoContent = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .caption {
+    font-weight: bold;
+    font-size: 12px;
+    color: gray;
+    height: 30px;
+    width: 100%;
+    text-align: center;
+  }
+`;
 
 let StyledTools = styled.select`
   width: 100px;

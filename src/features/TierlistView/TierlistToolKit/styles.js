@@ -25,18 +25,24 @@ export const StyledHeader = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    span {
+      color: transparent;
+      padding-right: 5px;
+      transition: 0.3s;
+    }
+    :hover span {
+      color: white;
+    }
   }
   .add-svg {
-    height: 15px;
-    width: 15px;
-    fill: white;
-    padding: 2px;
-    /* border: 1px solid white; */
-    transition:0.2s;
-    cursor: pointer;
-    :hover {
-      background-color: rgba(0,0,0,0.5);
-    }
+    height: 10px;
+    width: 10px;
+    fill: ${props => props.rotateSVG ? "lightgray" : "white"};
+    padding-top: 1px;
+    transition: 0.2s;
+    transform: ${props => props.rotateSVG ? "rotate(45deg)" : "rotate(0deg)"};
+
   }
 `;
 

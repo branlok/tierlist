@@ -47,7 +47,7 @@ let StyledHeader = styled.div`
     border-style: none;
     color: white;
     padding: 0px 10px;
-    transition: 0.3s;
+    transition: 0.1s;
     cursor: pointer;
     :hover {
       background-color: ${(props) => props.theme.main.primaryVarient};

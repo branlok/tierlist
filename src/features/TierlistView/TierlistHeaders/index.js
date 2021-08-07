@@ -10,9 +10,10 @@ import {
 import { ReactComponent as AddSVG } from "../../../Styles/svg/Add2.svg";
 import { useEffect } from "react";
 import { useState } from "react";
+import { blinking } from "../Tierlist/RowTitle";
 function TierlistHeaders() {
   let [editMode, setEditMode] = useState(false);
-  let [newTitle, setNewTitle] = useState("");
+
   let inputRef = useRef();
 
   let dispatch = useDispatch();
@@ -24,6 +25,7 @@ function TierlistHeaders() {
     (state) => state.loadedTierlist.tierlist
   );
 
+  let [newTitle, setNewTitle] = useState(title);
   useEffect(() => {
     if (newRowId !== "storage") {
       console.log(newRowId);
@@ -51,7 +53,11 @@ function TierlistHeaders() {
 
   let handleSubmitTitle = async (e) => {
     e.preventDefault();
-    dispatch(editTierlistInfo({ newValue: newTitle, field: "title" }));
+    let filteredTitle = newTitle;
+    // if (title) {
+    //   filteredTitle = "Untitled Tierlist"
+    // }
+    dispatch(editTierlistInfo({ newValue: filteredTitle, field: "title" }));
     await dispatch(saveTierlist());
     setEditMode(false);
   };
@@ -160,6 +166,10 @@ let StyledTLHeader = styled.div`
       padding: 0px;
       margin-bottom: 5px;
       width: 80%;
+      box-sizing: border-box;
+      animation: ${blinking} 2s linear infinite;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       ::placeholder {
         color: #c4c4c4;
       }

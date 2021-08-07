@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import ExplorerModal from "../ExplorerModal";
 import MyTierlistModal from "../MyTierlistsModal";
 import Storage from "../Storage";
@@ -29,6 +29,15 @@ function MiniToolKit({ toolState }) {
   );
 }
 
+let fadeIn = keyframes`
+ from {
+   opacity: 0;
+ }
+ to {
+   opacity: 1;
+ }
+`
+
 let StyledMiniToolKitWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -41,6 +50,7 @@ let StyledMiniToolKitWrapper = styled.div`
     overflow: hidden;
     display: flex;
     padding: 10px;
+    animation: ${fadeIn} 1s ease forwards;
   }
 `;
 

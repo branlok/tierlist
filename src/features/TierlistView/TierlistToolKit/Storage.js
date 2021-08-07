@@ -16,12 +16,13 @@ function Storage({ toolState }) {
 
   return (
     <StyledStorageWrapper vertical={toolState}>
-      <StyledHeader>
+      <StyledHeader rotateSVG={showFileUpload}>
         <div className="title">Storage</div>
         <button
           className="adder"
           onClick={() => setShowFileUpload((prevState) => !prevState)}
         >
+          <span>{showFileUpload ? "Return" : "Add Files"}</span>
           <AddSVG className="add-svg" />
         </button>
       </StyledHeader>

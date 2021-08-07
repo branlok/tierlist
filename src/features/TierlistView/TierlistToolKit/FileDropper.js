@@ -102,6 +102,15 @@ let StyledButton = styled.button`
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.25), 0 0px 5px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   animation: ${fadeIn} 1s ease forwards;
+  transition: 0.1s;
+    cursor: pointer;
+    :hover {
+      background-color: ${(props) => props.theme.main.primaryVarient};
+      transform: scale(0.95);
+    }
+    :active {
+      transform: scale(0.9);
+    }
 `;
 
 export default FileDropper;

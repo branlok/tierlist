@@ -99,7 +99,7 @@ function RowTitle({ row }) {
   );
 }
 
-let blinking = keyframes`
+export let blinking = keyframes`
   50% {
     opacity: 0.6;
   }
