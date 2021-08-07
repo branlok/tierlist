@@ -7,27 +7,29 @@ import styled from "styled-components";
 import FileDropper from "./FileDropper";
 import Item from "./Item";
 import { StyledHeader } from "./styles";
+import { ReactComponent as AddSVG } from "../../../Styles/svg/Add2.svg";
 
 function Storage({ toolState }) {
   let storageRow = useSelector((state) => state.loadedTierlist.rows.storage);
-  let [showFileUpload, setShowFileUpload] = useState(
-    // storageRow.itemOrder.length > 0 ? false : true
-    false
-  );
+  let [showFileUpload, setShowFileUpload] = useState(false);
+  let [showDialogue, setShowDialogue] = useState(false);
 
   return (
     <StyledStorageWrapper vertical={toolState}>
       <StyledHeader>
         <div className="title">Storage</div>
-        <div
+        <button
           className="adder"
           onClick={() => setShowFileUpload((prevState) => !prevState)}
         >
-          +
-        </div>
+          <AddSVG className="add-svg" />
+        </button>
       </StyledHeader>
       {showFileUpload ? (
-        <FileDropper setShowFileUpload={setShowFileUpload} />
+        <FileDropper
+          showFileUpload={showFileUpload}
+          setShowFileUpload={setShowFileUpload}
+        />
       ) : (
         <Droppable
           droppableId={storageRow.id}
@@ -40,6 +42,7 @@ function Storage({ toolState }) {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 onDragOver={() => setShowFileUpload((prevState) => !prevState)}
+                // onDragLeave={() => setShowFileUpload((prevState) => !prevState)}
               >
                 {storageRow.itemOrder.map((item, index) => {
                   return (
@@ -53,7 +56,7 @@ function Storage({ toolState }) {
                 })}
                 {storageRow.itemOrder.length == 0 ? (
                   <div className="messsge-for-empty">
-                    Drop the images files or draggables here ...{" "}
+                    Drop image files or draggables here ...{" "}
                   </div>
                 ) : null}
                 {provided.placeholder}
@@ -68,7 +71,7 @@ function Storage({ toolState }) {
 
 let StyledStorageWrapper = styled.div`
   /* height: 160px; */
-  height: ${(props) => (props.vertical ?"160px" :  "100%" )};
+  height: ${(props) => (props.vertical ? "160px" : "100%")};
   width: 100%;
   border-radius: 10px;
   /* padding: 0px 10px; */
@@ -86,14 +89,12 @@ let StyledStorage = styled.div`
   /* background-color: #261b3d; */
   background-color: rgba(0, 0, 0, 0.5);
 
-
   /*Pattern provided from https://www.magicpattern.design/tools/css-backgrounds */
   /* opacity: 0.8;
   background-image: radial-gradient(gray 0.5px, transparent 0.5px),
     radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.5) 0.5px);
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px; */
-
 
   border-radius: 0px 0px 10px 10px;
   overflow-x: ${(props) => (props.vertical ? "scroll" : "hidden")};

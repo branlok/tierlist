@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Row from "./Row";
 
 /* RENDERS ROWS */
@@ -83,6 +83,15 @@ function Tierlist({ toolState }) {
   );
 }
 
+let leftToRight = keyframes`
+from {
+  transform: translate(-100%);
+}
+to {
+  transform: translate(0%);
+}
+`
+
 let StyledTL = styled.div`
   height: auto;
   width: 100%;
@@ -96,6 +105,7 @@ let StyledTL = styled.div`
     height: 125px;
     width: 100%;
     display: flex;
+
   }
   .title {
     width: 150px;

@@ -45,7 +45,6 @@ function RowTitle({ row }) {
     await dispatch(saveTierlist());
   };
 
-
   //temporary
   let truncateText = function (str, length, ending) {
     if (length == null) {
@@ -70,7 +69,7 @@ function RowTitle({ row }) {
   };
 
   return (
-    <StyledRowTitle>
+    <StyledRowTitle hidetool={edit}>
       <div className="row-tools">
         <button
           className="delete-button"
@@ -123,7 +122,8 @@ let StyledRowTitle = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 
   :hover > .row-tools {
-    transform: translateX(0px);
+    transform: ${(props) =>
+      props.hidetool ? "translateX(-30px);" : "translateX(0px);"};
   }
   h2 {
     display: flex;
@@ -135,7 +135,7 @@ let StyledRowTitle = styled.div`
     color: white;
     font-weight: bold;
     text-align: center;
-    border-bottom: 4px solid white;
+    border-bottom: 4px solid #dedede;
   }
   .row-tools {
     position: absolute;
@@ -211,6 +211,8 @@ let StyledRowTitle = styled.div`
       padding: 0px;
       box-sizing: border-box;
       animation: ${blinking} 2s linear infinite;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       :focus {
         outline: none;
       }

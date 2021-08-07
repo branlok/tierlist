@@ -66,6 +66,7 @@ let StyledItem = styled.div`
   color: white;
   flex-shrink: 0;
   overflow-x: hidden;
+
 `;
 
 let StyledImage = styled.img`

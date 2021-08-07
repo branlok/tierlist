@@ -17,6 +17,27 @@ export const StyledHeader = styled.div`
     font-size: 14px;
     margin: 0px;
   }
+  .adder {
+    border-style: none;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .add-svg {
+    height: 15px;
+    width: 15px;
+    fill: white;
+    padding: 2px;
+    /* border: 1px solid white; */
+    transition:0.2s;
+    cursor: pointer;
+    :hover {
+      background-color: rgba(0,0,0,0.5);
+    }
+  }
 `;
 
 export const StyledOverlay = styled.div`
@@ -32,5 +53,5 @@ export const StyledOverlay = styled.div`
   z-index: 10;
   justify-content: center;
   align-items: center;
-    backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 `;
