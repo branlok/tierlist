@@ -18,6 +18,7 @@ let StyledLogo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
   background-color: #30269d;
   background-color: ${(props) => props.theme.main.accent};
   .title {

@@ -11,43 +11,58 @@ import Search from "../Search";
 function CurrentTierlist() {
   let items = useSelector((state) => state.loadedTierlist.items);
   let [orderedItems, setOrderedItems] = useState([]);
+  //   let [queryResult, setQueryResult] = useState(null);
+  //search logic
+  let [userSearch, setUserSearch] = useState(false);
   let [queryResult, setQueryResult] = useState(null);
+
   let [sort, setSort] = useState("[tierlistId+resides]");
   let { id } = useParams();
 
+  //on load render items from store
   useEffect(() => {
-    console.log("run 1");
+    //When item updates, update arrangement.
     let isMounted = true;
-    if (Object.keys(items).length >= 0) {
+    //we will only search if we are not using search
+    if (!userSearch) {
       (async () => {
-        console.log("run 3");
         const products = await db.items
           .where(sort)
           .between([id, "0"], [id, "\uffff"])
           .toArray((re) => {
             if (isMounted) {
-              console.log("run 4", re);
               setOrderedItems(re);
             }
           });
       })();
-
       return () => {
         isMounted = false;
       };
-    } else {
-      console.log("nothing");
     }
   }, [items, sort]);
-  console.log(items, orderedItems);
+
+  useEffect(() => {
+    if (queryResult) {
+      setUserSearch(true);
+    } else {
+      setUserSearch(false);
+    }
+  }, [queryResult]);
+
   return (
     <>
       <StyledSearchWrapper className="searchWrapper">
-        <Search setQueryResult={setQueryResult} />
-        <DropdownSort setSort={setSort} />
+        <Search
+          setQueryResult={setQueryResult}
+          searchType={"search/items/name"}
+          setUserSearch={setUserSearch}
+        />
       </StyledSearchWrapper>
       <StyledExplorer>
-        {queryResult
+        <StyledNoneFound visible={queryResult?.length == 0}>
+          {queryResult?.length == 0 && "No Results Found"}
+        </StyledNoneFound>
+        {userSearch
           ? queryResult.map((item, idx) => {
               return <Item key={item.id} item={items[item.id]} />;
             })
@@ -59,13 +74,20 @@ function CurrentTierlist() {
   );
 }
 
+let StyledNoneFound = styled.div`
+  width: 100%;
+  height: 100%;
+  display: ${(props) => (props.visible ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+`;
+
 let StyledSearchWrapper = styled.div`
   height: 80px;
   width: 100%;
-  padding: 20px;
+  padding: 0px 20px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   border-bottom: 1px solid ${(props) => props.theme.main.accent};
-  /* padding-left: 15px; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -83,7 +105,7 @@ let StyledExplorer = styled.div`
   align-items: center;
   /* justify-content: center; */
   .modal {
-    flex-basis: auto; 
+    flex-basis: auto;
     flex-grow: 1;
     @media only screen and (min-width: 0px) {
       max-width: calc(100% / 1 - 10px);

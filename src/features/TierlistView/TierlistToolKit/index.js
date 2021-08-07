@@ -27,7 +27,7 @@ function TierlistToolkit({ toolState, setToolState }) {
   //   let [toolState, setToolState] = useState(false);
 
   return (
-    <StyledSidebar width={toolState ? "450px" : "250px"}>
+    <StyledSidebar width={toolState ? "400px" : "250px"}>
       {/* <Header /> */}
       <StyledToggle
         pointLeft={toolState}
@@ -41,12 +41,12 @@ function TierlistToolkit({ toolState, setToolState }) {
           <Header />
           <StyledWrapper>
             <Explorer />
-            <Storage />
+            <Storage toolState={toolState} />
             <Footer />
           </StyledWrapper>
         </StyledExpandedWrapper>
       ) : (
-        <MiniToolKit />
+        <MiniToolKit toolState={toolState} />
       )}
     </StyledSidebar>
   );
@@ -65,11 +65,11 @@ let StyledExpandedWrapper = styled.div`
 
 let StyledWrapper = styled.div`
   width: calc(100% - 20px); //20px from margin
-  height: calc(100% - 100px); //80px + 20px from margin
+  height: calc(100% - 110px); //80px + 20px from margin
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin: 10px;
-  padding: 10px;
+  padding: 15px 10px;
   display: flex;
   flex-direction: column;
 `;
@@ -78,7 +78,7 @@ let StyledSidebar = styled.div`
   height: 100%;
   width: ${(props) => props.width};
   /* background-color: #331c64; */
-  background-color: ${(props) => props.theme.main.primaryVarient}; 
+  background-color: ${(props) => props.theme.main.primaryVarient};
   transition: 0.3s;
   flex-shrink: 0;
   color: white;
@@ -100,19 +100,23 @@ let StyledToggle = styled.button`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  
+  background-color: ${(props) =>
+    props.pointLeft
+      ? props.theme.main.primaryVarient
+      : props.theme.main.accent};
   .toggleSVG {
-    width: 25px;
-    height: 25px;
-    fill: gray;
-    padding-bottom: 2px;
+    width: 20px;
+    height: 20px;
+    fill: white;
+    padding: 6px;
+    padding-bottom: 6px;
     transform: ${(props) =>
       props.pointLeft
         ? "rotate(90deg) rotateY(180deg)"
         : "rotate(-90deg) rotateY(-180deg)"};
     transition: 0.5s;
     :hover {
-      fill: black;
+      fill: gray;
     }
   }
 `;

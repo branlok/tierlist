@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 function DropdownSort({ setSort }) {
   let [open, setOpen] = useState(false);
-  const node = useRef(); 
+  const node = useRef();
   const handleClickOutside = (e) => {
     console.log("clicking anywhere");
     if (node.current.contains(e.target)) {
@@ -26,9 +26,11 @@ function DropdownSort({ setSort }) {
     };
   }, [open]);
 
-  
   return (
-    <DropdownWrapper ref={node} onClick={() => setOpen((prevState) => !prevState)}>
+    <DropdownWrapper
+      ref={node}
+      onClick={() => setOpen((prevState) => !prevState)}
+    >
       <button className="drop-down">Sort By</button>
       {open && (
         <ul className="dropdownContainer">
@@ -49,47 +51,53 @@ function DropdownSort({ setSort }) {
 
 let DropdownWrapper = styled.div`
   position: relative;
-  width: 100px;
+  width: auto;
   height: 25px;
   color: white;
   font-weight: bold;
   display: flex;
+  flex-shrink: 0;
+  margin-left: 5px;
   justify-content: center;
   flex-direction: column;
   border-radius: 5px;
   .drop-down {
     height: 25px;
-    border: 1px solid #242424;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-style: none;
     border-radius: 5px;
-    width: 100px;
+    width: auto;
+    padding: 0px 15px;
     font-size: 14px;
     font-weight: bold;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    align-items: flex-end;
     text-align: center;
     cursor: pointer;
     transition: 0.2s;
     background-color: transparent;
     color: white;
+    background-color: rgba(0,0,0,0.2);
     :hover {
-      background-color: #2b2b2b;
+      background-color: rgba(0,0,0,0.3);
     }
   }
   .dropdownContainer {
     position: absolute;
     border: 1px solid #242424;
-    background-color: #161616;
+    background-color: ${props => props.theme.main.primaryVarient};
     z-index: 2;
     border-radius: 5px;
     width: 170px;
-
     display: flex;
     justify-content: center;
     flex-direction: column;
-    top: 30px;
+    overflow: hidden;
+    top: 35px;
     right: 0px;
-
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     ::before {
       content: "";
       width: 0;
@@ -115,7 +123,7 @@ let DropdownWrapper = styled.div`
       cursor: pointer;
       border-left: 2px solid transparent;
       :hover {
-        background-color: #2b2b2b;
+        background-color: rgba(255,255,255,0.3);
         border-left: 2px solid white;
       }
     }

@@ -16,7 +16,7 @@ function Item({ item }) {
   //adding serach abilities
   let rowReference = useSelector((state) => state.loadedTierlist.rows);
   let dispatch = useDispatch();
-  let [title, setTitle] = useState("");
+  let [title, setTitle] = useState(item?.name);
   let [showTitleEdit, setShowTitleEdit] = useState(
     item?.name?.length == 0 ? true : false
   );
@@ -49,7 +49,7 @@ function Item({ item }) {
 
   useEffect(() => {
     console.log(showTitleEdit);
-    if (showTitleEdit) {
+    if (showTitleEdit && title) {
       console.log("read");
       titleEditRef.current.focus();
     }
@@ -186,7 +186,6 @@ let StyledItemContent = styled.div`
         padding-right: 10px;
         padding-left: 10px;
         font-size: 13px;
-
         height: 25px;
         border-left: 2px solid transparent;
         :focus {
@@ -214,7 +213,7 @@ let StyledItemContent = styled.div`
       justify-content: flex-start;
       text-align: start;
       align-items: center;
-      user-select: all;
+      user-select: text;
       transition: 0.3s;
       p {
         white-space: nowrap;

@@ -21,10 +21,12 @@ function FileDropper({ setShowFileUpload }) {
         objectURLS.push([imageURL, id]);
         await dispatch(addImage({ source: file, imageURL, id, tierlistId }));
       }
-      await dispatch(addItem(objectURLS));
+
+      //
+      await dispatch(addItem(objectURLS)); //array of items.
       await dispatch(updateItemsDB());
       await dispatch(
-        updateTierlistStatus({ status: "draft", date: Date.now(), tierlistId })
+        updateTierlistStatus()
       );
       setShowFileUpload((prevState) => !prevState);
     },

@@ -1,22 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { saveTierlist } from "../TierlistSlice";
+import FinalizeModal from "./Modal/FinalizeModal";
 
 function Footer() {
   let tierlist = useSelector((state) => state.loadedTierlist);
   let dispatch = useDispatch();
+  let [openFinalize, setOpenFinalize] = useState(false);
 
   return (
     <StyledHeader>
       <button
         className="save-button"
-        onClick={async () => {
-          await dispatch(saveTierlist(tierlist));
-        }}
+        onClick={() => setOpenFinalize(true)}
+        // onClick={async () => {
+        //   await dispatch(saveTierlist(tierlist));
+        // }}
       >
         Save to Collection
       </button>
+      {openFinalize ? <FinalizeModal setOpenFinalize={setOpenFinalize}/> : null}
     </StyledHeader>
   );
 }
@@ -35,7 +39,7 @@ let StyledHeader = styled.div`
   flex-shrink: 0;
   /* border: 1px solid white; */
   .save-button {
-    background-color: #19cd61;
+    background-color: ${(props) => props.theme.main.accent};
     border-radius: 50px;
     height: 30px;
     font-weight: bold;
@@ -43,6 +47,15 @@ let StyledHeader = styled.div`
     border-style: none;
     color: white;
     padding: 0px 10px;
+    transition: 0.3s;
+    cursor: pointer;
+    :hover {
+      background-color: ${(props) => props.theme.main.primaryVarient};
+      transform: scale(0.95);
+    }
+    :active {
+      transform: scale(0.9);
+    }
   }
   /* background-color: rgba(255,255,255,0.5); */
 `;

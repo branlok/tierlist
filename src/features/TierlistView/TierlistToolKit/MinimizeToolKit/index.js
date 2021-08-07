@@ -1,23 +1,30 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ExplorerModal from "../ExplorerModal";
+import MyTierlistModal from "../MyTierlistsModal";
 import Storage from "../Storage";
 import TierlistInfo from "../TierlistInfo";
 import LinkBox from "./LinkBox";
 import Logo from "./Logo";
 
-function MiniToolKit() {
+function MiniToolKit({ toolState }) {
   let [modalOpen, setModalOpen] = useState(false);
-
   return (
     <StyledMiniToolKitWrapper>
       <Logo />
-      <LinkBox setModalOpen={setModalOpen}/>
+      <LinkBox setModalOpen={setModalOpen} />
       <div className="storage-wrapper">
-        <Storage mini={true} />
-      </div>  
-      {modalOpen == "info" && <TierlistInfo modalOpen={modalOpen} setModalOpen={setModalOpen} />}
-      {modalOpen == "explorer" && <ExplorerModal  modalOpen={modalOpen} setModalOpen={setModalOpen} />}
+        <Storage toolState={toolState} />
+      </div>
+      {modalOpen == "info" && (
+        <TierlistInfo modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
+      {modalOpen == "explorer" && (
+        <ExplorerModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
+      {modalOpen == "myTierlists" && (
+        <MyTierlistModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
     </StyledMiniToolKitWrapper>
   );
 }

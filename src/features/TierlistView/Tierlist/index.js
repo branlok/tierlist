@@ -55,7 +55,7 @@ function Tierlist({ toolState }) {
       default:
         highlight = "259";
     }
-    console.log(highlight);
+
     let str = "";
     let s = (100 - 38) / numOfRows;
     let segment = 75 / numOfRows;
@@ -92,25 +92,6 @@ let StyledTL = styled.div`
   flex-direction: column;
   overflow: hidden;
   ${(props) => props.rowGenerator}
-
-  /* .row:nth-child(1) {
-    background-color: #c1b7db;
-  }
-  .row:nth-child(2) {
-    background-color: #8c7cbe;
-  }
-  .row:nth-child(3) {
-    background-color: #7a67b2;
-  }
-  .row:nth-child(4) {
-    background-color: #4b3c7a;
-  }
-  .row:nth-child(5) {
-    background-color: #332659;
-  }
-  .row:nth-child(6) {
-    background-color: #180f30;
-  } */
   .row {
     height: 125px;
     width: 100%;

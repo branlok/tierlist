@@ -32,7 +32,7 @@ function Item({ itemId, index, toolState }) {
       return {
         ...style,
         height: "125px",
-        width: toolState ? "auto" : "230px",
+        width: toolState ? "125px" : "230px",
         maxWidth: "250px",
         transition: `all ${curve} ${duration}s`,
       };
@@ -74,10 +74,8 @@ function Item({ itemId, index, toolState }) {
 }
 
 let StyledItem = styled.div`
-  /* width: 100px; */
   height: 125px;
-  /* height: 50px */
-  width: ${(props) => (props.size == "square" ? "125px" : "auto")};
+  width: ${(props) => (props.size == "square" ? "125px" : "100%")};
   color: white;
   flex-shrink: 0;
   position: relative;
@@ -174,8 +172,8 @@ let StyledImage = styled.img`
   display: block;
   object-fit: cover;
   /* display: block; */
-  max-width: 250px;
-
+  /* max-width: 250px; */
+  
   /* min-width: 170px; */
 
   /* border-radius: 10px; //experimental */

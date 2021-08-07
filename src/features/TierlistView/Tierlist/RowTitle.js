@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelete.svg";
 import { ReactComponent as EditPenSVG } from "../../../Styles/svg/EditPen2.svg";
 
@@ -45,9 +45,26 @@ function RowTitle({ row }) {
     await dispatch(saveTierlist());
   };
 
+
+  //temporary
+  let truncateText = function (str, length, ending) {
+    if (length == null) {
+      length = 50;
+    }
+    if (ending == null) {
+      ending = "...";
+    }
+    if (str.length > length) {
+      return str.substring(0, length - ending.length) + ending;
+    } else {
+      return str;
+    }
+  };
+
   let handleSubmitTitle = async (e) => {
     e.preventDefault();
-    dispatch(editRowInfo({ id: row.id, field: "name", newValue: title }));
+    let newTitle = truncateText(title);
+    dispatch(editRowInfo({ id: row.id, field: "name", newValue: newTitle }));
     await dispatch(saveTierlist());
     setEdit(false);
   };
@@ -83,6 +100,12 @@ function RowTitle({ row }) {
   );
 }
 
+let blinking = keyframes`
+  50% {
+    opacity: 0.6;
+  }
+`;
+
 let StyledRowTitle = styled.div`
   width: 150px;
   height: 125px;
@@ -97,13 +120,22 @@ let StyledRowTitle = styled.div`
   padding: 10px;
 
   //this gives a desaturated look
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
 
   :hover > .row-tools {
     transform: translateX(0px);
   }
   h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0px;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 4px solid white;
   }
   .row-tools {
     position: absolute;
@@ -129,7 +161,7 @@ let StyledRowTitle = styled.div`
     border-style: none;
     cursor: pointer;
     .delete-cross {
-      fill: rgba(255, 255, 255, 0.6);
+      fill: rgba(255, 255, 255, 0.8);
       background-color: transparent;
       width: 10px;
       height: 10px;
@@ -139,7 +171,7 @@ let StyledRowTitle = styled.div`
       transition: 0.3s;
       :hover {
         transform: rotate(90deg);
-        fill: rgba(255, 0, 0, 0.8);
+        fill: rgba(255, 0, 0, 1);
       }
     }
   }
@@ -153,7 +185,7 @@ let StyledRowTitle = styled.div`
     .editSVG {
       height: 10px;
       width: 10px;
-      fill: rgba(255, 255, 255, 0.6);
+      fill: rgba(255, 255, 255, 0.8);
       transition: 0.3s;
       cursor: pointer;
       :hover {
@@ -176,6 +208,9 @@ let StyledRowTitle = styled.div`
       font-weight: bold;
       text-align: center;
       border-bottom: 4px solid white;
+      padding: 0px;
+      box-sizing: border-box;
+      animation: ${blinking} 2s linear infinite;
       :focus {
         outline: none;
       }

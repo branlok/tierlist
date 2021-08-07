@@ -8,7 +8,7 @@ import FileDropper from "./FileDropper";
 import Item from "./Item";
 import { StyledHeader } from "./styles";
 
-function Storage({ mini }) {
+function Storage({ toolState }) {
   let storageRow = useSelector((state) => state.loadedTierlist.rows.storage);
   let [showFileUpload, setShowFileUpload] = useState(
     // storageRow.itemOrder.length > 0 ? false : true
@@ -16,7 +16,7 @@ function Storage({ mini }) {
   );
 
   return (
-    <StyledStorageWrapper vertical={mini}>
+    <StyledStorageWrapper vertical={toolState}>
       <StyledHeader>
         <div className="title">Storage</div>
         <div
@@ -31,12 +31,12 @@ function Storage({ mini }) {
       ) : (
         <Droppable
           droppableId={storageRow.id}
-          direction={mini ? "vertical" : "horizontal"}
+          direction={toolState ? "horizontal" : "vertical"}
         >
           {(provided) => {
             return (
               <StyledStorage
-                vertical={mini}
+                vertical={toolState}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 onDragOver={() => setShowFileUpload((prevState) => !prevState)}
@@ -47,13 +47,12 @@ function Storage({ mini }) {
                       key={item}
                       itemId={item}
                       index={index}
-                      vertical={mini}
+                      toolState={toolState}
                     />
                   );
                 })}
                 {storageRow.itemOrder.length == 0 ? (
                   <div className="messsge-for-empty">
-                    {" "}
                     Drop the images files or draggables here ...{" "}
                   </div>
                 ) : null}
@@ -69,7 +68,7 @@ function Storage({ mini }) {
 
 let StyledStorageWrapper = styled.div`
   /* height: 160px; */
-  height: ${(props) => (props.vertical ? "100%" : "160px")};
+  height: ${(props) => (props.vertical ?"160px" :  "100%" )};
   width: 100%;
   border-radius: 10px;
   /* padding: 0px 10px; */
@@ -83,7 +82,7 @@ let StyledStorage = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: ${(props) => (props.vertical ? "column" : "row")};
+  flex-direction: ${(props) => (props.vertical ? "row" : "column")};
   /* background-color: #261b3d; */
   background-color: rgba(0, 0, 0, 0.5);
 
@@ -97,8 +96,8 @@ let StyledStorage = styled.div`
 
 
   border-radius: 0px 0px 10px 10px;
-  overflow-x: ${(props) => (props.vertical ? "hidden" : "scroll")};
-  overflow-y: ${(props) => (props.vertical ? "scroll" : "hidden")};
+  overflow-x: ${(props) => (props.vertical ? "scroll" : "hidden")};
+  overflow-y: ${(props) => (props.vertical ? "hidden" : "scroll")};
   user-select: none;
   position: relative;
   scrollbar-width: none;

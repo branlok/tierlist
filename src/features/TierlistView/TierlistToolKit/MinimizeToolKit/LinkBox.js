@@ -7,6 +7,7 @@ function LinkBox({setModalOpen}) {
     <StyledLinkBox>
       <div className="module-link" onClick={() => setModalOpen("info")}>Tierlist Settings</div>
       <div className="module-link" onClick={() => setModalOpen("explorer")} >Explorer</div>
+      <div className="module-link" onClick={() => setModalOpen("myTierlists")} >My Tierlists</div>
     </StyledLinkBox>
   );
 }
@@ -17,6 +18,7 @@ let StyledLinkBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
   .module-link {
     background-color: black;
     height: 40px;

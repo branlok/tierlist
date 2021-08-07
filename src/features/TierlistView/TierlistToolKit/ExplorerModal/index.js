@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styled, { keyframes } from "styled-components";
+
 import Search from "../Search";
 import { StyledOverlay } from "../styles";
 import CurrentTierlist from "./CurrentTierlist";
@@ -9,6 +10,20 @@ import LocalStorage from "./LocalStorage";
 function ExplorerModal({ modalOpen, setModalOpen }) {
   let [tab, setTab] = useState("currentTierlist");
   let items = useSelector((state) => state.loadedTierlist.items);
+
+  useEffect(() => {
+    let handleCloseModal = function (event) {
+      if (event.key === "Escape") {
+        //do something
+        setModalOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleCloseModal);
+    return () => {
+      document.removeEventListener("keydown", handleCloseModal);
+    };
+  }, []);
+
   return (
     <StyledOverlay
       onClick={(e) => {
@@ -53,16 +68,21 @@ function ExplorerModal({ modalOpen, setModalOpen }) {
   );
 }
 
-const StyledBody = styled.div`
+export const StyledBody = styled.div`
   width: 100%;
-  height: ${(props) => (props.active ? "calc(100% - 100px)" : "50px")};
+  height: ${(props) =>
+    props.height == "full"
+      ? "100%"
+      : props.active
+      ? "calc(100% - 100px)"
+      : "50px"};
   display: flex;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
   overflow: hidden;
   /* flex-shrink: ${(props) => (props.active ? 1 : 0)}; */
   transition: 0.4s;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(02, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   .leftColumn {
     display: flex;
     justify-content: center;
@@ -89,10 +109,11 @@ const StyledBody = styled.div`
   }
 `;
 
-const StyledHeader = styled.div`
+export const StyledHeader = styled.div`
   width: 100%;
   height: 35px;
   background-color: rgba(0, 0, 0, 0.6);
+
   border-radius: 3px 3px 0px 0px;
   color: white;
   font-weight: bold;
@@ -103,12 +124,10 @@ const StyledHeader = styled.div`
   font-size: 14px;
   flex-shrink: 0;
   z-index: 1;
-  /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
   .spacing {
     width: 150px;
     height: 100%;
-    /* border-right: 4px solid ${(props) => props.theme.main.accent}; */
-    /* border-right: 4px solid ${(props) => props.theme.main.accent}; */
+    border-right: 4px solid ${(props) => props.theme.main.accent};
   }
 `;
 
@@ -123,12 +142,13 @@ to {
 }
 `;
 
-const StyledModule = styled.div`
+export const StyledModule = styled.div`
   height: 80%;
   width: 80%;
   /* border: 4px solid ${(props) => props.theme.main.accent}; */
   background-color: #131313;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  
+  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); */
   animation: ${expandIn} 0.3s ease forwards;
   display: flex;
   flex-direction: column;

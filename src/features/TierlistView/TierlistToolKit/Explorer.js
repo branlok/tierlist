@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -18,18 +18,24 @@ import { StyledHeader } from "./styles";
  * @returns list of ordered items in tierlist
  * **/
 
+//kind reminder: right now theres no loading indicator, we just render blank or last result if its fetching.
 function Explorer() {
   let items = useSelector((state) => state.loadedTierlist.items);
   let [orderedItems, setOrderedItems] = useState([]);
+
+  //search logic
+  let [userSearch, setUserSearch] = useState(false);
   let [queryResult, setQueryResult] = useState(null);
+
   let [sort, setSort] = useState("[tierlistId+resides]");
   let { id } = useParams();
 
+  //on load render items from store
   useEffect(() => {
     //When item updates, update arrangement.
-    console.log("this ran");
     let isMounted = true;
-    if (Object.keys(items).length >= 0) {
+    //we will only search if we are not using search
+    if (!userSearch) {
       (async () => {
         const products = await db.items
           .where(sort)
@@ -45,17 +51,30 @@ function Explorer() {
       };
     }
   }, [items, sort]);
+
+  //as long as we receive truthy, we'll render search else false renders plan list
+  useEffect(() => {
+    if (queryResult) {
+      setUserSearch(true);
+    } else {
+      setUserSearch(false);
+    }
+  }, [queryResult]);
+
   return (
     <>
-      <Search setQueryResult={setQueryResult} />
+      <Search
+        setQueryResult={setQueryResult}
+        searchType={"search/items/name"}
+        setUserSearch={setUserSearch}
+      />
       <StyledWrapper className="explorer">
         <StyledHeader>
           <h1 className="title">Explorer</h1>
           <DropdownSort setSort={setSort} />
         </StyledHeader>
-
         <StyledExplorer>
-          {queryResult
+          {userSearch
             ? queryResult.map((item, idx) => {
                 return <Item key={item.id} item={items[item.id]} />;
               })
@@ -85,7 +104,7 @@ let StyledTools = styled.select`
 let StyledWrapper = styled.section`
   height: 100%;
   width: 100%;
-  /* padding: 10px; */
+  margin-top: 10px;
   padding-bottom: 10px;
   display: flex;
   flex-direction: column;

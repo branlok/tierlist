@@ -25,7 +25,17 @@ export const loadTierlist = createAsyncThunk(
 
     //use default the tierlist does not exist with the the same Id
     if (Object.keys(tierlistData).length === 0) {
-      return { updateTo: baseTierlistMaker(tierlistId) };
+      let newProject = baseTierlistMaker(tierlistId);
+      await db.tierlists.put({
+        id: tierlistId,
+        tierlist: newProject,
+        status: "initialized",
+        date: Date.now(),
+        lastEdited: Date.now(),
+        title: newProject.tierlist.title.toLowerCase(),
+        name: newProject.tierlist.title,
+      });
+      return { updateTo: newProject };
     }
 
     let keys = Object.keys(tierlistData.items);
@@ -89,17 +99,20 @@ export const loadTierlist = createAsyncThunk(
 export const saveTierlist = createAsyncThunk(
   "loadedTierlist/saveAll",
   async (tierlistStructure, thunkAPI) => {
-    console.log(thunkAPI.getState().loadedTierlist);
     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
-    const response = await db.tierlists.put({
-      id: tierlistId,
+
+    const response = await db.tierlists.update(tierlistId, {
+      // id: tierlistId,
       tierlist: thunkAPI.getState().loadedTierlist,
       status: "saved",
-      date: Date.now(),
+      // date: Date.now(),
+      lastEdited: Date.now(),
+      title: thunkAPI.getState().loadedTierlist.tierlist.title.toLowerCase(),
+      name: thunkAPI.getState().loadedTierlist.tierlist.title,
+      numberOfItems: Object.keys(thunkAPI.getState().loadedTierlist.items)
+        .length,
+      //TODO: add cover image
     });
-
-    // let x = Object.values(thunkAPI.getState().loadedTierlist.items);
-    // let y = Object.keys(thunkAPI.getState().loadedTierlist.items);
 
     let keys = [];
     let values = [];
@@ -122,12 +135,10 @@ export const saveTierlist = createAsyncThunk(
 export const updateTierlistStatus = createAsyncThunk(
   "loadedTierlist/statusUpdate",
   async (update, thunkAPI) => {
-    console.log("we");
-    const response = await db.tierlists.put({
-      id: thunkAPI.getState().loadedTierlist.tierlist.id,
-      status: update.status,
-      date: update.date,
+    let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
+    const response = await db.tierlists.update(tierlistId, {
       tierlist: thunkAPI.getState().loadedTierlist,
+      lastEdited: Date.now(),
     });
   }
 );
@@ -135,12 +146,11 @@ export const updateTierlistStatus = createAsyncThunk(
 export const updateItemsDB = createAsyncThunk(
   "loadedTierlist/updateItems",
   async (payload, thunkAPI) => {
-    // let x = Object.values(thunkAPI.getState().loadedTierlist.items);
-    // let y = Object.keys(thunkAPI.getState().loadedTierlist.items);
-    // console.log(x, y, "updateItemsDB");
     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
     let keys = [];
     let values = [];
+
+    //take all current items from redux;
     for (let [key, value] of Object.entries(
       thunkAPI.getState().loadedTierlist.items
     )) {
@@ -186,13 +196,14 @@ export const deleteItemFromDB = createAsyncThunk(
       });
 
     console.log(isTableEmpty, "is it ?");
-    if (isTableEmpty === 0) {
-      let deleted = await db.images
-        .where("id")
-        .equals(payload)
-        .delete()
-        .then((deletecount) => console.log(deletecount, "deleted"));
-    }
+
+    // if (isTableEmpty === 0) {
+    //   let deleted = await db.images
+    //     .where("id")
+    //     .equals(payload)
+    //     .delete()
+    //     .then((deletecount) => console.log(deletecount, "deleted"));
+    // }
 
     return payload;
   }
@@ -245,9 +256,13 @@ export const syncNewItems = createAsyncThunk(
     let item = payload;
     item.resides = "storage";
     item.tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
+
+    //format Id, this ensures, user cannot
     let concatId =
       thunkAPI.getState().loadedTierlist.tierlist.id + "/" + item.id;
-    await db.items.put(item, concatId).catch((res) => console.log(res));
+
+    //add a new item to itemIndex
+    await db.items.put(item, concatId);
     return item;
   }
 );
@@ -264,8 +279,8 @@ export const deleteSingleImageItem = createAsyncThunk(
       .delete()
       .then((deletecount) => console.log(deletecount, "deleted"));
 
-      //!use dedicated delete for notification index.
-      //! that would prompt update tierlist redux to remove those items. 
+    //!use dedicated delete for notification index.
+    //! that would prompt update tierlist redux to remove those items.
     // let flagItemIndex = await db.items
     //   .where("id")
     //   .equals(payload)
@@ -276,7 +291,71 @@ export const deleteSingleImageItem = createAsyncThunk(
       .equals(payload)
       .delete()
       .then((deletecount) => console.log(deletecount, "deleted"));
+  }
+);
 
+export const deleteTierlist = createAsyncThunk(
+  "loadedTierlist/deleteTierlist",
+  async (payload, thunkAPI) => {
+    //settings
+    let { tierlistId, option } = payload;
+    console.log(payload, "humm");
+    //run delete tierlist,
+    let x = await db.tierlists
+      .where("id")
+      .equals(tierlistId)
+      .delete()
+      .then((res) => console.log(res, "deleted tierlists"));
+    //run delete all item instances,
+    let y = await db.items
+      .where("tierlistId")
+      .equals(tierlistId)
+      .delete()
+      .then((res) => console.log(res, "deleted itemindex"));
+    //run delete
+    if (option.deleteImageIndex) {
+      await db.images
+        .where("tierlistId")
+        .equals(tierlistId)
+        .delete()
+        .then((deletecount) => console.log(deletecount, "deleted images"));
+    }
+
+    if (option.reset) {
+      let newTierlist = baseTierlistMaker(tierlistId);
+      await db.tierlists.put({
+        id: tierlistId,
+        tierlist: newTierlist,
+        status: "initialized",
+        date: Date.now(),
+        lastEdited: Date.now(),
+        title: newTierlist.tierlist.title.toLowerCase(),
+        name: newTierlist.tierlist.title,
+      });
+
+      return { newTierlist: newTierlist, reset: true };
+    } else {
+      return { reset: false };
+    }
+  }
+);
+
+export const deleteOutDatedTierlists = createAsyncThunk(
+  "loadedTierlist/deleteOutDatedTierlists",
+  async (payload, thunkAPI) => {
+    //initailized/drafts that are 1 week old will be deleted automatically - ms 604800000
+    await db.tierlists
+      .where("date")
+      .below(Date.now() - 604800000)
+      .modify((value, ref) => {
+        console.log(value, "the value");
+        if (value.status === "initialized" || value.status === "draft") {
+          delete ref.value;
+        }
+      })
+      .then(() => {
+        console.log("deleted");
+      });
   }
 );
 
@@ -423,6 +502,7 @@ let tierlistSlice = createSlice({
       state.rowOrder = action.payload.updateTo.rowOrder;
       state.tierlist = action.payload.updateTo.tierlist;
       state.status = "ready";
+
       if (action.payload.imagePayload) {
         for (const [key, value] of Object.entries(
           action.payload.imagePayload
@@ -456,6 +536,7 @@ let tierlistSlice = createSlice({
         action.payload.content;
     },
     [deleteItemFromDB.fulfilled]: (state, action) => {
+      //remove specificied item from items and row itemOrder
       if (action.payload) {
         console.log(action.payload, "what", state.items[action.payload]);
         let resides = state.items[action.payload]?.resides;
@@ -467,6 +548,20 @@ let tierlistSlice = createSlice({
           }
         }
       }
+    },
+    [deleteTierlist.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      if (action.payload.reset) {
+        // let action.payload.newTierlist = baseTierlistMaker(state.tierlist.id);
+        state.items = action.payload.newTierlist.items;
+        state.rows = action.payload.newTierlist.rows;
+        state.rowOrder = action.payload.newTierlist.rowOrder;
+        state.tierlist = action.payload.newTierlist.tierlist;
+        state.status = "initialized";
+      }
+    },
+    [deleteTierlist.rejected]: (state, action) => {
+      console.log(action.payload);
     },
   },
 });

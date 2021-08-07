@@ -9,6 +9,7 @@ import { editItemTitle, updateItemDetails } from "../../TierlistSlice";
 function Description({ itemId, itemDescription }) {
   let [description, setDescription] = useState(itemDescription);
   let dispatch = useDispatch();
+  let [initialRender, setInitialRender] = useState(false);
   let [showdescriptionEdit, setShowDescriptionEdit] = useState(
     description.length == 0 ? true : false
   );
@@ -17,7 +18,7 @@ function Description({ itemId, itemDescription }) {
   let textareaRef = useRef();
 
   useEffect(() => {
-    if (showdescriptionEdit) {
+    if (showdescriptionEdit && description) {
       textareaRef.current.focus();
     }
   }, [showdescriptionEdit]);

@@ -5,9 +5,11 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
+import useScreenshot from "../../customHooks/useScreenshot";
 import Tierlist from "./Tierlist";
 import TierlistHeaders from "./TierlistHeaders";
 import {
+  deleteOutDatedTierlists,
   loadTierlist,
   modifyRowOrder,
   reorderItemBetweenRow,
@@ -109,23 +111,27 @@ function retrieveTheme(theme) {
 
 function TierlistView() {
   // let rows = useSelector((state) => state.loadedTierlist.rows);
-  let status = useSelector((state) => state.loadedTierlist.status);
+  let statuss = useSelector((state) => state.loadedTierlist.status);
   let theme = useSelector((state) => state.loadedTierlist.tierlist?.theme);
   let dispatch = useDispatch();
   let { id } = useParams();
   let onDragEnd = useDragLogic();
   let [toolState, setToolState] = useState(false);
 
+  // const { generateImage, captureRef, status } = useScreenshot();
+
+  // ref={captureRef} disabled={status === "loading"} onClick={generateImage}
   useEffect(() => {
     if (id) {
       //load requested tierlist to redux
+      dispatch(deleteOutDatedTierlists());
       dispatch(loadTierlist(id));
     }
   }, [id]);
 
   let themes = useCallback(() => retrieveTheme(theme), [theme]);
 
-  if (status == "loading") {
+  if (statuss == "loading") {
     return <div>loading</div>;
   } else {
     return (

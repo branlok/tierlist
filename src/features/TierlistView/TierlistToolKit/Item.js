@@ -7,10 +7,9 @@ import { Draggable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-function Item({ itemId, index }) {
+function Item({ itemId, index, toolState }) {
   let [ready, setReady] = useState(false);
   let item = useSelector((state) => state.loadedTierlist.items[itemId]);
-
 
   let returnDnDStyle = (style, snapshot) => {
     if (!snapshot.isDropAnimating) {
@@ -22,8 +21,9 @@ function Item({ itemId, index }) {
       return {
         ...style,
         height: "125px",
-        width: "auto",
-        maxWidth: "500px",
+        width: "125px",
+        // maxWidth: "250px",
+        minWidth: "125px",
         transition: `all ${curve} ${duration}s`,
       };
     } else {
@@ -43,11 +43,13 @@ function Item({ itemId, index }) {
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             style={style}
+            toolState={toolState}
           >
             <StyledImage
               ready={ready}
               src={item.imageURL}
               onLoad={() => setReady(true)}
+              toolState={toolState}
             />
           </StyledItem>
         );
@@ -58,6 +60,8 @@ function Item({ itemId, index }) {
 
 let StyledItem = styled.div`
   height: 125px;
+  /* min-width: ${(props) => (props.toolState ? "125px" : "230px")}; */
+  width: ${(props) => (props.toolState ? "125px" : "230px")};
   /* padding: 10px; //experimental  */
   color: white;
   flex-shrink: 0;
@@ -67,10 +71,12 @@ let StyledItem = styled.div`
 let StyledImage = styled.img`
   height: 100%;
   width: 100%;
-  max-width: 250px;
+  width: ${(props) => (props.toolState ? "125px" : "100%")};
+  /* max-width: 250px; */
+  transition: 0.1s;
   object-fit: cover;
   display: block;
-  opacity: ${(props) => (props.ready ? "1" : "0")};
+  /* opacity: ${(props) => (props.ready ? "1" : "0")}; */
   /* min-width: 130px; */
 
   /* border-radius: 5px; //experimental  */
