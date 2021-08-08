@@ -24,7 +24,7 @@ function MockTierlist({ orientation }) {
 
 function MockRow({ rowId }) {
   let row = useSelector((state) => state.loadedTierlist.rows[rowId]);
-  console.log(row);
+
   return (
     <div className="row">
       <MockRowTitle row={row} />
@@ -46,9 +46,9 @@ function MockRowTitle({ row }) {
 }
 
 function MockItem({ itemId }) {
-  console.log(itemId);
+
   let { imageURL } = useSelector((state) => state.loadedTierlist.items[itemId]);
-  console.log(imageURL);
+
   return (
     <StyledMockItem>
       <img className="image" src={imageURL} />
@@ -150,8 +150,12 @@ let StyledRowTitle = styled.div`
   width: 100%;
   text-align: left;
   font-size: 12px;
-  background: rgb(0,0,0);
-background: linear-gradient(0deg, rgba(0,0,0,0.1) 0%, rgba(0,212,255,0) 70%);
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 212, 255, 0) 70%
+  );
   /* background-color: rgba(0, 0, 0, 0.3); */
 `;
 

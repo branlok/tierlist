@@ -61,9 +61,7 @@ function Table({
               <SortBySVG className="sortingSVG" />
             </StyledCol>
           </th>
-          <th>
-              Number of Items
-          </th>
+          {/* <th>Number of Items</th> */}
           <th className="action">Actions</th>
         </tr>
       </thead>

@@ -1,16 +1,8 @@
 import React from "react";
-import { useCallback } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { useDispatch, useSelector } from "react-redux";
+
 import styled from "styled-components";
 import { ReactComponent as UpArrowSVG } from "../../../Styles/svg/upArrow.svg";
 import Explorer from "./Explorer";
-import FileDropper from "./FileDropper";
-// import FileDropper from "./FileDropper";
-// import FileDropper from "./FileDropper";
-
 import Footer from "./Footer";
 import Header from "./Header";
 import MiniToolKit from "./MinimizeToolKit";
@@ -28,7 +20,6 @@ function TierlistToolkit({ toolState, setToolState }) {
 
   return (
     <StyledSidebar width={toolState ? "400px" : "250px"}>
-      {/* <Header /> */}
       <StyledToggle
         pointLeft={toolState}
         className="toggle"
@@ -92,8 +83,8 @@ let StyledToggle = styled.button`
   position: absolute;
   top: 50px;
   left: -15px;
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   border-radius: 50%;
   border-style: none;
   display: flex;
@@ -104,6 +95,7 @@ let StyledToggle = styled.button`
     props.pointLeft
       ? props.theme.main.primaryVarient
       : props.theme.main.accent};
+      background-color: black;
   .toggleSVG {
     width: 20px;
     height: 20px;
@@ -114,7 +106,7 @@ let StyledToggle = styled.button`
       props.pointLeft
         ? "rotate(90deg) rotateY(180deg)"
         : "rotate(-90deg) rotateY(-180deg)"};
-    transition: 0.5s;
+    transition: 0.3s;
     :hover {
       fill: gray;
     }

@@ -29,7 +29,6 @@ let fetchTierlists = async (db, table, index, reverse, page, pageSize) => {
       .offset(page * pageSize)
       .limit(pageSize)
       .toArray((response) => {
-        console.log(response, "Dew");
         return response;
       });
   } else {
@@ -39,7 +38,6 @@ let fetchTierlists = async (db, table, index, reverse, page, pageSize) => {
       .offset(page * pageSize)
       .limit(pageSize)
       .toArray((response) => {
-        console.log(response, "Dew");
         return response;
       });
   }
@@ -76,7 +74,7 @@ function LocalStorage() {
 
   useEffect(() => {
     if (status == "success") {
-      console.log(status, value, "read me");
+
       setOrderedItems(value);
     } else if (status == "error") {
       console.log(error);
@@ -84,11 +82,11 @@ function LocalStorage() {
     }
   }, [status, value, itemWasDeleted]);
 
-//   useEffect(() => {
-//     if (itemWasDeleted) {
-//       setItemWasDeleted(false);
-//     }
-//   }, [itemWasDeleted]);
+  //   useEffect(() => {
+  //     if (itemWasDeleted) {
+  //       setItemWasDeleted(false);
+  //     }
+  //   }, [itemWasDeleted]);
 
   // if search component reuturn queryResult with value,
   // overridedefault and show userSearch results
@@ -203,58 +201,6 @@ let StyledExplorer = styled.div`
     height: 100%;
     /* position: relative; */
   }
-  table {
-    overflow: hidden;
-    table-layout: fixed;
-    thead {
-      background-color: #131313;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), 0 5px 10px rgba(0, 0, 0, 0.22);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      th {
-        text-align: start;
-        vertical-align: middle;
-        font-weight: bold;
-        padding-left: 10px;
-        color: #e3e3e3;
-        font-size: 13px;
-        /* width: 100%; */
-      }
-    }
-  }
-  .instances {
-    width: 100px;
-  }
-  .picture {
-    text-align: center;
-    vertical-align: middle;
-    height: 50px;
-    width: 100px;
-    padding: 5px;
-    /* padding: 10px; */
-  }
-  .title {
-    /* width: calc(100% - 650px); */
-    max-width: 150px;
-    /* max-width: 400px; */
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .date {
-    width: 200px;
-  }
-  .action {
-    width: 250px;
-    position: relative;
-    .infoSVG {
-      height: 10px;
-      width: 10px;
-      fill: white;
-      margin-left: 10px;
-    }
-  }
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
@@ -263,54 +209,5 @@ let StyledExplorer = styled.div`
 
   scrollbar-width: none;
 `;
-
-// let StyledInfoOverlay = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(0, 0, 0, 0.8);
-//   position: absolute;
-//   backdrop-filter: blur(10px);
-//   top: 0px;
-//   left: 0px;
-//   z-index: 2;
-//   display: flex;
-//   justify-content: center;
-//   flex-direction: column;
-//   align-items: center;
-//   h1 {
-//     margin-bottom: 10px;
-//     font-size: 20px;
-//   }
-//   .instruction {
-//     background-color: #262626;
-//     padding: 5px;
-//     border-radius: 5px;
-//     display: flex;
-//     justify-content: flex-start;
-//     align-items: center;
-//     margin: 5px;
-//     width: 250px;
-//     .svg {
-//       margin: 5px;
-//     }
-//     .instruction-text {
-//       display: flex;
-//       flex-direction: column;
-//       justify-content: space-around;
-//       .main {
-//         font-size: 12px;
-//         font-weight: bold;
-//       }
-//       .extra {
-//         font-size: 10px;
-//         color: gray;
-//       }
-//     }
-//   }
-//   .footnote {
-//     font-size: 12px;
-//     margin-top: 20px;
-//   }
-// `;
 
 export default LocalStorage;

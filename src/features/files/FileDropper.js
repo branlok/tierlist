@@ -12,10 +12,10 @@ function FileDropper() {
   const onDrop = useCallback(async (acceptedFiles) => {
     let ObjectURL = [];
     //can't use foreach because await wont'work
-    console.log(acceptedFiles);
+
     for (let file in acceptedFiles) {
       let imageURL = URL.createObjectURL(file);
-      console.log(imageURL, "huh1")
+
       ObjectURL.push(imageURL);
       await dispatch(addImage({source: file, imageURL}));
     }
@@ -24,7 +24,7 @@ function FileDropper() {
   }, []);
 
   useEffect(() => {
-    console.log(image);
+
   }, [image]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

@@ -36,6 +36,7 @@ function FileDropper({ showFileUpload, setShowFileUpload }) {
     onDrop,
     noClick: true,
     noKeyboard: true,
+    accept: 'image/*'
   });
 
   return (

@@ -14,7 +14,7 @@ function FinalizeModal({ setOpenFinalize }) {
       <StyledModule>
         <StyledScreenshotWrapper className="fullScroll">
           <div ref={captureRef}>
-            <MockTierlist orientation={orientation}/>
+            <MockTierlist orientation={orientation} />
           </div>
         </StyledScreenshotWrapper>
         <StyledActions>
@@ -77,7 +77,7 @@ let StyledModule = styled.div`
     width: 900px;
   } */
   @media only screen and (min-width: 1700px) {
-    height: 600px;
+    height: 400px;
     width: 900px;
     border: 6px solid white;
   }
@@ -107,7 +107,7 @@ let StyledScreenshotWrapper = styled.div`
   }
   @media only screen and (min-width: 1700px) {
     height: 300px;
-    max-height: 600px;
+    max-height: 500px;
     width: 500px;
   }
   position: absolute;

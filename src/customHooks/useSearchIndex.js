@@ -36,7 +36,6 @@ function useSearchIndex(query) {
         .equals(searchValue)
         .toArray()
         .then((res) => {
-          console.log(res);
           setResults((prevState) => ({
             ...prevState,
             data: res,
@@ -56,7 +55,6 @@ function useSearchIndex(query) {
     };
   }, [category, searchValue, table]); //run only once
 
-  console.log(results);
   return results;
 }
 

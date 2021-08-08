@@ -14,16 +14,19 @@ function Tierlist({ toolState }) {
     let l = 75 - subtract;
     l = Number.parseFloat(l).toFixed(4);
     nd = Number.parseFloat(nd).toFixed(0);
+    let transitionDelay = 0.05 * i;
     return `
     .row:nth-child(${i + 1}) {
           background-color: ${`hsl(${highlight},${nd}%, ${l}%)`};
-          transition: 0.3s;
+          transition: 0.3s ease;
+          transition-delay: ${transitionDelay}s;
+          animation-delay: ${transitionDelay}s;
          }
       `;
   }
   function getColorRows(numOfRows, theme) {
     let highlight;
-    console.log(theme);
+
     switch (theme) {
       case "purple":
         highlight = "259";
@@ -86,11 +89,13 @@ function Tierlist({ toolState }) {
 let leftToRight = keyframes`
 from {
   transform: translate(-100%);
+  opacity: 0;
 }
 to {
   transform: translate(0%);
+  opacity: 1;
 }
-`
+`;
 
 let StyledTL = styled.div`
   height: auto;
@@ -105,7 +110,9 @@ let StyledTL = styled.div`
     height: 125px;
     width: 100%;
     display: flex;
-
+    opacity: 1;
+    animation: ${leftToRight} 1s ease;
+    transform-origin: top center;
   }
   .title {
     width: 150px;

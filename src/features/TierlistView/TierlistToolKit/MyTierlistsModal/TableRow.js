@@ -54,7 +54,7 @@ function TableRow(item) {
         <ReactTimeAgo date={lastModified} locale="en-US" />
         {/* ({status ? "expires in "}) */}
       </td>
-      <th>{numberOfItems}</th>
+      {/* <th>{numberOfItems}</th> */}
       <td className="action">
         <StyledActionLink
           href={`/build/${id}`}

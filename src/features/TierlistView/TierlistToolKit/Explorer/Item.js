@@ -22,17 +22,6 @@ function Item({ item }) {
   );
   let titleEditRef = useRef();
 
-  useEffect(() => {
-    if (item) {
-      (async () => {
-        let x = await db.items
-          .where("id")
-          .equals(item.id)
-          .each((item) => console.log(item, "weryoods"));
-      })();
-    }
-  }, [item]);
-
   const handleSubmit = async (e) => {
     //run dispatch to edit redux
     // console.log(item.id);
@@ -48,9 +37,7 @@ function Item({ item }) {
   };
 
   useEffect(() => {
-    console.log(showTitleEdit);
     if (showTitleEdit && title) {
-      console.log("read");
       titleEditRef.current.focus();
     }
   }, [showTitleEdit]);

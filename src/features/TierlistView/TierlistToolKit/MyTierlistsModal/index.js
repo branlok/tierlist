@@ -115,16 +115,16 @@ function MyTierlistModal({ modalOpen, setModalOpen }) {
  */
 let fetchTierlists = async (db, table, index, reverse) => {
   if (!reverse) {
-    return await db[table].reverse(index).toArray((response) => {
-      return response;
-    });
-  } else {
     return await db[table]
+      .orderBy(index)
       .reverse(index)
-      .reverse()
       .toArray((response) => {
         return response;
       });
+  } else {
+    return await db[table].orderBy(index).toArray((response) => {
+      return response;
+    });
   }
 };
 

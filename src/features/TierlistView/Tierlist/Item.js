@@ -1,10 +1,10 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
-import { deleteItem, deleteItemFromDB, saveTierlist } from "../TierlistSlice";
+import styled from "styled-components";
+import {  deleteItemFromDB, saveTierlist } from "../TierlistSlice";
 import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelete.svg";
-import { ReactComponent as ReturnSVG } from "../../../Styles/svg/returnArrow.svg";
+
 function Item({ itemId, index, toolState }) {
   let item = useSelector((state) => state.loadedTierlist.items[itemId]);
   let size = useSelector((state) => state.loadedTierlist.tierlist.size);

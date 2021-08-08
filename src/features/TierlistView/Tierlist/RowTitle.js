@@ -105,6 +105,15 @@ export let blinking = keyframes`
   }
 `;
 
+export let fadeIn = keyframes`
+from {
+  background-color: rgba(0, 0, 0, 0);
+}
+to {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+`;
+
 let StyledRowTitle = styled.div`
   width: 150px;
   height: 125px;
@@ -119,8 +128,9 @@ let StyledRowTitle = styled.div`
   padding: 10px;
 
   //this gives a desaturated look
-  background-color: rgba(0, 0, 0, 0.3);
-
+  /* background-color: rgba(0, 0, 0, 0.3); */
+  animation: ${fadeIn} 1s ease forwards;
+  animation-delay: 1s;
   :hover > .row-tools {
     transform: ${(props) =>
       props.hidetool ? "translateX(-30px);" : "translateX(0px);"};

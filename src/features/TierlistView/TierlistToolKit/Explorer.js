@@ -26,7 +26,7 @@ function Explorer() {
   let itemsExists = useMemo(() => {
     return Object.keys(items).length > 0;
   }, [items]);
-  console.log(itemsExists);
+
   //search logic
   let [userSearch, setUserSearch] = useState(false);
   let [queryResult, setQueryResult] = useState(null);

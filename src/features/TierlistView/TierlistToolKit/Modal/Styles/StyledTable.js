@@ -12,6 +12,7 @@ let StyledTable = styled.table`
     position: sticky; //!! fix to work on chrome
     top: 0px;
     left: 0px;
+    z-index: 1;
     tr {
       th {
         text-align: start;
@@ -24,12 +25,32 @@ let StyledTable = styled.table`
           background-color: rgba(0, 0, 0, 0.9);
         }
         .title {
-          width: calc(100% - (4 * 100px));
+          width: 100px;
         }
         .sortSVG {
           fill: gray;
           height: 10px;
           transform: ${(props) => (props.reverse ? "rotate(-180deg)" : "")};
+        }
+      }
+      .picture {
+        width: 70px;
+      }
+      .title {
+        width: calc(100% - 520px);
+      }
+      .date {
+        width: 150px;
+      }
+      .action {
+        /* min-width: 100px; */
+        min-width: 220px;
+        //Explorer/LocalStorage Modal
+        .infoSVG {
+          height: 10px;
+          width: 10px;
+          fill: white;
+          margin-left: 10px;
         }
       }
     }
@@ -48,9 +69,14 @@ let StyledTable = styled.table`
       td {
         padding-left: 10px;
         vertical-align: middle;
+        overflow: hidden;
       }
       .title {
         color: white;
+        width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .action {
         vertical-align: middle;

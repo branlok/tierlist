@@ -25,7 +25,6 @@ function Description({ itemId, itemDescription }) {
 
   let submitDescription = async (e) => {
     e.preventDefault();
-    console.log(itemId, description);
 
     await dispatch(
       updateItemDetails({
@@ -45,12 +44,12 @@ function Description({ itemId, itemDescription }) {
   let handleChange = (e) => {
     const keyCode = e.code;
     setDescription(e.target.value);
-    console.log(keyCode);
+
     if (keyCode === "Enter" && !e.shiftKey) {
       // Don't generate a new line
       e.preventDefault();
       // e.target.submit();
-      console.log("happened fired");
+
       submitForm.current.submit();
       // Do something else such as send the message to back-end
       // ...

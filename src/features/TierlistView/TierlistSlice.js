@@ -62,7 +62,6 @@ export const loadTierlist = createAsyncThunk(
           1
         );
         delete tierlistData.items[item];
-        console.log(`deleted: ${item}`);
       }
 
       //should also update tierlist right away.
@@ -75,7 +74,9 @@ export const loadTierlist = createAsyncThunk(
       .where("tierlistId")
       .equals(tierlistId)
       .delete()
-      .then((deletecount) => console.log(deletecount));
+      .then((deletecount) =>
+        console.log(`purged previous session item instances: ${deletecount}`)
+      );
 
     //generate new session items.
     let items = tierlistData.items;
@@ -88,9 +89,7 @@ export const loadTierlist = createAsyncThunk(
       itemEntries.push(value);
     }
 
-    await db.items.bulkAdd(itemEntries, itemKeys).then((response) => {
-      console.log("successfully instances");
-    });
+    await db.items.bulkAdd(itemEntries, itemKeys).then((response) => {});
 
     let response = { updateTo: tierlistData, imagePayload: imageObjects };
     return response;
@@ -125,9 +124,7 @@ export const saveTierlist = createAsyncThunk(
     }
     const response2 = await db.items
       .bulkPut(values, keys)
-      .then(function (lastKey) {
-        console.log("updated Store");
-      });
+      .then(function (lastKey) {});
 
     return;
   }
@@ -161,12 +158,10 @@ export const updateItemsDB = createAsyncThunk(
 
     const response2 = await db.items
       .bulkPut(values, keys)
-      .then(function (lastKey) {
-        console.log("updated Store");
-      });
+      .then(function (lastKey) {});
     //previously used with items: "++id, name, resides, tierlistId, [tierlistId+resides], [tierlistId+name]"});
     // const response2 = await db.items.bulkPut(x).then(function (lastKey) {
-    //   console.log("updated Store");
+
     // });
   }
 );
@@ -185,18 +180,17 @@ export const deleteItemFromDB = createAsyncThunk(
       .where(["id", "tierlistId"])
       .equals([payload, tierlistId])
       .delete()
-      .then((deletecount) => console.log(deletecount, "rew"));
+      .then((deletecount) =>
+        console.log(`number of items deleted from items index: ${deletecount}`)
+      );
 
     //check if it is last copy. if so delete the source file.
     let isTableEmpty = await db.items
       .where("id")
       .equals(payload)
       .toArray((items) => {
-        console.log(items, "Ews");
         return items.length;
       });
-
-    console.log(isTableEmpty, "is it ?");
 
     // if (isTableEmpty === 0) {
     //   let deleted = await db.images
@@ -218,7 +212,7 @@ export const updateOrderInRow = createAsyncThunk(
       .update(payload.draggableId, {
         resides: payload.destination.droppableId,
       })
-      .then((res) => console.log("updated"));
+      .then((res) => console.log("updated row"));
     return payload;
   }
 );
@@ -229,7 +223,7 @@ export const updateItemDetails = createAsyncThunk(
     //update instance
     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
     let itemId = tierlistId + "/" + payload.itemId;
-    console.log(itemId, { [payload.field]: payload.content });
+
     await db.items
       .update(itemId, { [payload.field]: payload.content })
       .catch((e) => console.log(e));
@@ -239,9 +233,8 @@ export const updateItemDetails = createAsyncThunk(
 
     await db.tierlists
       .update(tierlistId, { [pathToUpdate]: payload.content })
-      .then((res) => console.log(res));
-    //   .update(tierlistId, )
-    console.log(payload);
+      .then((res) => console.log("updated tierlist in indexeddb"));
+
     return payload;
   }
 );
@@ -300,26 +293,37 @@ export const deleteTierlist = createAsyncThunk(
   async (payload, thunkAPI) => {
     //settings
     let { tierlistId, option } = payload;
-    console.log(payload, "humm");
     //run delete tierlist,
     let x = await db.tierlists
       .where("id")
       .equals(tierlistId)
       .delete()
-      .then((res) => console.log(res, "deleted tierlists"));
+      .then((deletecount) =>
+        console.log(
+          `deleted tierlists indexeddb of ${tierlistId} - count ${deletecount}`
+        )
+      );
     //run delete all item instances,
     let y = await db.items
       .where("tierlistId")
       .equals(tierlistId)
       .delete()
-      .then((res) => console.log(res, "deleted itemindex"));
+      .then((deletecount) =>
+        console.log(
+          `deleted items indexeddb of ${tierlistId} - count: ${deletecount}`
+        )
+      );
     //run delete
     if (option.deleteImageIndex) {
       await db.images
         .where("tierlistId")
         .equals(tierlistId)
         .delete()
-        .then((deletecount) => console.log(deletecount, "deleted images"));
+        .then((deletecount) =>
+          console.log(
+            `deleted images indexeddb o ${tierlistId} - count: ${deletecount}`
+          )
+        );
     }
 
     //in the instance where u delete the tierlist you are on.
@@ -351,7 +355,7 @@ export const deleteOutDatedTierlists = createAsyncThunk(
       .where("date")
       .below(Date.now() - 604800000)
       .modify((value, ref) => {
-        console.log(value, "the value");
+        console.log("purging tierlists that were more than a week old");
         if (value.status === "initialized" || value.status === "draft") {
           delete ref.value;
         }
@@ -428,7 +432,7 @@ let tierlistSlice = createSlice({
       }
       //remove row from rowOrder
       let index = state.rowOrder.indexOf(targetRow);
-      console.log(index);
+
       state.rowOrder.splice(index, 1);
       //remove row data
       delete state.rows[targetRow];
@@ -465,7 +469,6 @@ let tierlistSlice = createSlice({
       }
     },
     editItemTitle: (state, action) => {
-      console.log(action.payload);
       state.items[action.payload.id][action.payload.field] =
         action.payload.newValue;
     },
@@ -475,9 +478,9 @@ let tierlistSlice = createSlice({
     },
     editTierlistInfo: (state, action) => {
       let field = action.payload.field;
-      console.log(action.payload.newValues);
       if (action.payload.multiple) {
-        console.log(action.payload.newValues);
+        //multiple actions
+
         for (let [key, value] of Object.entries(action.payload.newValues)) {
           state.tierlist[key] = value;
         }
@@ -494,12 +497,10 @@ let tierlistSlice = createSlice({
     },
     [loadTierlist.pending]: (state, action) => {
       //   return action.payload;
-      // console.log(action.payload.tierlistData, action.payload.imageObjects);
       state.status = "loading";
     },
     [loadTierlist.fulfilled]: (state, action) => {
       //   return action.payload;
-      // console.log(action.payload.tierlistData, action.payload.imageObjects);
       state.items = action.payload.updateTo.items;
       state.rows = action.payload.updateTo.rows;
       state.rowOrder = action.payload.updateTo.rowOrder;
@@ -541,7 +542,6 @@ let tierlistSlice = createSlice({
     [deleteItemFromDB.fulfilled]: (state, action) => {
       //remove specificied item from items and row itemOrder
       if (action.payload) {
-        console.log(action.payload, "what", state.items[action.payload]);
         let resides = state.items[action.payload]?.resides;
         if (resides) {
           delete state.items[action.payload];
@@ -564,7 +564,6 @@ let tierlistSlice = createSlice({
       }
     },
     [deleteTierlist.rejected]: (state, action) => {
-      console.log(action.payload);
     },
   },
 });

@@ -67,7 +67,7 @@ function Search({ setQueryResult, searchType, setUserSearch }) {
   let { execute, status, value, error } = useAsync(targetFunction, false);
 
   useEffect(() => {
-    console.log(value);
+
     if (status == "success") {
       setQueryResult(value);
     }

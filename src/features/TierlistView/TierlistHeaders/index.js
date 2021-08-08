@@ -54,7 +54,7 @@ function TierlistHeaders() {
 
   let handleSubmitTitle = async (e) => {
     e.preventDefault();
-    console.log(newTitle, typeof newTitle);
+
     let filteredTitle = newTitle;
     if (newTitle.length === 0) {
       filteredTitle = "Untitled Tierlist";
