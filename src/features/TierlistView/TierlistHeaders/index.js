@@ -26,6 +26,7 @@ function TierlistHeaders() {
   );
 
   let [newTitle, setNewTitle] = useState(title);
+
   useEffect(() => {
     if (newRowId !== "storage") {
       console.log(newRowId);
@@ -53,13 +54,17 @@ function TierlistHeaders() {
 
   let handleSubmitTitle = async (e) => {
     e.preventDefault();
+    console.log(newTitle, typeof newTitle);
     let filteredTitle = newTitle;
-    // if (title) {
-    //   filteredTitle = "Untitled Tierlist"
-    // }
+    if (newTitle.length === 0) {
+      filteredTitle = "Untitled Tierlist";
+    }
     dispatch(editTierlistInfo({ newValue: filteredTitle, field: "title" }));
     await dispatch(saveTierlist());
     setEditMode(false);
+    if (title.length === 0) {
+      setNewTitle(filteredTitle);
+    }
   };
 
   return (

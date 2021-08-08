@@ -33,6 +33,7 @@ export const loadTierlist = createAsyncThunk(
         date: Date.now(),
         lastEdited: Date.now(),
         title: newProject.tierlist.title.toLowerCase(),
+        numberOfItems: 0,
         name: newProject.tierlist.title,
       });
       return { updateTo: newProject };
@@ -321,6 +322,7 @@ export const deleteTierlist = createAsyncThunk(
         .then((deletecount) => console.log(deletecount, "deleted images"));
     }
 
+    //in the instance where u delete the tierlist you are on.
     if (option.reset) {
       let newTierlist = baseTierlistMaker(tierlistId);
       await db.tierlists.put({
@@ -329,6 +331,7 @@ export const deleteTierlist = createAsyncThunk(
         status: "initialized",
         date: Date.now(),
         lastEdited: Date.now(),
+        numberOfItems: 0,
         title: newTierlist.tierlist.title.toLowerCase(),
         name: newTierlist.tierlist.title,
       });

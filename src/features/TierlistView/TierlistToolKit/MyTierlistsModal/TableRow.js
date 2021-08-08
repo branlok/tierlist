@@ -16,11 +16,11 @@ function TableRow(item) {
   let [deleted, setDeleted] = useState(false);
   let { id: currentTierlistId } = useParams();
 
-  let { title, status, lastEdited, date, id } = item.item;
+  let { title, status, lastEdited, date, id, numberOfItems } = item.item;
 
   let handleDelete = async (targetTierlistId, calledFrom) => {
     let deleteSelf = targetTierlistId === calledFrom;
-    console.log(targetTierlistId, calledFrom, deleteSelf);
+
     if (deleteSelf) {
       await dispatch(
         deleteTierlist({
@@ -46,10 +46,7 @@ function TableRow(item) {
   if (deleted) return null;
   return (
     <tr>
-      <td className="title">
-        {" "}
-        {title} 
-      </td>
+      <td className="title"> {title}</td>
       <td>
         <ReactTimeAgo date={lastCreated} locale="en-US" />
       </td>
@@ -57,6 +54,7 @@ function TableRow(item) {
         <ReactTimeAgo date={lastModified} locale="en-US" />
         {/* ({status ? "expires in "}) */}
       </td>
+      <th>{numberOfItems}</th>
       <td className="action">
         <StyledActionLink
           href={`/build/${id}`}
@@ -91,5 +89,3 @@ function TableRow(item) {
 }
 
 export default TableRow;
-
-// let StyleRows = styled.tr``;
