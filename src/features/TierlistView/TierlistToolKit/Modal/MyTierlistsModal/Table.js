@@ -1,7 +1,7 @@
 import React from "react";
-import StyledTable, { StyledCol } from "../Modal/Styles/StyledTable";
+import StyledTable, { StyledCol } from "../Styles/StyledTable";
 import TableRow from "./TableRow";
-import { ReactComponent as SortBySVG } from "../../../../Styles/svg/triangle.svg";
+import { ReactComponent as SortBySVG } from "../../../../../Styles/svg/triangle.svg";
 import styled from "styled-components";
 function Table({
   tierlists,
@@ -66,9 +66,11 @@ function Table({
         </tr>
       </thead>
       <tbody>
-        {tierlists.map((item) => (
-          <TableRow key={item.id} item={item} />
-        ))}
+        {tierlists.map((item) => {
+          if (item.status !== "initialized") {
+            return <TableRow key={item.id} item={item} />;
+          }
+        })}
       </tbody>
     </StyledTable>
   );

@@ -6,12 +6,12 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import db from "../../../db";
-import DropdownSort from "./Explorer/DropdownSort";
+import db from "../../../../../db";
+import DropdownSort from "./DropdownSort";
 
-import Item from "./Explorer/Item";
-import Search from "./Search";
-import { StyledHeader } from "./styles";
+import Item from "./Item";
+import Search from "../../Search";
+import { StyledHeader } from "../../styles";
 
 /**
  * Component returns ordered list of items query from indexeddb
@@ -88,7 +88,7 @@ function Explorer() {
           {!userSearch && !itemsExists ? (
             <StyledNoContent>
               <p className="caption">
-                Get Started by uploading images <br /> into Storage below{" "}
+                Begin by uploading images <br /> into Storage below{" "}
               </p>
             </StyledNoContent>
           ) : null}

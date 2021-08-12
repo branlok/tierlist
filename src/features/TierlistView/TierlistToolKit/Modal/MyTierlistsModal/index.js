@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import useAsync from "../../../../customHooks/useAsync";
+import useAsync from "../../../../../customHooks/useAsync";
 
-import db from "../../../../db";
+import db from "../../../../../db";
 import { StyledBody, StyledHeader, StyledModule } from "../ExplorerModal";
 import { StyledSearchWrapper } from "../ExplorerModal/LocalStorage";
-import Search from "../Search";
-import { StyledOverlay } from "../styles";
+import Search from "../../Search";
+import { StyledOverlay } from "../../styles";
 import Table from "./Table";
 
 /**

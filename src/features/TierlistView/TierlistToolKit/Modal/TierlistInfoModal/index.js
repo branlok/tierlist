@@ -1,10 +1,11 @@
 import { Field, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
-import { editTierlistInfo, saveTierlist } from "../../TierlistSlice";
-import { StyledOverlay } from "../styles";
+import styled from "styled-components";
+import { editTierlistInfo, saveTierlist } from "../../../TierlistSlice";
+import { StyledOverlay } from "../../styles";
 import * as Yup from "yup";
+import { expandIn } from "../../../../../GlobalStyles";
 function TierlistInfo({ modalOpen, setModalOpen }) {
   let { title, description, size, theme } = useSelector(
     (state) => state.loadedTierlist.tierlist
@@ -14,16 +15,29 @@ function TierlistInfo({ modalOpen, setModalOpen }) {
   let initialValues = {
     title,
     description,
-    size,
+    // size,
     theme,
   };
 
   const SignupSchema = Yup.object().shape({
     title: Yup.string().max(60, "Too Long!").required("Required"),
     description: Yup.string().max(240, "Too Long!"),
-    size: Yup.string().required("Required"),
+    // size: Yup.string().required("Required"),
     theme: Yup.string().required("Required"),
   });
+
+  useEffect(() => {
+    let handleCloseModal = function (event) {
+      if (event.key === "Escape") {
+        //do something
+        setModalOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleCloseModal);
+    return () => {
+      document.removeEventListener("keydown", handleCloseModal);
+    };
+  }, []);
 
   return (
     <StyledOverlay
@@ -87,18 +101,20 @@ function TierlistInfo({ modalOpen, setModalOpen }) {
                   <div className="field">
                     <label>Theme</label>
                     <Field name="theme" component="select">
-                      <option value="default">Purple</option>
+                      <option value="default">Default - Purple</option>
                       <option value="pink">Pink</option>
                       <option value="brightPink">Bright Pink</option>
                       <option value="blue">Blue</option>
                       <option value="brightBlue">Bright Blue</option>
+                      <option value="orange">Orange</option>
+                      <option value="brightOrange">Bright Orange</option>
                       <option value="red">Red</option>
                       <option value="brightRed">Bright Red</option>
-                      <option value="yellow">Yellow</option>
-                      <option value="brightYellow">Bright Yellow</option>
+                      <option value="yellow">Olive Green</option>
+                      <option value="brightYellow">Yellow</option>
                     </Field>
                   </div>
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Image Dimensions</label>
                     <label className="radio-label">
                       <Field type="radio" name="size" value="original" />
@@ -108,7 +124,7 @@ function TierlistInfo({ modalOpen, setModalOpen }) {
                       <Field type="radio" name="size" value="square" />
                       1:1
                     </label>
-                  </div>
+                  </div> */}
                 </div>
               </StyledSection>
               <StyledSection height={100} shrink={false} flexEnd={true}>
@@ -149,7 +165,7 @@ export const StyledHeader = styled.div`
   flex-shrink: 0;
   z-index: 1;
   font-size: 14px;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   .spacing {
     width: 150px;
     height: 100%;
@@ -168,22 +184,11 @@ export const StyledHeader = styled.div`
   }
 `;
 
-let expandIn = keyframes`
-from {
-transform: scale(0.9);
-opacity: 0;
-}
-to {
-    transform: scale(1);
-    opacity: 1;
-}
-`;
-
 export const StyledModule = styled.form`
   height: 360px;
   width: 700px;
   background-color: #131313;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   animation: ${expandIn} 0.3s ease forwards;
   display: flex;
   flex-direction: column;
@@ -208,7 +213,7 @@ let StyledSection = styled.section`
     font-weight: bold;
     font-size: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   }
   .body {
     font-size: 16px;
@@ -219,13 +224,13 @@ let StyledSection = styled.section`
     align-items: start;
     padding: 15px 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     .field {
       display: flex;
       justify-content: center;
       align-items: flex-start;
       flex-direction: column;
-      width: 100%;
+      width: 50%;
       margin: 5px;
       label {
         padding-left: 5px;
@@ -271,25 +276,29 @@ let StyledSection = styled.section`
       } */
       }
     }
-    .cancel {
+    button {
+      padding: 5px 25px;
+      font-weight: bold;
+      border-style: none;
+      cursor: pointer;
+      transition: 0.2s;
       border-radius: 5px;
+    }
+    .cancel {
       background-color: gray;
       color: white;
-      font-weight: bold;
-      border-style: none;
-      padding: 5px 15px;
       margin: 5px 0px;
-      cursor: pointer;
+      :hover {
+        background-color: lightgray;
+      }
     }
     .submit {
-      border-radius: 5px;
-      background-color: #30269d;
+      background-color: ${(props) => props.theme.main.accent};
       color: white;
-      font-weight: bold;
-      border-style: none;
-      padding: 5px 15px;
       margin: 5px 10px;
-      cursor: pointer;
+      :hover {
+        background-color: ${(props) => props.theme.main.primary};
+      }
     }
   }
 `;

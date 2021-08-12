@@ -17,9 +17,9 @@ function Row({ rowId, index, toolState }) {
 
   return (
     <Droppable droppableId={rowId} direction="horizontal">
-      {(provided) => {
+      {(provided, snapshot) => {
         return (
-          <div id={`row-${rowId}`} className="row row1">
+          <div id={`row-${rowId}`} className="row">
             <RowTitle row={row} />
             <StyledDroppableRow
               //   className="row"

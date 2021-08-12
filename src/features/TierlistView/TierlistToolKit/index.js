@@ -1,74 +1,52 @@
 import React from "react";
 
 import styled from "styled-components";
+import { bounceIn } from "../../../GlobalStyles";
 import { ReactComponent as UpArrowSVG } from "../../../Styles/svg/upArrow.svg";
-import Explorer from "./Explorer";
-import Footer from "./Footer";
-import Header from "./Header";
+import ExpandedToolkit from "./ExpandedToolkit";
 import MiniToolKit from "./MinimizeToolKit";
-import Storage from "./Storage";
 
 /**
- * Renders tierlist toolkit, expandable and unexpanded form
+ * ?Renders  right sidebar toolkit of buildFpage, expandable and unexpanded states
  *
  * @param: toolState (Boolean) True: toolbar open, false: toolbar closed
  * @param: setToolState (fucntion) cooresponding react setter for toolState
  */
-
 function TierlistToolkit({ toolState, setToolState }) {
-  //   let [toolState, setToolState] = useState(false);
-
   return (
     <StyledSidebar width={toolState ? "400px" : "250px"}>
-      <StyledToggle
-        pointLeft={toolState}
-        className="toggle"
-        onClick={() => setToolState((prevState) => !prevState)}
-      >
-        <UpArrowSVG className="toggleSVG" />
-      </StyledToggle>
+      <ToggleButton pointLeft={toolState} setToolState={setToolState} />
       {toolState ? (
-        <StyledExpandedWrapper>
-          <Header />
-          <StyledWrapper>
-            <Explorer />
-            <Storage toolState={toolState} />
-            <Footer />
-          </StyledWrapper>
-        </StyledExpandedWrapper>
+        <ExpandedToolkit toolState={toolState} />
       ) : (
         <MiniToolKit toolState={toolState} />
       )}
     </StyledSidebar>
   );
 }
-let StyledExpandedWrapper = styled.div`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  .explorer {
-    height: 100%;
-  }
-`;
 
-let StyledWrapper = styled.div`
-  width: calc(100% - 20px); //20px from margin
-  height: calc(100% - 110px); //80px + 20px from margin
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  margin: 10px;
-  padding: 15px 10px;
-  display: flex;
-  flex-direction: column;
-`;
+/**
+ * renders the button that points left or right depending on expanded or not
+ *
+ * @param {boolean} param0.toolState - toolbar's state expanded/minimized
+ * @param {boolean} param0.setToolState - toolbar's setter
+ * @returns
+ */
+function ToggleButton({ pointLeft, setToolState }) {
+  return (
+    <StyledToggle
+      pointLeft={pointLeft}
+      className="toggle"
+      onClick={() => setToolState((prevState) => !prevState)}
+    >
+      <UpArrowSVG className="toggleSVG" />
+    </StyledToggle>
+  );
+}
 
 let StyledSidebar = styled.div`
   height: 100%;
   width: ${(props) => props.width};
-  /* background-color: #331c64; */
   background-color: ${(props) => props.theme.main.primaryVarient};
   transition: 0.3s;
   flex-shrink: 0;
@@ -78,6 +56,7 @@ let StyledSidebar = styled.div`
   flex-direction: column;
   position: relative;
 `;
+
 
 let StyledToggle = styled.button`
   position: absolute;
@@ -91,11 +70,8 @@ let StyledToggle = styled.button`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background-color: ${(props) =>
-    props.pointLeft
-      ? props.theme.main.primaryVarient
-      : props.theme.main.accent};
-      background-color: black;
+  background-color: black;
+  animation: ${bounceIn} 1s ease forwards;
   .toggleSVG {
     width: 20px;
     height: 20px;

@@ -1,57 +1,47 @@
 import React, { useState } from "react";
-import styled, { keyframes } from "styled-components";
-import ExplorerModal from "../ExplorerModal";
-import MyTierlistModal from "../MyTierlistsModal";
-import Storage from "../Storage";
-import TierlistInfo from "../TierlistInfo";
+import styled from "styled-components";
+import ExplorerModal from "../Modal/ExplorerModal";
+import MyTierlistModal from "../Modal/MyTierlistsModal";
+import Storage from "../Storage/Storage";
+import TierlistInfo from "../Modal/TierlistInfoModal";
 import LinkBox from "./LinkBox";
 import Logo from "./Logo";
+import { fadeIn } from "../../../../GlobalStyles";
+import Footer from "../ExpandedToolkit/Footer";
 
+/**
+ * renders minimize toolbar
+ *
+ * @param {boolean} param0.toolState - use to adjust storage view
+ * @returns minimized version which onctains modal links, storage and logo
+ */
 function MiniToolKit({ toolState }) {
   let [modalOpen, setModalOpen] = useState(false);
   return (
     <StyledMiniToolKitWrapper>
       <Logo />
       <LinkBox setModalOpen={setModalOpen} />
-      <div className="storage-wrapper">
         <Storage toolState={toolState} />
-      </div>
-      {modalOpen == "info" && (
+      {modalOpen === "info" && (
         <TierlistInfo modalOpen={modalOpen} setModalOpen={setModalOpen} />
       )}
-      {modalOpen == "explorer" && (
+      {modalOpen === "explorer" && (
         <ExplorerModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
       )}
-      {modalOpen == "myTierlists" && (
+      {modalOpen === "myTierlists" && (
         <MyTierlistModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
       )}
+      <Footer/>
     </StyledMiniToolKitWrapper>
   );
 }
 
-let fadeIn = keyframes`
- from {
-   opacity: 0;
- }
- to {
-   opacity: 1;
- }
-`
-
-let StyledMiniToolKitWrapper = styled.div`
+let StyledMiniToolKitWrapper = styled.aside`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  .storage-wrapper {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    padding: 10px;
-    animation: ${fadeIn} 1s ease forwards;
-  }
 `;
 
 export default MiniToolKit;

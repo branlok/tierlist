@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
+import { blinking, fadeIn03 } from "../../../GlobalStyles";
 import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelete.svg";
 import { ReactComponent as EditPenSVG } from "../../../Styles/svg/EditPen2.svg";
 
@@ -99,20 +100,7 @@ function RowTitle({ row }) {
   );
 }
 
-export let blinking = keyframes`
-  50% {
-    opacity: 0.6;
-  }
-`;
 
-export let fadeIn = keyframes`
-from {
-  background-color: rgba(0, 0, 0, 0);
-}
-to {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-`;
 
 let StyledRowTitle = styled.div`
   width: 150px;
@@ -129,7 +117,7 @@ let StyledRowTitle = styled.div`
 
   //this gives a desaturated look
   /* background-color: rgba(0, 0, 0, 0.3); */
-  animation: ${fadeIn} 1s ease forwards;
+  animation: ${fadeIn03} 1s ease forwards;
   animation-delay: 1s;
   :hover > .row-tools {
     transform: ${(props) =>

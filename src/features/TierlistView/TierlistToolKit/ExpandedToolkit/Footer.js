@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { saveTierlist } from "../TierlistSlice";
-import FinalizeModal from "./Modal/FinalizeModal";
+import { saveTierlist } from "../../TierlistSlice";
+import FinalizeModal from "../Modal/FinalizeModal";
 
 function Footer() {
-  let tierlist = useSelector((state) => state.loadedTierlist);
-  let dispatch = useDispatch();
+  // let tierlist = useSelector((state) => state.loadedTierlist);
+  // let dispatch = useDispatch();
   let [openFinalize, setOpenFinalize] = useState(false);
 
   return (
-    <StyledHeader>
+    <StyledFinalize>
       <button
         className="save-button"
         onClick={() => setOpenFinalize(true)}
@@ -20,12 +20,14 @@ function Footer() {
       >
         Save to Collection
       </button>
-      {openFinalize ? <FinalizeModal setOpenFinalize={setOpenFinalize}/> : null}
-    </StyledHeader>
+      {openFinalize ? (
+        <FinalizeModal setOpenFinalize={setOpenFinalize} />
+      ) : null}
+    </StyledFinalize>
   );
 }
 
-let StyledHeader = styled.div`
+let StyledFinalize = styled.div`
   width: 100%;
   padding-top: 10px;
   height: 80px;

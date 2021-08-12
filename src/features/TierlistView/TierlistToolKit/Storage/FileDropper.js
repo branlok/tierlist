@@ -1,32 +1,40 @@
 import { nanoid } from "@reduxjs/toolkit";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { useDispatch, useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
-import { addImage } from "../../imageHandler/imageSlice";
-import { addItem, updateItemsDB, updateTierlistStatus } from "../TierlistSlice";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { fadeIn } from "../../../../GlobalStyles";
+import { addImage } from "../../imageSlice";
 
-function FileDropper({ showFileUpload, setShowFileUpload }) {
+import { addItem, saveTierlist } from "../../TierlistSlice";
+
+/**
+ * React Component that will allows users to drag and drop items
+ * calls async action to update indexeddb and redux stores.
+ *
+ * @param {function} param0.setShowFileUpload - accepts react hook to set state to toggle back to storage mode.
+ * @returns Component with React-drop-zone logic.
+ */
+function FileDropper({ setShowFileUpload }) {
   const dispatch = useDispatch();
-  const tierlistId = useSelector((state) => state.loadedTierlist.tierlist.id);
-
-  const [showDialogue, setShowDialogue] = useState(true);
+  let { id: tierlistId } = useParams();
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      let objectURLS = [];
-
+      let objectURLS = []; //array of [imageURL, id]
       for (let file of acceptedFiles) {
         let id = nanoid();
         let imageURL = URL.createObjectURL(file);
         objectURLS.push([imageURL, id]);
+        //store original image file into indexeddb(image table)
         await dispatch(addImage({ source: file, imageURL, id, tierlistId }));
       }
+      dispatch(addItem(objectURLS)); //adds Items to redux only then,
+      await dispatch(saveTierlist()); //tell thunk to update redux tierlist to idnexeddb
 
-      await dispatch(addItem(objectURLS)); //array of items.
-      await dispatch(updateItemsDB());
-      await dispatch(updateTierlistStatus());
+      //return to storage draggables
       setShowFileUpload((prevState) => !prevState);
     },
     [tierlistId]
@@ -36,22 +44,20 @@ function FileDropper({ showFileUpload, setShowFileUpload }) {
     onDrop,
     noClick: true,
     noKeyboard: true,
-    accept: 'image/*'
+    accept: "image/*",
   });
 
   return (
     <StyledFileDropper
       {...getRootProps()}
-      onDragOver={() => setShowDialogue(false)}
       onDragLeave={() => {
-        setShowDialogue(true);
         setShowFileUpload((prevState) => !prevState);
       }}
     >
       <input {...getInputProps()} />
 
       {<p>Drop the files here ...</p>}
-      {showDialogue && (
+      {!isDragActive && (
         <StyledButton type="button" onClick={open}>
           Open File Dialog
         </StyledButton>
@@ -60,19 +66,10 @@ function FileDropper({ showFileUpload, setShowFileUpload }) {
   );
 }
 
-let fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
 let StyledFileDropper = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   /* height: 125px; */
-  height: calc(100% - 35px);
+  height: calc(100%);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -104,14 +101,14 @@ let StyledButton = styled.button`
   cursor: pointer;
   animation: ${fadeIn} 1s ease forwards;
   transition: 0.1s;
-    cursor: pointer;
-    :hover {
-      background-color: ${(props) => props.theme.main.primaryVarient};
-      transform: scale(0.95);
-    }
-    :active {
-      transform: scale(0.9);
-    }
+  cursor: pointer;
+  :hover {
+    background-color: ${(props) => props.theme.main.primaryVarient};
+    transform: scale(0.95);
+  }
+  :active {
+    transform: scale(0.9);
+  }
 `;
 
 export default FileDropper;

@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
+import { expandIn } from "../../../../../GlobalStyles";
 
-import Search from "../Search";
-import { StyledOverlay } from "../styles";
+import { StyledOverlay } from "../../styles";
 import CurrentTierlist from "./CurrentTierlist";
 import LocalStorage from "./LocalStorage";
 
-function ExplorerModal({ modalOpen, setModalOpen }) {
+/**
+ *React Component that displays a modal for 
+ *exploring files that can be added to tierlist project
+ *
+ * @param {function} param0.setModalOpen - hook to change modal open or close.
+ * @returns
+ */
+function ExplorerModal({ setModalOpen }) {
   let [tab, setTab] = useState("currentTierlist");
-  let items = useSelector((state) => state.loadedTierlist.items);
 
   useEffect(() => {
     let handleCloseModal = function (event) {
@@ -131,23 +137,13 @@ export const StyledHeader = styled.div`
   }
 `;
 
-let expandIn = keyframes`
-from {
-transform: scale(0.9);
-opacity: 0;
-}
-to {
-    transform: scale(1);
-    opacity: 1;
-}
-`;
 
 export const StyledModule = styled.div`
   height: 80%;
   width: 80%;
   /* border: 4px solid ${(props) => props.theme.main.accent}; */
   background-color: #131313;
-  
+
   /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); */
   animation: ${expandIn} 0.3s ease forwards;
   display: flex;

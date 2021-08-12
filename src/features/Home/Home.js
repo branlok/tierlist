@@ -1,14 +1,19 @@
 import { nanoid } from "@reduxjs/toolkit";
 import React from "react";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { newTierlistBuild } from "../TierlistView/TierlistSlice";
 
+/**
+ * Parent Route Component - immediately redirect user to /build with newly generated id param for project.
+ *
+ * @returns Redirect
+ *
+ */
 function Home() {
-  //create new tierlist and redirect
   let dispatch = useDispatch();
   let id = nanoid();
+  //alter loadedTierlist to loading before redirect
   dispatch(newTierlistBuild({ id }));
 
   return <Redirect to={`/build/${id}`} />;

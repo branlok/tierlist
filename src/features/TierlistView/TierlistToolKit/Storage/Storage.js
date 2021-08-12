@@ -1,23 +1,29 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import FileDropper from "./FileDropper";
 import Item from "./Item";
-import { StyledHeader } from "./styles";
-import { ReactComponent as AddSVG } from "../../../Styles/svg/Add2.svg";
+import { StyledHeader } from "../styles";
+import { ReactComponent as AddSVG } from "../../../../Styles/svg/Add2.svg";
 
+/**
+ * React Comopnent that renders the Storage module,
+ * as default renders the Storage Draggable column,
+ * but on file dragover, it changes to a filedropper component
+ *
+ * @param {boolean} param0.toolState - takes a prop name 'toolState' that inidicate toolbar open or closed.
+ * @returns
+ */
 function Storage({ toolState }) {
   let storageRow = useSelector((state) => state.loadedTierlist.rows.storage);
   let [showFileUpload, setShowFileUpload] = useState(false);
-  let [showDialogue, setShowDialogue] = useState(false);
 
   return (
-    <StyledStorageWrapper vertical={toolState}>
+    <StyledStorageWrapper vertical={!toolState}>
       <StyledHeader rotateSVG={showFileUpload}>
-        <div className="title">Storage</div>
+        <h1 className="title">Storage</h1>
         <button
           className="adder"
           onClick={() => setShowFileUpload((prevState) => !prevState)}
@@ -27,10 +33,7 @@ function Storage({ toolState }) {
         </button>
       </StyledHeader>
       {showFileUpload ? (
-        <FileDropper
-          showFileUpload={showFileUpload}
-          setShowFileUpload={setShowFileUpload}
-        />
+        <FileDropper setShowFileUpload={setShowFileUpload} />
       ) : (
         <Droppable
           droppableId={storageRow.id}
@@ -39,7 +42,7 @@ function Storage({ toolState }) {
           {(provided) => {
             return (
               <StyledStorage
-                vertical={toolState}
+                vertical={!toolState}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 onDragOver={() => setShowFileUpload((prevState) => !prevState)}
@@ -55,7 +58,7 @@ function Storage({ toolState }) {
                     />
                   );
                 })}
-                {storageRow.itemOrder.length == 0 ? (
+                {storageRow.itemOrder.length === 0 ? (
                   <div className="messsge-for-empty">
                     Drop image files or draggables here ...{" "}
                   </div>
@@ -70,14 +73,15 @@ function Storage({ toolState }) {
   );
 }
 
-let StyledStorageWrapper = styled.div`
-  /* height: 160px; */
-  height: ${(props) => (props.vertical ? "160px" : "100%")};
+let StyledStorageWrapper = styled.section`
+  height: ${(props) => (props.vertical ? "100%" : "160px")};
+  /* width: ${(props) => (props.vertical ? "100%" : "calc(100% - 20px)")}; */
+  padding: ${(props) => (props.vertical ? "10px" : "0px")};
   width: 100%;
   border-radius: 10px;
-  /* padding: 0px 10px; */
   overflow: hidden;
   flex-shrink: 0;
+  flex-shrink: ${(props) => (props.vertical ? "1" : "0")};
   overflow: hidden;
   position: relative;
 `;
@@ -86,30 +90,20 @@ let StyledStorage = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: ${(props) => (props.vertical ? "row" : "column")};
-  /* background-color: #261b3d; */
   background-color: rgba(0, 0, 0, 0.5);
-
-  /*Pattern provided from https://www.magicpattern.design/tools/css-backgrounds */
-  /* opacity: 0.8;
-  background-image: radial-gradient(gray 0.5px, transparent 0.5px),
-    radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.5) 0.5px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px; */
-
   border-radius: 0px 0px 10px 10px;
-  overflow-x: ${(props) => (props.vertical ? "scroll" : "hidden")};
-  overflow-y: ${(props) => (props.vertical ? "hidden" : "scroll")};
+  //storage as minimized or expanded
+  flex-direction: ${(props) => (props.vertical ? "column" : "row")};
+  overflow-x: ${(props) => (props.vertical ? "hidden" : "scroll")};
+  overflow-y: ${(props) => (props.vertical ? "scroll" : "hidden")};
   user-select: none;
   position: relative;
   scrollbar-width: none;
-  /* flex-direction: row-reverse; */
   ::-webkit-scrollbar {
     height: 0;
     width: 0;
     color: transparent;
   }
-
   .messsge-for-empty {
     position: absolute;
     top: 0px;

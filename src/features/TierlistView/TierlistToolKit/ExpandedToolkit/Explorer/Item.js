@@ -2,13 +2,14 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
-import db from "../../../../db";
-import { editItemTitle, updateItemDetails } from "../../TierlistSlice";
-import { ReactComponent as EditPenSVG } from "../../../../Styles/svg/EditPen.svg";
+import styled from "styled-components";
+import db from "../../../../../db";
+import { editItemTitle, updateItemDetails } from "../../../TierlistSlice";
+import { ReactComponent as EditPenSVG } from "../../../../../Styles/svg/EditPen.svg";
 import Description from "./Description";
 import { useRef } from "react";
-import scrollInto from "../../../utils/scrollInto";
+import scrollInto from "../../../../utils/scrollInto";
+import { fadeIn } from "../../../../../GlobalStyles";
 
 function Item({ item }) {
   //better appraoch to use api from indexeddb
@@ -88,14 +89,7 @@ function Item({ item }) {
   );
 }
 
-let fadeIn = keyframes`
-from {
-  opacity: 0;
-}
-to {
-  opacity: 1;
-}
-`;
+
 
 let StyledItem = styled.div`
   width: calc(100% - 10px);

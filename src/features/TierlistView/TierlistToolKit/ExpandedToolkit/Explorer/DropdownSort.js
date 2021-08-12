@@ -5,7 +5,7 @@ function DropdownSort({ setSort }) {
   let [open, setOpen] = useState(false);
   const node = useRef();
   const handleClickOutside = (e) => {
-    console.log("clicking anywhere");
+
     if (node.current.contains(e.target)) {
       // inside click
       return;

@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
+import { leftToRight } from "../../../GlobalStyles";
 import Row from "./Row";
 
 /* RENDERS ROWS */
@@ -14,7 +15,9 @@ function Tierlist({ toolState }) {
     let l = 75 - subtract;
     l = Number.parseFloat(l).toFixed(4);
     nd = Number.parseFloat(nd).toFixed(0);
-    let transitionDelay = 0.05 * i;
+    let transitionDelay = 0.1 * i;
+    //          animation-delay: ${transitionDelay}s;
+
     return `
     .row:nth-child(${i + 1}) {
           background-color: ${`hsl(${highlight},${nd}%, ${l}%)`};
@@ -55,6 +58,12 @@ function Tierlist({ toolState }) {
       case "brightPink":
         highlight = "321";
         break;
+      case "orange": 
+        highlight = "32";
+        break;
+        case "brightOrange": 
+        highlight = "32";
+        break;
       default:
         highlight = "259";
     }
@@ -86,17 +95,6 @@ function Tierlist({ toolState }) {
   );
 }
 
-let leftToRight = keyframes`
-from {
-  transform: translate(-100%);
-  opacity: 0;
-}
-to {
-  transform: translate(0%);
-  opacity: 1;
-}
-`;
-
 let StyledTL = styled.div`
   height: auto;
   width: 100%;
@@ -111,7 +109,8 @@ let StyledTL = styled.div`
     width: 100%;
     display: flex;
     opacity: 1;
-    animation: ${leftToRight} 1s ease;
+    transform: translateX(-100%);
+    animation: ${leftToRight} 1s ease forwards;
     transform-origin: top center;
   }
   .title {

@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import ReactTimeAgo from "react-time-ago";
-import {
-  StyledActionButton,
-  StyledActionLink,
-} from "../Modal/Styles/StyledTable";
-import { ReactComponent as GargabeSVG } from "../../../../Styles/svg/Gargabe.svg";
-import { deleteTierlist } from "../../TierlistSlice";
+import { StyledActionButton, StyledActionLink } from "../Styles/StyledTable";
+import { ReactComponent as GargabeSVG } from "../../../../../Styles/svg/Gargabe.svg";
+import { deleteTierlist } from "../../../TierlistSlice";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 

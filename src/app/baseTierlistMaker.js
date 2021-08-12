@@ -57,6 +57,7 @@ function baseTierlistMaker(id) {
       lastModified: Date.now(),
       lastCreated: Date.now(),
     },
+    notifications: [{notifId: 1, message: "ayo first tierlist"}]
   };
 }
 

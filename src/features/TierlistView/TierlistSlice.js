@@ -26,6 +26,7 @@ export const loadTierlist = createAsyncThunk(
     //use default the tierlist does not exist with the the same Id
     if (Object.keys(tierlistData).length === 0) {
       let newProject = baseTierlistMaker(tierlistId);
+
       await db.tierlists.put({
         id: tierlistId,
         tierlist: newProject,
@@ -114,57 +115,78 @@ export const saveTierlist = createAsyncThunk(
       //TODO: add cover image
     });
 
+    /* creates entries */
     let keys = [];
     let values = [];
+
     for (let [key, value] of Object.entries(
       thunkAPI.getState().loadedTierlist.items
     )) {
       keys.push(`${tierlistId}/${key}`);
       values.push(value);
     }
-    const response2 = await db.items
-      .bulkPut(values, keys)
-      .then(function (lastKey) {});
+    if (keys.length > 0) {
+      const response2 = await db.items
+        .bulkPut(values, keys)
+        .then(function (lastKey) {
+          console.log(
+            `successfully entered new items into indexeddb, last key: ${lastKey}`
+          );
+        });
+    }
 
     return;
   }
 );
 
-export const updateTierlistStatus = createAsyncThunk(
-  "loadedTierlist/statusUpdate",
-  async (update, thunkAPI) => {
-    let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
-    const response = await db.tierlists.update(tierlistId, {
-      tierlist: thunkAPI.getState().loadedTierlist,
-      lastEdited: Date.now(),
-    });
-  }
-);
+/**
+ * updates lastEdited and tierlist content on indexeddb(tierlists table).
+ */
+// export const updateTierlistStatus = createAsyncThunk(
+//   "loadedTierlist/statusUpdate",
+//   async (update, thunkAPI) => {
+//     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
+//     await db.tierlists.update(tierlistId, {
+//       tierlist: thunkAPI.getState().loadedTierlist,
+//       lastEdited: Date.now(),
+//     });
+//   }
+// );
 
-export const updateItemsDB = createAsyncThunk(
-  "loadedTierlist/updateItems",
-  async (payload, thunkAPI) => {
-    let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
-    let keys = [];
-    let values = [];
+/**
+ * updates indexeddb on item index, it automatically gets lastest item from redux store as payload.
+ */
+// export const updateItemsDB = createAsyncThunk(
+//   "loadedTierlist/updateItems",
+//   async (payload, thunkAPI) => {
+//     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
+//     let keys = [];
+//     let values = [];
 
-    //take all current items from redux;
-    for (let [key, value] of Object.entries(
-      thunkAPI.getState().loadedTierlist.items
-    )) {
-      keys.push(`${tierlistId}/${key}`);
-      values.push(value);
-    }
+//     //take all current items from redux but keys and values array;
+//     for (let [key, value] of Object.entries(
+//       thunkAPI.getState().loadedTierlist.items
+//     )) {
+//       keys.push(`${tierlistId}/${key}`);
+//       values.push(value);
+//     }
 
-    const response2 = await db.items
-      .bulkPut(values, keys)
-      .then(function (lastKey) {});
-    //previously used with items: "++id, name, resides, tierlistId, [tierlistId+resides], [tierlistId+name]"});
-    // const response2 = await db.items.bulkPut(x).then(function (lastKey) {
+//     await db.items.bulkPut(values, keys).then(function (lastKey) {
+//       console.log(
+//         `successfully entered new items into indexeddb, last key: ${lastKey}`
+//       );
+//     });
 
-    // });
-  }
-);
+//     // return { message: "successfully save to indexeddb", status: "success" };
+//   }
+// );
+
+// export const returnItemToStorage = createAsyncThunk(
+//   "loadedTierlist/returnItemToStorage",
+//   async (payload, thunkAPI) => {
+
+//   }
+// );
 
 /**
  * delete item table from database, if last item, it deletes item in image table as well.
@@ -176,29 +198,41 @@ export const deleteItemFromDB = createAsyncThunk(
     //delete instance from tierlist
     let tierlistId = thunkAPI.getState().loadedTierlist.tierlist.id;
 
-    const deleteFromInstanceDB = await db.items
+    await db.items
       .where(["id", "tierlistId"])
       .equals([payload, tierlistId])
       .delete()
       .then((deletecount) =>
-        console.log(`number of items deleted from items index: ${deletecount}`)
+        console.log(
+          `%cdeleting item from indexeddb: 1/2: deleted ${payload} from items table: ${deletecount}`,
+          "color:green"
+        )
       );
 
-    //check if it is last copy. if so delete the source file.
-    let isTableEmpty = await db.items
+    let isItemsTableEmpty = await db.items
       .where("id")
       .equals(payload)
       .toArray((items) => {
         return items.length;
       });
 
-    // if (isTableEmpty === 0) {
-    //   let deleted = await db.images
-    //     .where("id")
-    //     .equals(payload)
-    //     .delete()
-    //     .then((deletecount) => console.log(deletecount, "deleted"));
-    // }
+    if (isItemsTableEmpty === 0) {
+      await db.images
+        .where("id")
+        .equals(payload)
+        .delete()
+        .then((deleteCount) =>
+          console.log(
+            `%cdeleting item from indexeddb: 2/2: deleted ${payload} from image table: ${deleteCount}`,
+            "color:green"
+          )
+        );
+    } else {
+      console.log(
+        "%cdeleting item from indexeddb: 2/2: more than one instance exists, only copy from this tierlist was deleted - to delete source file go to Explorer/local storage",
+        "color:green"
+      );
+    }
 
     return payload;
   }
@@ -273,8 +307,6 @@ export const deleteSingleImageItem = createAsyncThunk(
       .delete()
       .then((deletecount) => console.log(deletecount, "deleted"));
 
-    //!use dedicated delete for notification index.
-    //! that would prompt update tierlist redux to remove those items.
     // let flagItemIndex = await db.items
     //   .where("id")
     //   .equals(payload)
@@ -285,6 +317,8 @@ export const deleteSingleImageItem = createAsyncThunk(
       .equals(payload)
       .delete()
       .then((deletecount) => console.log(deletecount, "deleted"));
+
+    return { id: payload, action: "deleted" };
   }
 );
 
@@ -366,22 +400,29 @@ export const deleteOutDatedTierlists = createAsyncThunk(
   }
 );
 
+//NOTE: IMMER LIBRARY APPLIED WITH REACTTOOLKKIT, MUTABILITY TREATED AS IMMUTABLILITY
 let tierlistSlice = createSlice({
   name: "loadedTierlist",
   initialState: {
     status: "loading",
   },
   reducers: {
-    newTierlistBuild: (state, action) => {
-      let defaultTierlist = baseTierlistMaker(action.payload.id);
-      state.items = defaultTierlist.items;
-      state.rows = defaultTierlist.rows;
-      state.rowOrder = defaultTierlist.rowOrder;
-      state.tierlist = defaultTierlist.tierlist;
-      state.status = "ready";
+    returnItemToStorage: (state, action) => {
+      let itemId = action.payload;
+      let currentRowOrder = state.items[itemId].resides;
+      let itemOrder = state.rows[currentRowOrder].itemOrder;
+      let indexOfItem = itemOrder.indexOf(itemId);
+      itemOrder.splice(indexOfItem, 1);
+      state.rows.storage.itemOrder.unshift(itemId);
+
+      state.items[itemId].resides = "storage";
     },
-    //IMMER LIBRARY APPLIED WITH REACTTOOLKKIT, MUTABILITY TREATED AS IMMUTABLILITY
+    newTierlistBuild: (state, action) => {
+      state.status = "loading";
+    },
     addItem: (state, action) => {
+      //Iterate through array of [itemId, imageURL]
+      //adds image to tierlist.items with imageurl provided from payload.
       action.payload.forEach((item, idx) => {
         state.items[item[1]] = {
           id: item[1],
@@ -505,6 +546,7 @@ let tierlistSlice = createSlice({
       state.rows = action.payload.updateTo.rows;
       state.rowOrder = action.payload.updateTo.rowOrder;
       state.tierlist = action.payload.updateTo.tierlist;
+      state.notifications = [];
       state.status = "ready";
 
       if (action.payload.imagePayload) {
@@ -549,11 +591,17 @@ let tierlistSlice = createSlice({
           if (itemIndex !== -1) {
             state.rows[resides].itemOrder.splice(itemIndex, 1);
           }
+          let notifId = nanoid();
+          state.notifications.push({
+            notifId,
+            message: "Successfully deleted item",
+            type: "delete",
+          });
         }
       }
     },
     [deleteTierlist.fulfilled]: (state, action) => {
-      console.log(action.payload);
+      let notifId = nanoid();
       if (action.payload.reset) {
         // let action.payload.newTierlist = baseTierlistMaker(state.tierlist.id);
         state.items = action.payload.newTierlist.items;
@@ -561,9 +609,46 @@ let tierlistSlice = createSlice({
         state.rowOrder = action.payload.newTierlist.rowOrder;
         state.tierlist = action.payload.newTierlist.tierlist;
         state.status = "initialized";
+        state.notifications.push({
+          notifId,
+          message: "Sucessfully reset tierlist",
+          type: "delete",
+        });
+      } else {
+        state.notifications.push({
+          notifId,
+          message: "Tierlist deleted",
+          type: "delete",
+        });
       }
     },
     [deleteTierlist.rejected]: (state, action) => {
+      console.log(action.payload);
+    },
+    [deleteSingleImageItem.fulfilled]: (state, action) => {
+      let resides = state.items[action.payload.id]?.resides;
+      if (resides) {
+        delete state.items[action.payload.id];
+        let itemIndex = state.rows[resides].itemOrder.indexOf(
+          action.payload.id
+        );
+        if (itemIndex !== -1) {
+          state.rows[resides].itemOrder.splice(itemIndex, 1);
+        }
+        let notifId = nanoid();
+        state.notifications.push({
+          notifId,
+          message: "Successfully deleted item from storage",
+          type: "delete",
+        });
+      }
+
+      // let notifId = nanoid();
+      // state.notifications.push({
+      //   notifId,
+      //   message: "Successfully deleted from storage",
+      //   type: "delete",
+      // });
     },
   },
 });
@@ -580,6 +665,7 @@ export const {
   returnToStorage,
   editRowInfo,
   editTierlistInfo,
+  returnItemToStorage,
 } = tierlistSlice.actions;
 
 export default tierlistSlice.reducer;

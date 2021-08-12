@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { editItemTitle, updateItemDetails } from "../../TierlistSlice";
+import { editItemTitle, updateItemDetails } from "../../../TierlistSlice";
 
 function Description({ itemId, itemDescription }) {
   let [description, setDescription] = useState(itemDescription);

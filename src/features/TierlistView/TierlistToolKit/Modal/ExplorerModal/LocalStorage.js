@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
-import db from "../../../../db";
+import styled from "styled-components";
+import db from "../../../../../db";
 
-import DropdownSort from "../Explorer/DropdownSort";
-import Item from "../Explorer/Item";
-import Search from "../Search";
+import DropdownSort from "../../ExpandedToolkit/Explorer/DropdownSort";
+import Item from "../../ExpandedToolkit/Explorer/Item";
+import Search from "../../Search";
 import LocalStorageItem from "./LocalStorageItem";
 
-import { ReactComponent as SortBySVG } from "../../../../Styles/svg/triangle.svg";
-import { ReactComponent as AddSVG } from "../../../../Styles/svg/Add2.svg";
-import { ReactComponent as GargabeSVG } from "../../../../Styles/svg/Gargabe.svg";
-import { ReactComponent as InfoSVG } from "../../../../Styles/svg/info.svg";
-import { ReactComponent as ArrowSVG } from "../../../../Styles/svg/arrow.svg";
+import { ReactComponent as SortBySVG } from "../../../../../Styles/svg/triangle.svg";
+import { ReactComponent as AddSVG } from "../../../../../Styles/svg/Add2.svg";
+import { ReactComponent as GargabeSVG } from "../../../../../Styles/svg/Gargabe.svg";
+import { ReactComponent as InfoSVG } from "../../../../../Styles/svg/info.svg";
+import { ReactComponent as ArrowSVG } from "../../../../../Styles/svg/arrow.svg";
 import StyledTable, {
   StyledActionButton,
   StyledCol,
-} from "../Modal/Styles/StyledTable";
-import PaginationButtons from "../Modal/PaginationButtons";
-import InstructionOverlay from "../Modal/InstructionOverlay";
-import useAsync from "../../../../customHooks/useAsync";
+} from "../Styles/StyledTable";
+import PaginationButtons from "../PaginationButtons";
+import InstructionOverlay from "../InstructionOverlay";
+import useAsync from "../../../../../customHooks/useAsync";
+import { fadeIn } from "../../../../../GlobalStyles";
 
 let fetchTierlists = async (db, table, index, reverse, page, pageSize) => {
   if (!reverse) {
@@ -74,7 +75,6 @@ function LocalStorage() {
 
   useEffect(() => {
     if (status == "success") {
-
       setOrderedItems(value);
     } else if (status == "error") {
       console.log(error);
@@ -174,14 +174,7 @@ export let StyledSearchWrapper = styled.div`
   justify-content: space-between;
 `;
 
-let fadeIn = keyframes`
-from {
-opacity: 0
-}
-to {
-opacity: 1;
-}
-`;
+
 
 let StyledExplorer = styled.div`
   height: calc(100% - 80px);

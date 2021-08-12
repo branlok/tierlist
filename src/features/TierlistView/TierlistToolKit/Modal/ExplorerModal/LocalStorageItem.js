@@ -2,17 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import db from "../../../../db";
-import { ReactComponent as AddSVG } from "../../../../Styles/svg/Add2.svg";
-import { ReactComponent as GargabeSVG } from "../../../../Styles/svg/Gargabe.svg";
+import db from "../../../../../db";
+import { ReactComponent as AddSVG } from "../../../../../Styles/svg/Add2.svg";
+import { ReactComponent as GargabeSVG } from "../../../../../Styles/svg/Gargabe.svg";
 import {
   deleteItem,
   deleteItemFromDB,
   deleteSingleImageItem,
   saveTierlist,
   syncNewItems,
-} from "../../TierlistSlice";
-import { StyledActionButton, StyledRow } from "../Modal/Styles/StyledTable";
+} from "../../../TierlistSlice";
+import { StyledActionButton, StyledRow } from "../Styles/StyledTable";
 
 function LocalStorageItem({ item, itemKeys, setItemWasDeleted }) {
   let { id } = useParams();
@@ -65,7 +65,7 @@ function LocalStorageItem({ item, itemKeys, setItemWasDeleted }) {
 
   let handleDeleteSource = async (itemId) => {
     //shallow delete  - for components like explore
-    await dispatch(deleteItemFromDB(itemId));
+    // await dispatch(deleteItemFromDB(itemId));
     //deep delete  - for components like file explorer
     await dispatch(deleteSingleImageItem(itemId));
     await dispatch(saveTierlist()); //doesn't hurt to save again.

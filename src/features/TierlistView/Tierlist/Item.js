@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import {  deleteItemFromDB, saveTierlist } from "../TierlistSlice";
+import {
+  deleteItemFromDB,
+  returnItemToStorage,
+  saveTierlist,
+} from "../TierlistSlice";
 import { ReactComponent as CrossDeleteSVG } from "../../../Styles/svg/CrossDelete.svg";
+import { createPortal } from "react-dom";
 
 function Item({ itemId, index, toolState }) {
   let item = useSelector((state) => state.loadedTierlist.items[itemId]);
@@ -12,8 +17,15 @@ function Item({ itemId, index, toolState }) {
 
   let deleteSequence = async () => {
     await dispatch(deleteItemFromDB(itemId)); //doesn't delete source unless its the last item.
-    dispatch(saveTierlist());
+    await dispatch(saveTierlist());
   };
+
+  let returnToStorage = async () => {
+    dispatch(returnItemToStorage(itemId));
+    await dispatch(saveTierlist());
+  };
+
+  const renderDraggable = useDraggableInPortal();
 
   let scrollToItem = () => {
     let item = document.getElementById(`explorer-${itemId}`);
@@ -45,7 +57,7 @@ function Item({ itemId, index, toolState }) {
 
   return (
     <Draggable draggableId={itemId} index={index}>
-      {(provided, snapshot) => {
+      {renderDraggable((provided, snapshot) => {
         const style = returnDnDStyle(provided.draggableProps.style, snapshot);
         return (
           <StyledItem
@@ -57,21 +69,52 @@ function Item({ itemId, index, toolState }) {
             // style={returnDnDStyle(provided.draggableProps.style, snapshot)}
           >
             <div className="item-info-wrapper" onDoubleClick={scrollToItem}>
-              {/* <div className="return-button">
-                <ReturnSVG className="return-svg" />
-              </div> */}
               <div className="delete-button" onClick={deleteSequence}>
                 <CrossDeleteSVG className="delete-cross" />
               </div>
-              <div className="name">{item.name} </div>
+              <div className="return-button" onClick={returnToStorage}>
+                return
+              </div>
+              <div className="name">{item.name}</div>
             </div>
             <StyledImage src={item.imageURL} />
           </StyledItem>
         );
-      }}
+      })}
     </Draggable>
   );
 }
+
+
+//hook solution provided from to fix parent row transform distort draggable position fix
+// Issue: https://github.com/atlassian/react-beautiful-dnd/issues/128
+// Solution: https://github.com/DucktorDanny/react-beautiful-dnd-example
+const useDraggableInPortal = () => {
+  const self = useRef({}).current;
+
+  useEffect(() => {
+    const div = document.createElement("div");
+    div.style.position = "absolute";
+    div.style.pointerEvents = "none";
+    div.style.top = "0";
+    div.style.width = "100%";
+    div.style.height = "100%";
+    self.elt = div;
+    document.body.appendChild(div);
+    return () => {
+      document.body.removeChild(div);
+    };
+  }, [self]);
+
+  return (render) =>
+    (provided, ...args) => {
+      const element = render(provided, ...args);
+      if (provided.draggableProps.style.position === "fixed") {
+        return createPortal(element, self.elt);
+      }
+      return element;
+    };
+};
 
 let StyledItem = styled.div`
   height: 125px;
@@ -102,7 +145,8 @@ let StyledItem = styled.div`
   .name {
     height: calc(100% - 0px);
     width: calc(100% - 0px);
-    font-size: 20px;
+
+    font-size: 18px;
     font-weight: bold;
     display: flex;
     padding: 10px;
@@ -113,14 +157,20 @@ let StyledItem = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     padding: 10px;
+    padding-bottom: 40px;
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
     /* margin: 5px; */
     /* border-radius: 15px; */
     background-color: rgba(0, 0, 0, 0.9);
     /* background: linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.6) 0%,
-      rgba(97, 255, 0, 0) 100%
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.3) 100%
     ); */
   }
   .delete-button {
@@ -143,20 +193,31 @@ let StyledItem = styled.div`
   }
   .return-button {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 0px;
+    right: 0px;
     cursor: pointer;
+    align-items: center;
+    width: calc(100% - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 25px;
     height: 25px;
+    margin: 10px;
+
+    font-size: 12px;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px 5px;
+    background-color: black;
+    transition: 0.1s;
+    :hover {
+      transform: scale(0.95);
+    }
     .return-svg {
-      fill: rgba(255, 255, 255, 0.6);
+      fill: rgba(255, 255, 255, 0.4);
       background-color: transparent;
-      transform: rotate(-90deg);
-      /* width: 20px;
-      height: 20px; */
+      transform: rotate(180deg);
+      height: 15px;
       padding: 7px;
       transition: 0.2s;
       :hover {
@@ -173,7 +234,7 @@ let StyledImage = styled.img`
   object-fit: cover;
   /* display: block; */
   /* max-width: 250px; */
-  
+
   /* min-width: 170px; */
 
   /* border-radius: 10px; //experimental */

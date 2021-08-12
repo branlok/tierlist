@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import db from "../../../../db";
+import db from "../../../../../db";
 
-import DropdownSort from "../Explorer/DropdownSort";
-import Item from "../Explorer/Item";
-import Search from "../Search";
+import Item from "../../ExpandedToolkit/Explorer/Item";
+import Search from "../../Search";
 
 function CurrentTierlist() {
   let items = useSelector((state) => state.loadedTierlist.items);
   let [orderedItems, setOrderedItems] = useState([]);
   //   let [queryResult, setQueryResult] = useState(null);
+
   //search logic
   let [userSearch, setUserSearch] = useState(false);
   let [queryResult, setQueryResult] = useState(null);

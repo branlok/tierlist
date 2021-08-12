@@ -1,24 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 
-function LinkBox({setModalOpen}) {
-  
+function LinkBox({ setModalOpen }) {
   return (
     <StyledLinkBox>
-      <div className="module-link" onClick={() => setModalOpen("info")}>Tierlist Settings</div>
-      <div className="module-link" onClick={() => setModalOpen("explorer")} >Explorer</div>
-      <div className="module-link" onClick={() => setModalOpen("myTierlists")} >My Tierlists</div>
+      <li onClick={() => setModalOpen("info")}>
+        <button className="module-link">Tierlist Settings</button>
+      </li>
+      <li onClick={() => setModalOpen("explorer")}>
+        <button className="module-link">Explorer</button>
+      </li>
+      <li onClick={() => setModalOpen("myTierlists")}>
+        <button className="module-link">My Tierlists</button>
+      </li>
     </StyledLinkBox>
   );
 }
 
-let StyledLinkBox = styled.div`
+let StyledLinkBox = styled.ul`
   width: 100%;
-  height: 100px;
+  height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  li {
+    height: 40px;
+    width: 100%;
+  }
   .module-link {
     background-color: black;
     height: 40px;
@@ -32,8 +41,10 @@ let StyledLinkBox = styled.div`
     align-items: center;
     transition: 0.2s;
     cursor: pointer;
+    outline: none;
+    border-style: none;
     :hover {
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: ${props => props.theme.main.primaryVarient}; //rgba(255, 255, 255, 0.3);
     }
   }
 `;

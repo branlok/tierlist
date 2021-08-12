@@ -1,13 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import useScreenshot from "../../../../../customHooks/useScreenshot";
+import { expandIn, floatIn } from "../../../../../GlobalStyles";
 import { StyledOverlay } from "../../styles";
 import MockTierlist from "./MockTierlist";
 
 function FinalizeModal({ setOpenFinalize }) {
   const { generateImage, captureRef, status } = useScreenshot();
   let [orientation, setOrientation] = useState("column");
+
+  useEffect(() => {
+    let handleCloseModal = function (event) {
+      if (event.key === "Escape") {
+        //do something
+        setOpenFinalize(false);
+      }
+    };
+    document.addEventListener("keydown", handleCloseModal);
+    return () => {
+      document.removeEventListener("keydown", handleCloseModal);
+    };
+  }, []);
+
   //TODO: add more settings before export, ie. theme, layout, title inclusion
   return (
     <StyledOverlay dark>
@@ -39,28 +54,6 @@ function FinalizeModal({ setOpenFinalize }) {
     </StyledOverlay>
   );
 }
-
-let expandIn = keyframes`
-from {
-    transform: scale(0.9);
-    opacity: 0;
-}
-to {
-    transform: scale(1);
-    opacity: 1;
-}
-`;
-
-let floatIn = keyframes`
-from {
-    transform: translateY(-50px);
-    opacity: 0;
-}
-to {
-    transform: translateY(0px);
-    opacity: 1;
-}
-`;
 
 let StyledModule = styled.div`
   @media only screen and (min-width: 0px) {

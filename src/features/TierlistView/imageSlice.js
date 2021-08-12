@@ -12,25 +12,19 @@ export const fetchimages = createAsyncThunk("posts/getImages", async () => {
         return URL.createObjectURL(item.picture);
       });
     });
-    
-  console.log(
-    await db.images.each((item) => {
-      console.log(item);
-    })
-  );
-  console.log(response);
 
   return response;
 });
 
-export const addImage = createAsyncThunk("posts/pushImages", async (image) => {
-  console.log(image, "what");
+
+export const addImage = createAsyncThunk("posts/pushImages", 
+async (image) => {
   const response = await db.images.put({
     picture: image.source,
     id: image.id,
     tierlistId: image.tierlistId,
     dateAdded: Date.now(),
-    fileName: image.source.name
+    fileName: image.source.name,
   });
 
   return image.imageURL;

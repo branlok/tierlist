@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   addNewRow,
+  deleteTierlist,
   editTierlistInfo,
   loadTierlist,
   saveTierlist,
@@ -10,12 +11,13 @@ import {
 import { ReactComponent as AddSVG } from "../../../Styles/svg/Add2.svg";
 import { useEffect } from "react";
 import { useState } from "react";
-import { blinking } from "../Tierlist/RowTitle";
+import { blinking } from "../../../GlobalStyles";
+import { useParams } from "react-router-dom";
+
 function TierlistHeaders() {
   let [editMode, setEditMode] = useState(false);
-
   let inputRef = useRef();
-
+  let { id } = useParams();
   let dispatch = useDispatch();
   let newRowId = useSelector(
     (state) =>
@@ -67,10 +69,19 @@ function TierlistHeaders() {
     }
   };
 
+  let resetTierlist = async (e) => {
+    await dispatch(
+      deleteTierlist({
+        tierlistId: id,
+        option: { deleteImageIndex: false, reset: true },
+      })
+    );
+  };
+
   return (
     <StyledTLHeaderWrapper>
       <StyledColumn>
-        <button onClick={addRowAndSave}>
+        <button className="addNewRow" onClick={addRowAndSave}>
           <span>Add Row </span>
           <AddSVG className="svg" />
         </button>
@@ -93,12 +104,22 @@ function TierlistHeaders() {
           </h1>
         )}
         <h2 className="caption">{description}</h2>
+        <div className="createNew" aria >
+          <button className="resetTierlist" onClick={resetTierlist}>
+            Delete and Reset
+          </button>
+          <button className="newTierlist">
+            <a href="/" target="_blank">
+              Open New
+            </a>
+          </button>
+        </div>
       </StyledTLHeader>
     </StyledTLHeaderWrapper>
   );
 }
 
-let StyledTLHeaderWrapper = styled.div`
+let StyledTLHeaderWrapper = styled.header`
   height: 300px;
   width: 100%;
   flex-shrink: 0;
@@ -108,11 +129,14 @@ let StyledTLHeaderWrapper = styled.div`
 let StyledColumn = styled.div`
   width: 150px;
   height: 100%;
+  padding-top: 10px;
+
   color: white;
   flex-shrink: 0;
   display: flex;
-  flex-direction: column-reverse;
-  button {
+  flex-direction: column;
+  justify-content: flex-end;
+  .addNewRow {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -152,15 +176,16 @@ let StyledTLHeader = styled.div`
   color: white;
   padding: 20px;
   /*Pattern provided from https://www.magicpattern.design/tools/css-backgrounds */
-  opacity: 0.8;
+  opacity: 1;
   background-image: radial-gradient(gray 0.5px, transparent 0.5px),
-    radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.3) 0.5px);
+    radial-gradient(gray 0.5px, rgba(0, 0, 0, 0.1) 0.5px);
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px;
+  position: relative;
   /* background-image: url("https://images.unsplash.com/photo-1504548840739-580b10ae7715?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3000&q=80");
   background-size: cover; */
   .title-form {
-    width: 100%;
+    width: calc(100% - 100px);
     .title-input {
       border-style: none;
       background-color: transparent;
@@ -185,16 +210,53 @@ let StyledTLHeader = styled.div`
     }
   }
   .title {
+    width: calc(100% - 350px);
+    min-width: 300px;
     font-size: 35px;
     line-height: 40px;
     margin-bottom: 5px;
+    /* word-wrap: wrap; */
     cursor: pointer;
-    display: inline;
+    display: block;
   }
   .caption {
     font-size: 16px;
     margin-top: 5px;
     font-weight: normal;
+  }
+  .createNew {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    button {
+      margin-left: 5px;
+      border-style: none;
+      background-color: transparent;
+      color: white;
+      padding: 5px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid white;
+      border-radius: 5px;
+      transition: 0.2s;
+      cursor: pointer;
+      :hover {
+        border: 1px solid transparent;
+        background-color: ${(props) => props.theme.main.accent};
+      }
+      a {
+        color: white;
+        text-decoration: none;
+      }
+    }
+    .resetTierlist {
+      :hover {
+        background-color: red;
+        color: white;
+      }
+    }
   }
 `;
 

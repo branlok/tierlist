@@ -1,11 +1,15 @@
+import { nanoid } from "@reduxjs/toolkit";
 import React, { useCallback } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import styled, { ThemeProvider } from "styled-components";
-import useScreenshot from "../../customHooks/useScreenshot";
+import styled, { keyframes, ThemeProvider } from "styled-components";
+import { fadeIn } from "../../GlobalStyles";
+import { ReactComponent as NotificationSVG } from "../../Styles/svg/notification.svg";
+import { ReactComponent as CircleCheckSVG } from "../../Styles/svg/CircleCheck.svg";
+import retrieveTheme from "../utils/themeSelect";
 import Tierlist from "./Tierlist";
 import TierlistHeaders from "./TierlistHeaders";
 import {
@@ -18,109 +22,14 @@ import {
 } from "./TierlistSlice";
 import TierlistToolkit from "./TierlistToolKit";
 
-function retrieveTheme(theme) {
-  switch (theme) {
-    case "purple":
-      return {
-        main: {
-          primary: "hsl(259, 56%, 25%)",
-          primaryVarient: "hsl(257, 44%, 20%)",
-          accent: "hsl(245, 61%, 38%)",
-        },
-      };
-    case "red":
-      return {
-        main: {
-          primary: "hsl(0, 56%, 25%)",
-          primaryVarient: "hsl(0, 44%, 20%)",
-          accent: "hsl(0, 61%, 38%)",
-        },
-      };
-    case "pink":
-      return {
-        main: {
-          primary: "hsl(321, 56%, 25%)",
-          primaryVarient: "hsl(321, 44%, 20%)",
-          accent: "hsl(321, 61%, 38%)",
-        },
-      };
-    case "blue":
-      return {
-        main: {
-          primary: "hsl(236, 56%, 25%)",
-          primaryVarient: "hsl(236, 44%, 20%)",
-          accent: "hsl(236, 61%, 38%)",
-        },
-      };
-    case "brightBlue":
-      return {
-        main: {
-          primary: "hsl(236, 74%, 48%)",
-          primaryVarient: "hsl(236, 74%, 48%)",
-          accent: "hsl(236, 74%, 48%)",
-        },
-        bright: true,
-      };
-    case "yellow":
-      return {
-        main: {
-          primary: "hsl(57, 56%, 25%)",
-          primaryVarient: "hsl(57, 44%, 20%)",
-          accent: "hsl(57, 61%, 38%)",
-        },
-      };
-    case "brightYellow":
-      return {
-        main: {
-          primary: "hsl(63, 74%, 48%)",
-          primaryVarient: "hsl(63, 74%, 48%)",
-          accent: "hsl(63, 74%, 48%)",
-        },
-        bright: true,
-      };
-    case "brightRed":
-      return {
-        main: {
-          primary: "hsl(0, 74%, 48%)",
-          primaryVarient: "hsl(0, 74%, 24%)",
-          accent: "hsl(0, 87%, 48%)",
-        },
-        bright: true,
-      };
-    case "brightPink":
-      return {
-        main: {
-          primary: "hsl(328, 74%, 48%)",
-          primaryVarient: "hsl(328, 74%, 48%)",
-          accent: "hsl(328, 74%, 48%)",
-        },
-        bright: true,
-      };
-
-    default: {
-      return {
-        main: {
-          primary: "hsl(259, 56%, 25%)",
-          primaryVarient: "hsl(257, 44%, 20%)",
-          accent: "hsl(245, 61%, 38%)",
-        },
-      };
-    }
-  }
-}
-
 function TierlistView() {
-  // let rows = useSelector((state) => state.loadedTierlist.rows);
-  let statuss = useSelector((state) => state.loadedTierlist.status);
-  let theme = useSelector((state) => state.loadedTierlist.tierlist?.theme);
+  let status = useSelector((state) => state.loadedTierlist.status);
+  let theme = useSelector((state) => state.loadedTierlist?.tierlist?.theme); //This is undefined on mount until status is "ready"
   let dispatch = useDispatch();
   let { id } = useParams();
-  let onDragEnd = useDragLogic();
+  //toggle toolbar open or closed.
   let [toolState, setToolState] = useState(false);
 
-  // const { generateImage, captureRef, status } = useScreenshot();
-
-  // ref={captureRef} disabled={status === "loading"} onClick={generateImage}
   useEffect(() => {
     if (id) {
       //load requested tierlist to redux
@@ -129,14 +38,19 @@ function TierlistView() {
     }
   }, [id]);
 
+  //beautiful-dnd set up
+  let onDragEnd = useDragLogic();
+
+  //setup theme
   let themes = useCallback(() => retrieveTheme(theme), [theme]);
 
-  if (statuss == "loading") {
-    return <div>loading</div>;
+  if (status === "loading") {
+    return <StyledLoadingPage>loading</StyledLoadingPage>;
   } else {
     return (
       <ThemeProvider theme={themes}>
         <StyledWrapper data-test="tierlistwindow">
+          <Notifications />
           <StyledLeftColumn data-test="leftColumn" />
           <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
@@ -187,6 +101,122 @@ function useDragLogic() {
   };
   return onDragEnd;
 }
+
+function Notifications() {
+  let notifications = useSelector(
+    (state) => state.loadedTierlist.notifications
+  );
+
+  // let [test, setTest] = useState([]);
+
+  return (
+    <StyleNotifContainer>
+      {notifications.map((item) => {
+        return <Notification key={item.notifId} message={item.message} />;
+      })}
+    </StyleNotifContainer>
+  );
+}
+
+function Notification({ message }) {
+  let [expires, setExpires] = useState(false);
+  console.log(message);
+  useEffect(() => {
+    let timeout = setTimeout(() => setExpires(true), 3000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (expires) return null;
+  return (
+    <div className="notif">
+      <CircleCheckSVG className="svg" />
+      {message}
+      <div className="highlight"></div>
+    </div>
+  );
+}
+
+let fadeinout = keyframes`
+0% {
+  opacity: 0;
+  height: 0px;
+}
+10% {
+  opacity: 1;
+  height: 50px;
+}
+50% {
+  opacity: 1;
+  height: 50px;
+}
+90% {
+  opacity: 1;
+  height: 50px;
+  /* margin-top: 10px; */
+}
+100% {
+  opacity: 0;
+  height: 0px;
+  display: none;
+  /* margin-top: 0px; */
+}
+
+`;
+
+let StyleNotifContainer = styled.div`
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  height: 500px;
+  width: 300px;
+  /* border: 1px solid white; */
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  /* overflow: hidden; */
+  margin: 10px;
+  padding: 10px;
+  pointer-events: none;
+  .notif {
+    margin-top: 5px;
+    height: 50px;
+    font-size: 12px;
+    animation: ${fadeinout} 3s ease forwards;
+    background-color: ${(props) => props.theme.main.accent};
+    width: 100%;
+    flex-shrink: 0;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    border-radius: 5px;
+    .svg {
+      height: 20px;
+      width: 20px;
+      fill: white;
+      margin-right: 10px;
+    }
+    .highlight {
+      height: 1px;
+    }
+  }
+`;
+
+let StyledLoadingPage = styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+`;
 
 let StyledWrapper = styled.div`
   height: 100vh;
