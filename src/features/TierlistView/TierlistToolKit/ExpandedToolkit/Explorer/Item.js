@@ -72,7 +72,7 @@ function Item({ item }) {
                 setShowTitleEdit(true);
               }}
             >
-              {item.name.length > 0 ? item.name : "Untitled"} <EditPenSVG className="svg" />
+              {item.name?.length > 0 ? item.name : "Untitled"} <EditPenSVG className="svg" />
             </p>
           )}
 
