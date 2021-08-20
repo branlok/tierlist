@@ -124,6 +124,7 @@ export let StyledActionLink = styled.a`
   align-items: center;
   cursor: pointer;
   transition: 0.1s;
+  font-size: 11px;
   //disable appearance
   opacity: ${(props) => (props.disable ? "0.3" : "1")};
   pointer-events: ${(props) => (props.disable ? "none" : "auto")};
@@ -154,10 +155,10 @@ export let StyledActionButton = styled.button`
   align-items: center;
   cursor: pointer;
   transition: 0.1s;
+  font-size: 11px;
   //disable appearance
   opacity: ${(props) => (props.disable ? "0.3" : "1")};
   pointer-events: ${(props) => (props.disable ? "none" : "auto")};
-
   :hover {
     transform: scale(1.15);
     border: 3px solid #e3e3e3;

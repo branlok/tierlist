@@ -510,6 +510,7 @@ let tierlistSlice = createSlice({
       }
     },
     editItemTitle: (state, action) => {
+      console.log(action.payload);
       state.items[action.payload.id][action.payload.field] =
         action.payload.newValue;
     },

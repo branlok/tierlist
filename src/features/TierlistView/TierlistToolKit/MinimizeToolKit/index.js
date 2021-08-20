@@ -21,7 +21,7 @@ function MiniToolKit({ toolState }) {
     <StyledMiniToolKitWrapper>
       <Logo />
       <LinkBox setModalOpen={setModalOpen} />
-        <Storage toolState={toolState} />
+      <Storage toolState={toolState} />
       {modalOpen === "info" && (
         <TierlistInfo modalOpen={modalOpen} setModalOpen={setModalOpen} />
       )}
@@ -31,7 +31,7 @@ function MiniToolKit({ toolState }) {
       {modalOpen === "myTierlists" && (
         <MyTierlistModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
       )}
-      <Footer/>
+      <Footer />
     </StyledMiniToolKitWrapper>
   );
 }

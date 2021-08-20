@@ -72,7 +72,7 @@ function Item({ item }) {
                 setShowTitleEdit(true);
               }}
             >
-              {item.name} <EditPenSVG className="svg" />
+              {item.name.length > 0 ? item.name : "Untitled"} <EditPenSVG className="svg" />
             </p>
           )}
 
@@ -88,8 +88,6 @@ function Item({ item }) {
     </StyledItem>
   );
 }
-
-
 
 let StyledItem = styled.div`
   width: calc(100% - 10px);
@@ -139,14 +137,16 @@ let StyledItemContent = styled.div`
       height: 25px;
       padding-left: 10px;
       font-size: 13px;
-
+      word-break: break-all;
       /* text-align: center; */
       display: flex;
       align-items: center;
       .svg {
         fill: gray;
         height: 10px;
-        margin-left: 5px;
+        width: 10px;
+        flex-shrink: 0;
+        margin: 0px 5px;
         cursor: pointer;
         :hover {
           fill: white;

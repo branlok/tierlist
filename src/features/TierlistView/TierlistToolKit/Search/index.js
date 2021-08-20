@@ -14,6 +14,42 @@ import db from "../../../../db";
 
 */
 function getSearchFunction(searchType) {
+  if (searchType.externalApi && searchType.api === "Kitsu") {
+    return async (value) => {
+      return fetch("https://kitsu.io/api/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `
+                  {
+                      searchAnimeByTitle(title: "${value}", first: 10) {
+                        nodes {
+                          id
+                          description
+                          titles{
+                            canonical
+                          }
+                          posterImage {
+                            views {
+                              url
+                            }
+                          }
+                        }
+                      }
+                    }
+                    
+                  `,
+        }),
+      }).then((res) => res.json());
+    };
+  }
+  if (searchType.externalApi && searchType.api === "Unsplash") {
+    return async (value) => {
+      return fetch(
+        `https://express-unsplash-proxy.herokuapp.com/unsplash?query=${value}`
+      ).then((res) => res.json());
+    };
+  }
   if (searchType === "search/items/name") {
     return async (values, id) => {
       return await db.items
@@ -67,12 +103,16 @@ function Search({ setQueryResult, searchType, setUserSearch }) {
   let { execute, status, value, error } = useAsync(targetFunction, false);
 
   useEffect(() => {
-
     if (status == "success") {
       setQueryResult(value);
+      setUserSearch(true);
     }
     if (status == "error") {
       setQueryResult(error);
+      setUserSearch(false);
+    }
+    if (status == "loading") {
+      setUserSearch(false);
     }
   }, [status]);
 
@@ -84,7 +124,11 @@ function Search({ setQueryResult, searchType, setUserSearch }) {
           if (values.query.length == 0) {
             setUserSearch(false);
           } else {
-            await execute(values, id);
+            if (searchType.externalApi) {
+              await execute(values.query);
+            } else {
+              await execute(values, id);
+            }
 
             // await db.items
             //   .where("name")
@@ -129,13 +173,13 @@ let StyledInput = styled.input`
   border-style: none;
   color: black;
   font-weight: bold;
-  padding-left: 10px;
+  padding-left: 12px;
   border-radius: 20px !important;
   font-family: Arial, Helvetica, sans-serif;
-  border: 4px solid ${(props) => props.theme.main.accent};
+  border: 2px solid ${(props) => props.theme.main.primary};
   transition: 0.2s;
   :hover {
-    border: 4px solid ${(props) => props.theme.main.accent};
+    border: 2px solid ${(props) => props.theme.main.accent};
   }
   :focus {
     outline: none;

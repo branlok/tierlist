@@ -6,6 +6,7 @@ import { editTierlistInfo, saveTierlist } from "../../../TierlistSlice";
 import { StyledOverlay } from "../../styles";
 import * as Yup from "yup";
 import { expandIn } from "../../../../../GlobalStyles";
+import { ReactComponent as CrossDelete } from "../../../../../Styles/svg/CrossDelete.svg";
 function TierlistInfo({ modalOpen, setModalOpen }) {
   let { title, description, size, theme } = useSelector(
     (state) => state.loadedTierlist.tierlist
@@ -62,7 +63,14 @@ function TierlistInfo({ modalOpen, setModalOpen }) {
               onClick={(e) => e.stopPropagation(e)}
             >
               <StyledHeader>
-                <div className="spacing"></div>
+                <div className="spacing">
+                  <button
+                    aria-label="Close"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    <CrossDelete className="close" />
+                  </button>
+                </div>
                 <div className="right">Project Settings</div>
               </StyledHeader>
               <StyledSection shrink={true}>
@@ -171,6 +179,19 @@ export const StyledHeader = styled.div`
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     border-right: 4px solid ${(props) => props.theme.main.accent}; //#30269d;
+    display: flex;
+    align-items: center;
+    button {
+      border-style: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+    .close {
+      height: 10px;
+      margin-left: 10px;
+      width: 10px;
+      fill: white;
+    }
   }
   .right {
     .title {

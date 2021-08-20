@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Prompt, useParams } from "react-router-dom";
 import styled, { keyframes, ThemeProvider } from "styled-components";
 import { fadeIn } from "../../GlobalStyles";
 import { ReactComponent as NotificationSVG } from "../../Styles/svg/notification.svg";
@@ -50,6 +50,10 @@ function TierlistView() {
     return (
       <ThemeProvider theme={themes}>
         <StyledWrapper data-test="tierlistwindow">
+          <Prompt
+            when={true}
+            message="You have unsaved changes, are you sure you want to leave?"
+          />
           <Notifications />
           <StyledLeftColumn data-test="leftColumn" />
           <DragDropContext onDragEnd={onDragEnd}>

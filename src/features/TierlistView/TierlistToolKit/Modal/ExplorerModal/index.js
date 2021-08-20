@@ -1,22 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link, useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { expandIn } from "../../../../../GlobalStyles";
-
+import { ReactComponent as CrossDelete } from "../../../../../Styles/svg/CrossDelete.svg";
 import { StyledOverlay } from "../../styles";
+import APIs from "./APIs";
 import CurrentTierlist from "./CurrentTierlist";
 import LocalStorage from "./LocalStorage";
 
 /**
- *React Component that displays a modal for 
+ *React Component that displays a modal for
  *exploring files that can be added to tierlist project
  *
  * @param {function} param0.setModalOpen - hook to change modal open or close.
  * @returns
  */
 function ExplorerModal({ setModalOpen }) {
-  let [tab, setTab] = useState("currentTierlist");
-
+  let [tab, setTab] = useState("api");
   useEffect(() => {
     let handleCloseModal = function (event) {
       if (event.key === "Escape") {
@@ -39,10 +40,22 @@ function ExplorerModal({ setModalOpen }) {
     >
       <StyledModule onClick={(e) => e.stopPropagation(e)}>
         <StyledHeader>
-          <div className="spacing"></div>
+          <div className="spacing">
+            <button aria-label="Close" onClick={() => setModalOpen(false)}>
+              <CrossDelete className="close" />
+            </button>
+          </div>
           <div className="right">Project Settings</div>
         </StyledHeader>
         <div className="bodyWrapper">
+          <StyledBody active={tab == "api"}>
+            <div className="leftColumn" onClick={() => setTab("api")}>
+              API Explorer
+            </div>
+            <div className="body">
+              <APIs />
+            </div>
+          </StyledBody>
           <StyledBody active={tab == "currentTierlist"}>
             <div
               className="leftColumn"
@@ -61,12 +74,6 @@ function ExplorerModal({ setModalOpen }) {
             <div className="body">
               <LocalStorage />
             </div>
-          </StyledBody>
-          <StyledBody active={tab == "api"}>
-            <div className="leftColumn" onClick={() => setTab("api")}>
-              API
-            </div>
-            <div className="body">Local storage search</div>
           </StyledBody>
         </div>
       </StyledModule>
@@ -89,6 +96,7 @@ export const StyledBody = styled.div`
   /* flex-shrink: ${(props) => (props.active ? 1 : 0)}; */
   transition: 0.4s;
   box-shadow: 0 14px 28px rgba(02, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
   .leftColumn {
     display: flex;
     justify-content: center;
@@ -130,13 +138,26 @@ export const StyledHeader = styled.div`
   font-size: 14px;
   flex-shrink: 0;
   z-index: 1;
+
   .spacing {
     width: 150px;
     height: 100%;
     border-right: 4px solid ${(props) => props.theme.main.accent};
+    display: flex;
+    align-items: center;
+    button {
+      border-style: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+    .close {
+      height: 10px;
+      margin-left: 10px;
+      width: 10px;
+      fill: white;
+    }
   }
 `;
-
 
 export const StyledModule = styled.div`
   height: 80%;

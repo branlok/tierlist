@@ -17,7 +17,12 @@ import { StyledActionButton, StyledRow } from "../Styles/StyledTable";
 function LocalStorageItem({ item, itemKeys, setItemWasDeleted }) {
   let { id } = useParams();
   let { id: itemId, dateAdded, fileName, picture: imageURL } = item;
-  imageURL = useMemo(() => URL.createObjectURL(imageURL), [imageURL]);
+
+  imageURL = useMemo(
+    () =>
+      typeof imageURL === "string" ? imageURL : URL.createObjectURL(imageURL),
+    [imageURL]
+  );
 
   let [itemDetails, setItemDetails] = useState({
     decoration: null,
@@ -80,7 +85,7 @@ function LocalStorageItem({ item, itemKeys, setItemWasDeleted }) {
           <img className="image" src={imageURL}></img>
         </td>
         <td className="title tdTitle">
-          {fileName.length > 0 ? fileName : "Untitled"}
+          {fileName?.length > 0 ? fileName : "Untitled"}
         </td>
         <td className="date tdDate">{date.toLocaleTimeString()}</td>
         <td className="action">

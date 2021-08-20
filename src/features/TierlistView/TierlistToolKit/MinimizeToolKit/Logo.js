@@ -23,11 +23,11 @@ let StyledLogo = styled.div`
   background-color: #30269d;
   background-color: ${(props) => props.theme.main.accent};
   transition: 1s;
-  :active {
+  /* :active {
     background: linear-gradient(270deg, #002dff, #441bd3, #9341c5, #c874de);
     background-size: 800% 800%;
     animation: ${gradient} 10s ease infinite;
-  }
+  } */
 
   .title {
     font-weight: bold;

@@ -8,7 +8,7 @@ import { StyledSearchWrapper } from "../ExplorerModal/LocalStorage";
 import Search from "../../Search";
 import { StyledOverlay } from "../../styles";
 import Table from "./Table";
-
+import { ReactComponent as CrossDelete } from "../../../../../Styles/svg/CrossDelete.svg";
 /**
  * Component renders either searched results or default(all) results of tierlists made
  */
@@ -70,7 +70,11 @@ function MyTierlistModal({ modalOpen, setModalOpen }) {
     >
       <StyledModule onClick={(e) => e.stopPropagation(e)}>
         <StyledHeader>
-          <div className="spacing"></div>
+          <div className="spacing">
+            <button aria-label="Close" onClick={() => setModalOpen(false)}>
+              <CrossDelete className="close" />
+            </button>
+          </div>
           <div className="right">My Tierlists</div>
         </StyledHeader>
         <div className="bodyWrapper">

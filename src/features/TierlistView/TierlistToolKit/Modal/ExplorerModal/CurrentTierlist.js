@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import db from "../../../../../db";
+import { fadeIn } from "../../../../../GlobalStyles";
 
 import Item from "../../ExpandedToolkit/Explorer/Item";
 import Search from "../../Search";
@@ -91,6 +92,9 @@ let StyledSearchWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: ${fadeIn} 1s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
 `;
 
 let StyledExplorer = styled.div`

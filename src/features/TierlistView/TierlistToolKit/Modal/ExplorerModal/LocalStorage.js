@@ -167,14 +167,15 @@ export let StyledSearchWrapper = styled.div`
   height: 80px;
   width: 100%;
   padding: 20px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  /* box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); */
   border-bottom: 1px solid ${(props) => props.theme.main.accent};
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: ${fadeIn} 1s ease forwards;
+  opacity: 0;
+  animation-delay: 0.2s;
 `;
-
-
 
 let StyledExplorer = styled.div`
   height: calc(100% - 80px);
