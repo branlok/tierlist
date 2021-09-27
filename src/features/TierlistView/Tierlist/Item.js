@@ -85,7 +85,6 @@ function Item({ itemId, index, toolState }) {
   );
 }
 
-
 //hook solution provided from to fix parent row transform distort draggable position fix
 // Issue: https://github.com/atlassian/react-beautiful-dnd/issues/128
 // Solution: https://github.com/DucktorDanny/react-beautiful-dnd-example
@@ -134,9 +133,11 @@ let StyledItem = styled.div`
     left: 0px;
     transition: 0.3s;
     /* border: 3px solid black; */
+    transform: scale(0.9);
     :hover {
       transition: 0.3s;
       opacity: 1;
+      transform: scale(1);
       > .name {
         color: white;
       }
@@ -146,7 +147,7 @@ let StyledItem = styled.div`
     height: calc(100% - 0px);
     width: calc(100% - 0px);
 
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
     display: flex;
     padding: 10px;
@@ -203,7 +204,6 @@ let StyledItem = styled.div`
     align-items: center;
     height: 25px;
     margin: 10px;
-
     font-size: 12px;
     border: 1px solid white;
     border-radius: 5px;

@@ -104,7 +104,7 @@ function TierlistHeaders() {
           </h1>
         )}
         <h2 className="caption">{description}</h2>
-        <div className="createNew" aria >
+        <div className="createNew"  >
           <button className="resetTierlist" onClick={resetTierlist}>
             Delete and Reset
           </button>

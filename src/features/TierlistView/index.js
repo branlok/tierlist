@@ -50,10 +50,7 @@ function TierlistView() {
     return (
       <ThemeProvider theme={themes}>
         <StyledWrapper data-test="tierlistwindow">
-          <Prompt
-            when={true}
-            message="You have unsaved changes, are you sure you want to leave?"
-          />
+          <Prompt when={true} message="Are you sure you want to leave?" />
           <Notifications />
           <StyledLeftColumn data-test="leftColumn" />
           <DragDropContext onDragEnd={onDragEnd}>

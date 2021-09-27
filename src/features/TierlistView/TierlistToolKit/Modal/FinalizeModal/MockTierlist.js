@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import RowTitle from "../../../Tierlist/RowTitle";
@@ -46,7 +46,6 @@ function MockRowTitle({ row }) {
 }
 
 function MockItem({ itemId }) {
-
   let { imageURL } = useSelector((state) => state.loadedTierlist.items[itemId]);
 
   return (
