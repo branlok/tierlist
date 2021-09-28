@@ -47,10 +47,18 @@ function MockRowTitle({ row }) {
 
 function MockItem({ itemId }) {
   let { imageURL } = useSelector((state) => state.loadedTierlist.items[itemId]);
+  let [objectURL, setObjectURL] = useState(null);
+
+  useEffect(() => {
+    if (imageURL && imageURL.includes("https:")) {
+      // getBlob(imageURL)
+      setObjectURL("https://cors-anywhere-tlis.herokuapp.com/" + imageURL);
+    }
+  }, [imageURL])
 
   return (
     <StyledMockItem>
-      <img className="image" src={imageURL} />
+      <img className="image" crossOrigin="anonymous" src={objectURL || imageURL} />
     </StyledMockItem>
   );
 }
