@@ -1,5 +1,5 @@
-# the tierlist builder
-꒰(･‿･)꒱ A Tierlist builder built with React. No registration required, build the list on your mind with no interrupts.
+# A Tierlist Maker
+꒰(･‿･)꒱ A Tierlist Maker is built with React. No registration required, build the list on your mind with no interrupts.
 
 
 
